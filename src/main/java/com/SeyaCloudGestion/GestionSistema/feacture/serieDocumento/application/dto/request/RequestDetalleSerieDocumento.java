@@ -1,0 +1,12 @@
+package com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request;
+
+import lombok.Data;
+
+import jakarta.validation.constraints.Min;
+
+@Data
+public class RequestDetalleSerieDocumento {
+    @Min(value = 1, message = "El id debe ser mayor a 0")
+    private Long idSerieDocumento;
+
+}

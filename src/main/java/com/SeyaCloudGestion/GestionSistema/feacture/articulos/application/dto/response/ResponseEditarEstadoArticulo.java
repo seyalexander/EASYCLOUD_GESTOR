@@ -1,4 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response;
 
-public class ResponseEditarEstadoArticulo {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseEditarEstadoArticulo extends ResponseGeneral {
 }

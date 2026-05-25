@@ -1,4 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.ajustes.application.dto.response;
 
-public class ResponseEditarEstadoAjuste {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseEditarEstadoAjuste extends ResponseGeneral {
 }
