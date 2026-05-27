@@ -28,12 +28,12 @@ public class ImpuestoDetalleRepository implements IImpuestoDetalle {
     @Override
     public ResponseDetalleImpuesto DetalleImpuesto(RequestDetalleImpuesto request) {
         ResponseDetalleImpuesto response = new ResponseDetalleImpuesto();
-        String SQL = "{ call dbo.sp_ObtenerImpuestoPorId() }";
+        String SQL = "{ call dbo.sp_ObtenerImpuestoPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetro id definido en el request.
+            pstmt.setLong(1, request.getIdImpuesto());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -43,6 +43,7 @@ public class ImpuestoDetalleRepository implements IImpuestoDetalle {
                     item.setPorcentaje(rs.getDouble("porcentaje"));
                     item.setEsPrincipal(rs.getInt("esPrincipal"));
                     item.setEstado(rs.getInt("estado"));
+
                     response.setExito(true);
                     response.setMessage("Impuesto obtenido correctamente.");
                     response.setImpuesto(item);
@@ -59,7 +60,4 @@ public class ImpuestoDetalleRepository implements IImpuestoDetalle {
         return response;
     }
 
-    private void setParameter(CallableStatement pstmt, int index, Object value) throws SQLException {
-        pstmt.setObject(index, value);
-    }
 }

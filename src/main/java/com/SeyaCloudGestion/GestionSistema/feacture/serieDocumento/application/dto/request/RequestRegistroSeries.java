@@ -12,7 +12,7 @@ public class RequestRegistroSeries {
     private long idEmpresa;
 
     @NotBlank(message = "La serie es obligatoria")
-    @Size(max = 250, message = "La serie no debe superar los 250 caracteres")
+    @Size(max = 10, message = "La serie no debe superar los 10 caracteres")
     private String serie;
 
     @PositiveOrZero(message = "El correlativo actual no puede ser negativo")

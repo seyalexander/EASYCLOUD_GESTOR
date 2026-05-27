@@ -24,7 +24,7 @@ public class EmpresaRegistroRepository implements IEmpresaRegistro {
     private DataSource con;
 
     @Override
-    public ResponseRegistroEmpresa registrarEmpresa(RequestRegistroEmpresa request, long userAutenticado) throws Exception {
+    public ResponseRegistroEmpresa registrarEmpresa(RequestRegistroEmpresa request, long userAutenticado) {
         ResponseRegistroEmpresa rpt = new ResponseRegistroEmpresa();
 
         String SQL = "{ call CONFIGURACION.sp_RegistroEmpresa(?,?,?,?,?,?,?,?) }";

@@ -1,7 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestEditarAllSerieDocumento;
-import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestEditarEstadoSerieDocumento;
+import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestEditarAllSeries;
+import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestEditarEstadoSeries;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.response.ResponseEditarAllSerieDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.response.ResponseEditarEstadoSerieDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.domain.interfaces.ISerieDocumentoEdicion;
@@ -26,15 +26,21 @@ public class SerieDocumentoEdicionRepository implements ISerieDocumentoEdicion {
     private DataSource con;
 
     @Override
-    public ResponseEditarAllSerieDocumento EditarAllSerieDocumento(RequestEditarAllSerieDocumento request) {
+    public ResponseEditarAllSerieDocumento EditarAllSerieDocumento(RequestEditarAllSeries request) {
         ResponseEditarAllSerieDocumento rpt = new ResponseEditarAllSerieDocumento();
-        String SQL = "{ call dbo.sp_EditarSerieDocumento(?) }";
+        String SQL = "{ call dbo.sp_EditarSerieDocumento(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            //pstmt.setLong(1, userId);
+            pstmt.setLong(1, request.getIdSerieDocumento());
+            pstmt.setLong(2, request.getIdTipoDocumento());
+            pstmt.setString(3, request.getSerie());
+            pstmt.setLong(4, request.getCorrelativoActual());
+            pstmt.setInt(5, request.getEsElectronico());
+            pstmt.setInt(6, request.getEstado());
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -53,17 +59,17 @@ public class SerieDocumentoEdicionRepository implements ISerieDocumentoEdicion {
     }
 
     @Override
-    public ResponseEditarEstadoSerieDocumento EditarEstadoSerieDocumento(RequestEditarEstadoSerieDocumento request, int estado) {
+    public ResponseEditarEstadoSerieDocumento EditarEstadoSerieDocumento(RequestEditarEstadoSeries request, int estado) {
         ResponseEditarEstadoSerieDocumento rpt = new ResponseEditarEstadoSerieDocumento();
-        String SQL = "{ call dbo.sp_EditarSerieDocumento_Estado(?,?,?) }";
+        String SQL = "{ call dbo.sp_EditarSerieDocumento_Estado(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdSerieDocumento());
+            pstmt.setLong(1, request.getIdSeries());
             pstmt.setInt(2, estado);
-            Long userId = 1L;
-            pstmt.setLong(3, userId);
+            //Long userId = 1L;
+            //pstmt.setLong(3, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -81,7 +87,4 @@ public class SerieDocumentoEdicionRepository implements ISerieDocumentoEdicion {
         return rpt;
     }
 
-    private void setParameter(CallableStatement pstmt, int index, Object value) throws SQLException {
-        pstmt.setObject(index, value);
-    }
 }

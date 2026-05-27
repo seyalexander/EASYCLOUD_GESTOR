@@ -59,7 +59,7 @@ public class EmpresaEdicionRepository implements IEmpresaEdicion {
     public ResponseEditarAllEmpresa editarAllEmpresa(RequestEditarAllEmpresa request, long userAutenticado) {
         ResponseEditarAllEmpresa rpt = new ResponseEditarAllEmpresa();
 
-        String SQL = "{ call CONFIGURACION.sp_EditarMoneda_Estado(?,?,?,?,?,?,?,?,?,?) }";
+        String SQL = "{ call CONFIGURACION.sp_EditarEmpresa(?,?,?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {

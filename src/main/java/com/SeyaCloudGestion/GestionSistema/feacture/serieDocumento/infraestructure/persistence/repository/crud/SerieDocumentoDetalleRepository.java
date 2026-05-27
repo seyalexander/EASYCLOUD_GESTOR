@@ -1,6 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestDetalleSerieDocumento;
+import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestDetalleSeries;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.response.ResponseDetalleSerieDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.domain.interfaces.ISerieDocumentoDetalle;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.infraestructure.persistence.model.SerieDocumentoModel;
@@ -26,14 +26,14 @@ public class SerieDocumentoDetalleRepository implements ISerieDocumentoDetalle {
     private DataSource con;
 
     @Override
-    public ResponseDetalleSerieDocumento DetalleSerieDocumento(RequestDetalleSerieDocumento request) {
+    public ResponseDetalleSerieDocumento DetalleSerieDocumento(RequestDetalleSeries request) {
         ResponseDetalleSerieDocumento response = new ResponseDetalleSerieDocumento();
         String SQL = "{ call dbo.sp_ObtenerSerieDocumentoPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdSerieDocumento());
+            setParameter(pstmt, 1, request.getIdSeries());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -45,6 +45,7 @@ public class SerieDocumentoDetalleRepository implements ISerieDocumentoDetalle {
                     item.setCorrelativoActual(rs.getLong("correlativoActual"));
                     item.setEsElectronico(rs.getInt("esElectronico"));
                     item.setEstado(rs.getInt("estado"));
+
                     response.setExito(true);
                     response.setMessage("SerieDocumento obtenido correctamente.");
                     response.setSerieDocumento(item);

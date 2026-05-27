@@ -2,7 +2,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.impuestos.infraestructure.p
 
 import com.SeyaCloudGestion.GestionSistema.feacture.impuestos.application.dto.request.RequestListaImpuesto;
 import com.SeyaCloudGestion.GestionSistema.feacture.impuestos.application.dto.response.ResponseListaImpuesto;
-import com.SeyaCloudGestion.GestionSistema.feacture.impuestos.domain.interfaces.IImpuestoListado;
+import com.SeyaCloudGestion.GestionSistema.feacture.impuestos.domain.interfaces.IImpuestoLista;
 import com.SeyaCloudGestion.GestionSistema.feacture.impuestos.infraestructure.persistence.model.ImpuestoModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.List;
 @Slf4j
 @Repository
 @Transactional("sqlServerTransactionManager")
-public class ImpuestoListadoRepository implements IImpuestoListado {
+public class ImpuestoListadoRepository implements IImpuestoLista {
 
     @Autowired
     @Qualifier("SQLSERVER")
@@ -31,16 +31,18 @@ public class ImpuestoListadoRepository implements IImpuestoListado {
     public ResponseListaImpuesto listaImpuesto(RequestListaImpuesto request) {
         ResponseListaImpuesto rpt = new ResponseListaImpuesto();
         List<ImpuestoModel> registros = new ArrayList<>();
-        String SQL = "{ call dbo.sp_ListarImpuesto() }";
+        String SQL = "{ call dbo.sp_ListarImpuesto(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetros de filtro definidos en el request.
+            pstmt.setInt(1, request.getEstado());
 
             try (ResultSet rs = pstmt.executeQuery()) {
+
                 while (rs.next()) {
                     ImpuestoModel item = new ImpuestoModel();
+
                 item.setIdImpuesto(rs.getLong("idImpuesto"));
                 item.setDescripcion(rs.getString("descripcion"));
                 item.setPorcentaje(rs.getDouble("porcentaje"));
@@ -61,7 +63,4 @@ public class ImpuestoListadoRepository implements IImpuestoListado {
         return rpt;
     }
 
-    private void setParameter(CallableStatement pstmt, int index, Object value) throws SQLException {
-        pstmt.setObject(index, value);
-    }
 }

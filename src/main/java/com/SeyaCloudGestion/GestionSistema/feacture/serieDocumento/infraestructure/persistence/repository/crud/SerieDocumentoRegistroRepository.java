@@ -1,6 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestRegistroSerieDocumento;
+import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestRegistroSeries;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.response.ResponseRegistroSerieDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.domain.interfaces.ISerieDocumentoRegistro;
 import lombok.extern.slf4j.Slf4j;
@@ -24,15 +24,19 @@ public class SerieDocumentoRegistroRepository implements ISerieDocumentoRegistro
     private DataSource con;
 
     @Override
-    public ResponseRegistroSerieDocumento RegistroSerieDocumento(RequestRegistroSerieDocumento request) {
+    public ResponseRegistroSerieDocumento RegistroSerieDocumento(RequestRegistroSeries request) {
         ResponseRegistroSerieDocumento rpt = new ResponseRegistroSerieDocumento();
         String SQL = "{ call dbo.sp_RegistroSerieDocumento(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            Long userId = 1L;
-            pstmt.setLong(1, userId);
+            //Long userId = 1L;
+            //pstmt.setLong(1, userId);
+            pstmt.setLong(1, request.getIdTipoDocumento());
+            pstmt.setString(2, request.getSerie());
+            pstmt.setLong(3, request.getCorrelativoActual());
+            pstmt.setInt(4, request.getEsElectronico());
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -51,7 +55,4 @@ public class SerieDocumentoRegistroRepository implements ISerieDocumentoRegistro
         return rpt;
     }
 
-    private void setParameter(CallableStatement pstmt, int index, Object value) throws SQLException {
-        pstmt.setObject(index, value);
-    }
 }

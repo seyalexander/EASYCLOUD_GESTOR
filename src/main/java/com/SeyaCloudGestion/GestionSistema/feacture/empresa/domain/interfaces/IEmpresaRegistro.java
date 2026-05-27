@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.requ
 import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.response.ResponseRegistroEmpresa;
 
 public interface IEmpresaRegistro {
-    ResponseRegistroEmpresa RegistroEmpresa(RequestRegistroEmpresa request);
+    ResponseRegistroEmpresa registrarEmpresa(RequestRegistroEmpresa request, long id);
 }

@@ -44,7 +44,7 @@ public class EmpresaService implements IEmpresaListado, IEmpresaRegistro, IEmpre
 
     @Override
     @CacheEvict(value = {"empresa_lista", "empresa_detalle"}, allEntries = true)
-    public ResponseRegistroEmpresa registrarEmpresa(RequestRegistroEmpresa request, long userAutenticado) throws Exception {
+    public ResponseRegistroEmpresa registrarEmpresa(RequestRegistroEmpresa request, long userAutenticado) {
         return empresaRegistroRepository.registrarEmpresa(request, userAutenticado);
     }
 

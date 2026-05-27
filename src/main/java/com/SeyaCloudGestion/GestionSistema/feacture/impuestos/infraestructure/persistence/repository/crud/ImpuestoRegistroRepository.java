@@ -26,7 +26,7 @@ public class ImpuestoRegistroRepository implements IImpuestoRegistro {
     @Override
     public ResponseRegistroImpuesto RegistroImpuesto(RequestRegistroImpuesto request) {
         ResponseRegistroImpuesto rpt = new ResponseRegistroImpuesto();
-        String SQL = "{ call dbo.sp_RegistroImpuesto(?,?,?,?) }";
+        String SQL = "{ call dbo.sp_RegistroImpuesto(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -34,8 +34,8 @@ public class ImpuestoRegistroRepository implements IImpuestoRegistro {
             setParameter(pstmt, 1, request.getDescripcion());
             setParameter(pstmt, 2, request.getPorcentaje());
             setParameter(pstmt, 3, request.getEsPrincipal());
-            Long userId = 1L;
-            pstmt.setLong(4, userId);
+            //Long userId = 1L;
+           // pstmt.setLong(4, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 

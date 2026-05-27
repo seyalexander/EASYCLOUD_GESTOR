@@ -1,5 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.moneda.infraestructure.controller;
 
+import com.SeyaCloudGestion.GestionSistema.common.enums.TipoNotificacion;
 import com.SeyaCloudGestion.GestionSistema.feacture.moneda.application.dto.request.RequestEditarAllMoneda;
 import com.SeyaCloudGestion.GestionSistema.feacture.moneda.application.dto.request.RequestListaMonedas;
 import com.SeyaCloudGestion.GestionSistema.feacture.moneda.application.dto.request.RequestRegistroMoneda;
@@ -115,8 +116,8 @@ public class MonedaController {
 
         if (response.isExito()) {
             NotificacionMonedaDTO notificacion = new NotificacionMonedaDTO();
-            notificacion.setTipo("ANULACION");
-            notificacion.setMensaje("Moneda anulada");
+            notificacion.setTipo(String.valueOf(TipoNotificacion.ACTIVACION));
+            notificacion.setMensaje("Moneda Activada");
             notificacion.setIdMoneda(idMoneda);
 
             notificacionMonedaService.enviarNotificacionMoneda_Anular(notificacion);

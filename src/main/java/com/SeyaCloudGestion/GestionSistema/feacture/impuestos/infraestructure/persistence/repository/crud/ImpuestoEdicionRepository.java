@@ -28,15 +28,19 @@ public class ImpuestoEdicionRepository implements IImpuestoEdicion {
     @Override
     public ResponseEditarAllImpuesto EditarAllImpuesto(RequestEditarAllImpuesto request) {
         ResponseEditarAllImpuesto rpt = new ResponseEditarAllImpuesto();
-        String SQL = "{ call dbo.sp_EditarImpuesto(?) }";
+        String SQL = "{ call dbo.sp_EditarImpuesto(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             Long userId = 1L;
             pstmt.setLong(1, userId);
-
+            pstmt.setLong(2, request.getIdImpuesto());
+            pstmt.setString(3, request.getDescripcion());
+            pstmt.setDouble(4, request.getPorcentaje());
+            pstmt.setInt(5, request.getEsPrincipal());
             int rowsAffected = pstmt.executeUpdate();
+
             if (rowsAffected > 0) {
                 rpt.setExito(true);
                 rpt.setMessage("Impuesto actualizado correctamente.");

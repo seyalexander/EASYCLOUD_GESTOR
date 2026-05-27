@@ -1,6 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestListaSerieDocumento;
+import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestListaSeries;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.response.ResponseListaSerieDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.domain.interfaces.ISerieDocumentoListado;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.infraestructure.persistence.model.SerieDocumentoModel;
@@ -28,7 +28,7 @@ public class SerieDocumentoListadoRepository implements ISerieDocumentoListado {
     private DataSource con;
 
     @Override
-    public ResponseListaSerieDocumento listaSerieDocumento(RequestListaSerieDocumento request) {
+    public ResponseListaSerieDocumento listaSerieDocumento(RequestListaSeries request) {
         ResponseListaSerieDocumento rpt = new ResponseListaSerieDocumento();
         List<SerieDocumentoModel> registros = new ArrayList<>();
         String SQL = "{ call dbo.sp_ListarSerieDocumento(?) }";
@@ -43,7 +43,6 @@ public class SerieDocumentoListadoRepository implements ISerieDocumentoListado {
                     SerieDocumentoModel item = new SerieDocumentoModel();
                 item.setIdSerieDocumento(rs.getLong("idSerieDocumento"));
                 item.setIdTipoDocumento(rs.getLong("idTipoDocumento"));
-                item.setIdEmpresa(rs.getLong("idEmpresa"));
                 item.setSerie(rs.getString("serie"));
                 item.setCorrelativoActual(rs.getLong("correlativoActual"));
                 item.setEsElectronico(rs.getInt("esElectronico"));

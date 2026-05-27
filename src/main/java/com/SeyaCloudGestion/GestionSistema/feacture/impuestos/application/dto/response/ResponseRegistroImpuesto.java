@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.impuestos.application.dto.response;
 
-public class ResponseRegistroImpuesto {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseRegistroImpuesto extends ResponseGeneral {
 
 }
