@@ -1,16 +1,12 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.familia.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.request.RequestEditarAllFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.request.RequestRegistroFamilia;
-import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.response.ResponseEditarAllFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.response.ResponseRegistroFamilia;
-import com.SeyaCloudGestion.GestionSistema.feacture.familia.domain.interfaces.IFamiliaEdicion;
 import com.SeyaCloudGestion.GestionSistema.feacture.familia.domain.interfaces.IFamiliaRegistro;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;

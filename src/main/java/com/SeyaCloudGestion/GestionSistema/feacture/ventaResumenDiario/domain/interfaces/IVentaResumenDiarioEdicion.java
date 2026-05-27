@@ -1,5 +1,11 @@
-package com.SeyaCloudGestion.GestionSistema.feacture.ventaResumenDiario.domain.interfaces;
+﻿package com.SeyaCloudGestion.GestionSistema.feacture.ventaResumenDiario.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.ventaResumenDiario.application.dto.request.RequestEditarAllVentaResumenDiario;
+import com.SeyaCloudGestion.GestionSistema.feacture.ventaResumenDiario.application.dto.request.RequestEditarEstadoVentaResumenDiario;
+import com.SeyaCloudGestion.GestionSistema.feacture.ventaResumenDiario.application.dto.response.ResponseEditarAllVentaResumenDiario;
+import com.SeyaCloudGestion.GestionSistema.feacture.ventaResumenDiario.application.dto.response.ResponseEditarEstadoVentaResumenDiario;
 
 public interface IVentaResumenDiarioEdicion {
-
+    ResponseEditarAllVentaResumenDiario EditarAllVentaResumenDiario(RequestEditarAllVentaResumenDiario request);
+    ResponseEditarEstadoVentaResumenDiario EditarEstadoVentaResumenDiario(RequestEditarEstadoVentaResumenDiario request, int estado);
 }

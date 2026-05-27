@@ -1,5 +1,8 @@
-package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.domain.interfaces;
+﻿package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestRegistroCuentasPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseRegistroCuentasPorCobrar;
 
 public interface ICuentasPorCobrarRegistro {
-
+    ResponseRegistroCuentasPorCobrar RegistroCuentasPorCobrar(RequestRegistroCuentasPorCobrar request);
 }

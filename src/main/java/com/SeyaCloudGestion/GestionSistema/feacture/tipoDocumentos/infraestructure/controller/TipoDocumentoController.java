@@ -1,6 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.infraestructure.controller;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.moneda.application.dto.request.RequestListaMonedas;
+import com.SeyaCloudGestion.GestionSistema.common.enums.TipoNotificacion;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.request.RequestEditarAllTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.request.RequestListaTipoDocumentos;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.request.RequestRegistroTipoDocumento;
@@ -111,7 +111,7 @@ public class TipoDocumentoController {
 
         if (response.isExito()) {
             NotificacionTipoDocumentoDTO notificacion = new NotificacionTipoDocumentoDTO();
-            notificacion.setTipo("ANULACION");
+            notificacion.setTipo(String.valueOf(TipoNotificacion.ACTIVACION));
             notificacion.setMensaje("Tipo Documento activado");
             notificacion.setIdTipoDocumentos(idTipoDocumentos);
 

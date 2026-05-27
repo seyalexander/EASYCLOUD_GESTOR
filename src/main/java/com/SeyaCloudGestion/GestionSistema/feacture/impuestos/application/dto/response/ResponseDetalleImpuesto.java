@@ -1,5 +1,11 @@
-package com.SeyaCloudGestion.GestionSistema.feacture.impuestos.application.dto.response;
+﻿package com.SeyaCloudGestion.GestionSistema.feacture.impuestos.application.dto.response;
 
-public class ResponseDetalleImpuesto {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+import com.SeyaCloudGestion.GestionSistema.feacture.impuestos.infraestructure.persistence.model.ImpuestoModel;
+import lombok.Data;
 
+@Data
+public class ResponseDetalleImpuesto extends ResponseGeneral {
+
+    private ImpuestoModel impuesto;
 }

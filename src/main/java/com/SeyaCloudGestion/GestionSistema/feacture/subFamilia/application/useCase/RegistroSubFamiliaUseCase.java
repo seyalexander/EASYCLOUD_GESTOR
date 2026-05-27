@@ -1,8 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestListaSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestRegistrarSubFamilia;
-import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.response.ResponseListaSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.response.ResponseRegistroSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.domain.services.SubFamiliaService;
 import org.springframework.stereotype.Component;

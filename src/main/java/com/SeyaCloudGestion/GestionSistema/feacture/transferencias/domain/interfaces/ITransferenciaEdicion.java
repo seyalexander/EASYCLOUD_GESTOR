@@ -1,5 +1,11 @@
-package com.SeyaCloudGestion.GestionSistema.feacture.transferencias.domain.interfaces;
+﻿package com.SeyaCloudGestion.GestionSistema.feacture.transferencias.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.transferencias.application.dto.request.RequestEditarAllTransferencia;
+import com.SeyaCloudGestion.GestionSistema.feacture.transferencias.application.dto.request.RequestEditarEstadoTransferencia;
+import com.SeyaCloudGestion.GestionSistema.feacture.transferencias.application.dto.response.ResponseEditarAllTransferencia;
+import com.SeyaCloudGestion.GestionSistema.feacture.transferencias.application.dto.response.ResponseEditarEstadoTransferencia;
 
 public interface ITransferenciaEdicion {
-
+    ResponseEditarAllTransferencia EditarAllTransferencia(RequestEditarAllTransferencia request);
+    ResponseEditarEstadoTransferencia EditarEstadoTransferencia(RequestEditarEstadoTransferencia request, int estado);
 }

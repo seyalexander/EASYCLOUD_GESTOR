@@ -1,12 +1,8 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.usuarios.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.empleados.application.dto.response.ResponseListaEmpleado;
-import com.SeyaCloudGestion.GestionSistema.feacture.empleados.infraestructure.persistence.model.EmpleadoModel;
 import com.SeyaCloudGestion.GestionSistema.feacture.usuarios.application.dto.request.RequestListaUsuario;
 import com.SeyaCloudGestion.GestionSistema.feacture.usuarios.application.dto.response.ResponseListaUsuario;
-import com.SeyaCloudGestion.GestionSistema.feacture.usuarios.application.useCase.ListaUsuarioUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.usuarios.domain.interfaces.IUsuarioListado;
-import com.SeyaCloudGestion.GestionSistema.feacture.usuarios.domain.services.UsuarioService;
 import com.SeyaCloudGestion.GestionSistema.feacture.usuarios.infraestructure.persistence.model.UsuariosModel;
 import com.SeyaCloudGestion.GestionSistema.security.PasswordSecurityService;
 import org.springframework.beans.factory.annotation.Autowired;

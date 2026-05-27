@@ -1,5 +1,11 @@
-package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorPagar.domain.interfaces;
+﻿package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorPagar.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorPagar.application.dto.request.RequestEditarAllCuentasPorPagar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorPagar.application.dto.request.RequestEditarEstadoCuentasPorPagar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorPagar.application.dto.response.ResponseEditarAllCuentasPorPagar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorPagar.application.dto.response.ResponseEditarEstadoCuentasPorPagar;
 
 public interface ICuentasPorPagarEdicion {
-
+    ResponseEditarAllCuentasPorPagar EditarAllCuentasPorPagar(RequestEditarAllCuentasPorPagar request);
+    ResponseEditarEstadoCuentasPorPagar EditarEstadoCuentasPorPagar(RequestEditarEstadoCuentasPorPagar request, int estado);
 }

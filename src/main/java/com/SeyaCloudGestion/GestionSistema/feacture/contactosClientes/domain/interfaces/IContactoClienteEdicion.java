@@ -1,5 +1,11 @@
-package com.SeyaCloudGestion.GestionSistema.feacture.contactosClientes.domain.interfaces;
+﻿package com.SeyaCloudGestion.GestionSistema.feacture.contactosClientes.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.contactosClientes.application.dto.request.RequestEditarAllContactoCliente;
+import com.SeyaCloudGestion.GestionSistema.feacture.contactosClientes.application.dto.request.RequestEditarEstadoContactoCliente;
+import com.SeyaCloudGestion.GestionSistema.feacture.contactosClientes.application.dto.response.ResponseEditarAllContactoCliente;
+import com.SeyaCloudGestion.GestionSistema.feacture.contactosClientes.application.dto.response.ResponseEditarEstadoContactoCliente;
 
 public interface IContactoClienteEdicion {
-
+    ResponseEditarAllContactoCliente EditarAllContactoCliente(RequestEditarAllContactoCliente request);
+    ResponseEditarEstadoContactoCliente EditarEstadoContactoCliente(RequestEditarEstadoContactoCliente request, int estado);
 }

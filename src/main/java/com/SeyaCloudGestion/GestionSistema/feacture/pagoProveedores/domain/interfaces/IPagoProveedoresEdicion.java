@@ -1,5 +1,11 @@
-package com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.domain.interfaces;
+﻿package com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.request.RequestEditarAllPagoProveedores;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.request.RequestEditarEstadoPagoProveedores;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.response.ResponseEditarAllPagoProveedores;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.response.ResponseEditarEstadoPagoProveedores;
 
 public interface IPagoProveedoresEdicion {
-
+    ResponseEditarAllPagoProveedores EditarAllPagoProveedores(RequestEditarAllPagoProveedores request);
+    ResponseEditarEstadoPagoProveedores EditarEstadoPagoProveedores(RequestEditarEstadoPagoProveedores request, int estado);
 }

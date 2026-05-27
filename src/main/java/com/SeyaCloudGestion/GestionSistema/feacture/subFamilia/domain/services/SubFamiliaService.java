@@ -1,6 +1,5 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.domain.services;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.request.RequestDetalleFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.response.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.domain.interfaces.ISubFamiliaDetalle;

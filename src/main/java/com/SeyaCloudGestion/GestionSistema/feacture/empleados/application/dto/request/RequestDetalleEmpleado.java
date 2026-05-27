@@ -11,6 +11,4 @@ public class RequestDetalleEmpleado {
     @Min(value = 1, message = "El id debe ser mayor a 0")
     private Long idEmpleado;
 
-    @Positive
-    @NotNull
 }

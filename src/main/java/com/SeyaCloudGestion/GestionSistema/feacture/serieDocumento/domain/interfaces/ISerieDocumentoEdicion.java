@@ -1,5 +1,11 @@
-package com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.domain.interfaces;
+﻿package com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestEditarAllSerieDocumento;
+import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestEditarEstadoSerieDocumento;
+import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.response.ResponseEditarAllSerieDocumento;
+import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.response.ResponseEditarEstadoSerieDocumento;
 
 public interface ISerieDocumentoEdicion {
-
+    ResponseEditarAllSerieDocumento EditarAllSerieDocumento(RequestEditarAllSerieDocumento request);
+    ResponseEditarEstadoSerieDocumento EditarEstadoSerieDocumento(RequestEditarEstadoSerieDocumento request, int estado);
 }

@@ -1,5 +1,8 @@
-package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.domain.interfaces;
+﻿package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestDetalleCuentasPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseDetalleCuentasPorCobrar;
 
 public interface ICuentasPorCobrarDetalle {
-
+    ResponseDetalleCuentasPorCobrar DetalleCuentasPorCobrar(RequestDetalleCuentasPorCobrar request);
 }

@@ -1,5 +1,65 @@
 ﻿package com.SeyaCloudGestion.GestionSistema.feacture.marca.application.useCase;
 
-public class EdicionMarcaEstadoUseCase {
+import com.SeyaCloudGestion.GestionSistema.feacture.marca.application.dto.request.RequestEditarEstadoMarca;
+import com.SeyaCloudGestion.GestionSistema.feacture.marca.application.dto.response.ResponseEditarEstadoMarca;
+import com.SeyaCloudGestion.GestionSistema.feacture.marca.domain.services.MarcaService;
+import org.springframework.stereotype.Component;
 
+@Component
+public class EdicionMarcaEstadoUseCase {
+    private final MarcaService marcaService;
+
+    public EdicionMarcaEstadoUseCase(MarcaService marcaService) {
+        this.marcaService = marcaService;
+    }
+
+    public ResponseEditarEstadoMarca AnularMarca(Long idMarca) {
+        try {
+            RequestEditarEstadoMarca request = new RequestEditarEstadoMarca();
+            request.setIdMarca(idMarca);
+            ResponseEditarEstadoMarca response = marcaService.EditarEstadoMarca(request,0);
+            if(response.isExito()){}
+
+            return response;
+
+        }catch (IllegalArgumentException | SecurityException e){
+            ResponseEditarEstadoMarca response = new ResponseEditarEstadoMarca();
+            response.setExito(false);
+            response.setMessage(e.getMessage());
+            return response;
+        }
+        catch (Exception e){
+            String mensajeError = "Error inesperado al actualizar el estado de la marca: " + e.getMessage();
+            System.err.println("[ERROR] " + mensajeError);
+            ResponseEditarEstadoMarca response = new ResponseEditarEstadoMarca();
+            response.setExito(false);
+            response.setMessage(mensajeError);
+            return response;
+        }
+    }
+
+    public ResponseEditarEstadoMarca ActivarMarca(Long idMarca) {
+        try {
+            RequestEditarEstadoMarca request = new RequestEditarEstadoMarca();
+            request.setIdMarca(idMarca);
+            ResponseEditarEstadoMarca response = marcaService.EditarEstadoMarca(request,1);
+            if(response.isExito()){}
+
+            return response;
+
+        }catch (IllegalArgumentException | SecurityException e){
+            ResponseEditarEstadoMarca response = new ResponseEditarEstadoMarca();
+            response.setExito(false);
+            response.setMessage(e.getMessage());
+            return response;
+        }
+        catch (Exception e){
+            String mensajeError = "Error inesperado al actualizar el estado de la marca: " + e.getMessage();
+            System.err.println("[ERROR] " + mensajeError);
+            ResponseEditarEstadoMarca response = new ResponseEditarEstadoMarca();
+            response.setExito(false);
+            response.setMessage(mensajeError);
+            return response;
+        }
+    }
 }

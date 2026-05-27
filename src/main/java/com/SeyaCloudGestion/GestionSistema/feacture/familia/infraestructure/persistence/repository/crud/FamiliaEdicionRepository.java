@@ -2,7 +2,6 @@ package com.SeyaCloudGestion.GestionSistema.feacture.familia.infraestructure.per
 
 import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.request.RequestEditarAllFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.request.RequestEditarEstadoFamilia;
-import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.request.RequestRegistroFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.response.ResponseEditarAllFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.response.ResponseEditarEstadoFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.familia.domain.interfaces.IFamiliaEdicion;
