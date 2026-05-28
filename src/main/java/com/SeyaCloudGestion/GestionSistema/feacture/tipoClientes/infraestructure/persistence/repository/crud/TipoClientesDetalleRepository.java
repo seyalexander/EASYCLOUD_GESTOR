@@ -28,12 +28,12 @@ public class TipoClientesDetalleRepository implements ITipoClientesDetalle {
     @Override
     public ResponseDetalleTipoClientes DetalleTipoClientes(RequestDetalleTipoClientes request) {
         ResponseDetalleTipoClientes response = new ResponseDetalleTipoClientes();
-        String SQL = "{ call CONFIGURACION.sp_ObtenerTipoClientesPorId(?) }";
+        String SQL = "{ call CLIENTES.sp_ObtenerTipoClientePorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdTipoClientes());
+            pstmt.setLong(1, request.getIdTipoClientes());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -41,6 +41,7 @@ public class TipoClientesDetalleRepository implements ITipoClientesDetalle {
                     item.setIdTipoCliente(rs.getLong("idTipoCliente"));
                     item.setDescripcion(rs.getString("descripcion"));
                     item.setEstado(rs.getInt("estado"));
+
                     response.setExito(true);
                     response.setMessage("TipoClientes obtenido correctamente.");
                     response.setTipoClientes(item);
@@ -57,7 +58,4 @@ public class TipoClientesDetalleRepository implements ITipoClientesDetalle {
         return response;
     }
 
-    private void setParameter(CallableStatement pstmt, int index, Object value) throws SQLException {
-        pstmt.setObject(index, value);
-    }
 }

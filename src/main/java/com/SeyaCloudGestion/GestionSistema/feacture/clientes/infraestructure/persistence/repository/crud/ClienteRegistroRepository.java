@@ -26,7 +26,7 @@ public class ClienteRegistroRepository implements IClienteRegistro {
     @Override
     public ResponseRegistroCliente RegistroCliente(RequestRegistroCliente request) {
         ResponseRegistroCliente rpt = new ResponseRegistroCliente();
-        String SQL = "{ call VENTAS.sp_RegistroCliente(?,?,?,?,?,?,?,?,?) }";
+        String SQL = "{ call CLIENTES.sp_RegistroCliente(?,?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -54,7 +54,7 @@ public class ClienteRegistroRepository implements IClienteRegistro {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en VENTAS.sp_RegistroCliente", e);
+            log.error("Error en CLIENTES.sp_RegistroCliente", e);
         }
         return rpt;
     }

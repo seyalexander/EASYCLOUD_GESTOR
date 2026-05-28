@@ -28,15 +28,15 @@ public class ClienteListadoRepository implements IClienteListado {
     private DataSource con;
 
     @Override
-    public ResponseListaCliente listaCliente(RequestListaCliente request) {
+    public ResponseListaCliente ListaCliente(RequestListaCliente request) {
         ResponseListaCliente rpt = new ResponseListaCliente();
         List<ClienteModel> registros = new ArrayList<>();
-        String SQL = "{ call VENTAS.sp_ListarCliente() }";
+        String SQL = "{ call CLIENTES.sp_ListarCliente(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetros de filtro definidos en el request.
+            pstmt .setInt(1, request.getEstado());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -51,6 +51,27 @@ public class ClienteListadoRepository implements IClienteListado {
                 item.setTelefono(rs.getString("telefono"));
                 item.setEmail(rs.getString("email"));
                 item.setEstado(rs.getInt("estado"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     registros.add(item);
                 }
             }
@@ -61,7 +82,7 @@ public class ClienteListadoRepository implements IClienteListado {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en VENTAS.sp_ListarCliente", e);
+            log.error("Error en CLIENTES.sp_ListarTipoCliente", e);
         }
         return rpt;
     }

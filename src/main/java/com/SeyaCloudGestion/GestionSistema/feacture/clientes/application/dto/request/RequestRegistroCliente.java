@@ -1,19 +1,19 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.dto.request;
 
+import com.SeyaCloudGestion.GestionSistema.common.anotations.NumeroTelefonicoValidator.ValidarTelefono;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
 public class RequestRegistroCliente {
-    @NotBlank(message = "Los nombres son obligatorios")
-    @Size(max = 250, message = "Los nombres no deben superar los 250 caracteres")
+
+    @Size(max = 150, message = "Los nombres no deben superar los 150 caracteres")
     private String nombres;
 
-    @NotBlank(message = "Los apellidos son obligatorios")
-    @Size(max = 250, message = "Los apellidos no deben superar los 250 caracteres")
+    @Size(max = 150, message = "Los apellidos no deben superar los 150 caracteres")
     private String apellidos;
 
-    @Size(max = 250, message = "La razón social no debe superar los 250 caracteres")
+    @Size(max = 200, message = "La razón social no debe superar los 200 caracteres")
     private String razonSocial;
 
     @NotBlank(message = "El número de documento es obligatorio")
@@ -27,7 +27,7 @@ public class RequestRegistroCliente {
     private long idTipoCliente;
 
     @NotBlank(message = "El teléfono es obligatorio")
-    @Size(max = 20, message = "El teléfono no debe superar los 20 caracteres")
+    @ValidarTelefono
     private String telefono;
 
     @NotBlank(message = "El email es obligatorio")

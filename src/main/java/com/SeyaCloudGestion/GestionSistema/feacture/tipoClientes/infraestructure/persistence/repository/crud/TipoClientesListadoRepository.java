@@ -28,15 +28,15 @@ public class TipoClientesListadoRepository implements ITipoClientesListado {
     private DataSource con;
 
     @Override
-    public ResponseListaTipoClientes listaTipoClientes(RequestListaTipoClientes request) {
+    public ResponseListaTipoClientes ListaTipoClientes(RequestListaTipoClientes request) {
         ResponseListaTipoClientes rpt = new ResponseListaTipoClientes();
         List<TipoClientesModel> registros = new ArrayList<>();
-        String SQL = "{ call CONFIGURACION.sp_ListarTipoClientes(?) }";
+        String SQL = "{ call CLIENTES.sp_ListarTipoCliente(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getEstado());
+            pstmt.setInt(1, request.getEstado());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -59,7 +59,5 @@ public class TipoClientesListadoRepository implements ITipoClientesListado {
         return rpt;
     }
 
-    private void setParameter(CallableStatement pstmt, int index, Object value) throws SQLException {
-        pstmt.setObject(index, value);
-    }
+
 }

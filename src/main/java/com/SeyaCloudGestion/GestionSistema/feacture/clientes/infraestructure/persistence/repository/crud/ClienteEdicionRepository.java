@@ -28,13 +28,24 @@ public class ClienteEdicionRepository implements IClienteEdicion {
     @Override
     public ResponseEditarAllCliente EditarAllCliente(RequestEditarAllCliente request) {
         ResponseEditarAllCliente rpt = new ResponseEditarAllCliente();
-        String SQL = "{ call VENTAS.sp_EditarCliente(?) }";
+        String SQL = "{ call CLIENTES.sp_EditarCliente(?,?,?,?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
+            setParameter(pstmt, 1, request.getIdCliente());
+            setParameter(pstmt, 2, request.getNombres());
+            setParameter(pstmt, 3, request.getApellidos());
+            setParameter(pstmt, 4, request.getRazonSocial());
+            setParameter(pstmt, 5, request.getNumeroDocumento());
+            setParameter(pstmt, 6, request.getIdTipoDocumento());
+            setParameter(pstmt, 7, request.getIdTipoCliente());
+            setParameter(pstmt, 8, request.getTelefono());
+            setParameter(pstmt, 9, request.getEmail());
+            setParameter(pstmt, 10, request.getEstado());
+
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(11, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -59,10 +70,10 @@ public class ClienteEdicionRepository implements IClienteEdicion {
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
-            pstmt.setInt(1, estado);
+            pstmt.setLong(1, request.getIdCliente());
+            pstmt.setInt(2, estado);
             Long userId = 1L;
-            pstmt.setLong(2, userId);
+            pstmt.setLong(3, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -75,7 +86,7 @@ public class ClienteEdicionRepository implements IClienteEdicion {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en VENTAS.sp_EditarCliente_Estado", e);
+            log.error("Error en CLIENTES.sp_EditarCliente_Estado", e);
         }
         return rpt;
     }

@@ -28,13 +28,17 @@ public class TipoClientesEdicionRepository implements ITipoClientesEdicion {
     @Override
     public ResponseEditarAllTipoClientes EditarAllTipoClientes(RequestEditarAllTipoClientes request) {
         ResponseEditarAllTipoClientes rpt = new ResponseEditarAllTipoClientes();
-        String SQL = "{ call CONFIGURACION.sp_EditarTipoClientes(?) }";
+        String SQL = "{ call CLIENTES.sp_EditarTipoCliente(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            Long userId = 1L;
-            pstmt.setLong(1, userId);
+            //Long userId = 1L;
+            //pstmt.setLong(1, userId);
+
+            pstmt.setLong(1, request.getIdTipoCliente());
+            pstmt.setString(2, request.getDescripcion());
+            pstmt.setInt(3, request.getEstado());
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -55,16 +59,17 @@ public class TipoClientesEdicionRepository implements ITipoClientesEdicion {
     @Override
     public ResponseEditarEstadoTipoClientes EditarEstadoTipoClientes(RequestEditarEstadoTipoClientes request, int estado) {
         ResponseEditarEstadoTipoClientes rpt = new ResponseEditarEstadoTipoClientes();
-        String SQL = "{ call CONFIGURACION.sp_EditarTipoClientes_Estado(?,?,?) }";
+        String SQL = "{ call CLIENTES.sp_EditarTipoCliente_Estado(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdTipoClientes());
+            pstmt.setLong(1, request.getIdTipoClientes());
             pstmt.setInt(2, estado);
-            Long userId = 1L;
+            /*
+           Long userId = 1L;
             pstmt.setLong(3, userId);
-
+                */
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 rpt.setExito(true);
@@ -81,7 +86,4 @@ public class TipoClientesEdicionRepository implements ITipoClientesEdicion {
         return rpt;
     }
 
-    private void setParameter(CallableStatement pstmt, int index, Object value) throws SQLException {
-        pstmt.setObject(index, value);
-    }
 }

@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.tipoClientes.application.dto
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoClientes.application.dto.response.ResponseListaTipoClientes;
 
 public interface ITipoClientesListado {
-    ResponseListaTipoClientes listaTipoClientes(RequestListaTipoClientes request);
+    ResponseListaTipoClientes ListaTipoClientes(RequestListaTipoClientes request);
 }

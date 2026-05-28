@@ -8,5 +8,4 @@ import jakarta.validation.constraints.Min;
 public class RequestEditarEstadoTipoClientes {
     @Min(value = 1, message = "El id debe ser mayor a 0")
     private Long idTipoClientes;
-
 }

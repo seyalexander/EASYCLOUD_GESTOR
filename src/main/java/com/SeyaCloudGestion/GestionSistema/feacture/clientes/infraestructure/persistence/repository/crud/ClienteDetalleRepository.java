@@ -28,12 +28,12 @@ public class ClienteDetalleRepository implements IClienteDetalle {
     @Override
     public ResponseDetalleCliente DetalleCliente(RequestDetalleCliente request) {
         ResponseDetalleCliente response = new ResponseDetalleCliente();
-        String SQL = "{ call VENTAS.sp_ObtenerClientePorId() }";
+        String SQL = "{ call CLIENTES.sp_ObtenerClientePorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetro id definido en el request.
+            pstmt.setLong(1, request.getIdCliente());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -48,6 +48,27 @@ public class ClienteDetalleRepository implements IClienteDetalle {
                     item.setTelefono(rs.getString("telefono"));
                     item.setEmail(rs.getString("email"));
                     item.setEstado(rs.getInt("estado"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     response.setExito(true);
                     response.setMessage("Cliente obtenido correctamente.");
                     response.setCliente(item);
@@ -64,7 +85,4 @@ public class ClienteDetalleRepository implements IClienteDetalle {
         return response;
     }
 
-    private void setParameter(CallableStatement pstmt, int index, Object value) throws SQLException {
-        pstmt.setObject(index, value);
-    }
 }

@@ -26,15 +26,14 @@ public class TipoClientesRegistroRepository implements ITipoClientesRegistro {
     @Override
     public ResponseRegistroTipoClientes RegistroTipoClientes(RequestRegistroTipoClientes request) {
         ResponseRegistroTipoClientes rpt = new ResponseRegistroTipoClientes();
-        String SQL = "{ call CONFIGURACION.sp_RegistroTipoClientes(?,?) }";
+        String SQL = "{ call CLIENTES.sp_RegistroTipoCliente(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getDescripcion());
-            Long userId = 1L;
-            pstmt.setLong(2, userId);
-
+            //Long userId = 1L;
+            //pstmt.setLong(2, userId);
+            pstmt.setString(1, request.getDescripcion());
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
@@ -52,7 +51,5 @@ public class TipoClientesRegistroRepository implements ITipoClientesRegistro {
         return rpt;
     }
 
-    private void setParameter(CallableStatement pstmt, int index, Object value) throws SQLException {
-        pstmt.setObject(index, value);
-    }
+
 }
