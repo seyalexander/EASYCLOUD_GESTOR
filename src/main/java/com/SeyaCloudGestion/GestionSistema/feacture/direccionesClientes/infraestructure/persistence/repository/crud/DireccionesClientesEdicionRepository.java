@@ -28,13 +28,19 @@ public class DireccionesClientesEdicionRepository implements IDireccionesCliente
     @Override
     public ResponseEditarAllDireccionesClientes EditarAllDireccionesClientes(RequestEditarAllDireccionesClientes request) {
         ResponseEditarAllDireccionesClientes rpt = new ResponseEditarAllDireccionesClientes();
-        String SQL = "{ call VENTAS.sp_EditarDireccionesClientes(?) }";
+        String SQL = "{ call CLIENTES.sp_EditarDireccionCliente(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
+            pstmt.setLong(1, request.getIdDireccionCliente());
+            setParameter(pstmt, 2, request.getIdCliente());
+            setParameter(pstmt, 3, request.getDireccion());
+            setParameter(pstmt, 4, request.getDepartamento());
+            setParameter(pstmt, 5, request.getProvincia());
+            setParameter(pstmt, 6, request.getDistrito());
+            setParameter(pstmt, 7, request.getReferencia());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(8, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -55,7 +61,7 @@ public class DireccionesClientesEdicionRepository implements IDireccionesCliente
     @Override
     public ResponseEditarEstadoDireccionesClientes EditarEstadoDireccionesClientes(RequestEditarEstadoDireccionesClientes request, int estado) {
         ResponseEditarEstadoDireccionesClientes rpt = new ResponseEditarEstadoDireccionesClientes();
-        String SQL = "{ call VENTAS.sp_EditarDireccionesClientes_Estado(?,?,?) }";
+        String SQL = "{ call CLIENTES.sp_EditarDireccionCliente_Estado(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -76,7 +82,7 @@ public class DireccionesClientesEdicionRepository implements IDireccionesCliente
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en VENTAS.sp_EditarDireccionesClientes_Estado", e);
+            log.error("Error en CLIENTES.sp_EditarDireccionCliente_Estado", e);
         }
         return rpt;
     }

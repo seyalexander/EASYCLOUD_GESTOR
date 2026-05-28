@@ -26,7 +26,7 @@ public class ParametrosRegistroRepository implements IParametrosRegistro {
     @Override
     public ResponseRegistroParametros RegistroParametros(RequestRegistroParametros request) {
         ResponseRegistroParametros rpt = new ResponseRegistroParametros();
-        String SQL = "{ call CONFIGURACION.sp_RegistroParametros(?,?,?,?) }";
+        String SQL = "{ call CONFIGURACION.sp_RegistroParametroSistema(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -34,8 +34,8 @@ public class ParametrosRegistroRepository implements IParametrosRegistro {
             setParameter(pstmt, 1, request.getClave());
             setParameter(pstmt, 2, request.getValor());
             setParameter(pstmt, 3, request.getDescripcion());
-            Long userId = 1L;
-            pstmt.setLong(4, userId);
+            //Long userId = 1L;
+            //pstmt.setLong(4, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -49,7 +49,7 @@ public class ParametrosRegistroRepository implements IParametrosRegistro {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en CONFIGURACION.sp_RegistroParametros", e);
+            log.error("Error en CONFIGURACION.sp_RegistroParametroSistema", e);
         }
         return rpt;
     }

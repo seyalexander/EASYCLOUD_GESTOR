@@ -28,13 +28,18 @@ public class ContactoClienteEdicionRepository implements IContactoClienteEdicion
     @Override
     public ResponseEditarAllContactoCliente EditarAllContactoCliente(RequestEditarAllContactoCliente request) {
         ResponseEditarAllContactoCliente rpt = new ResponseEditarAllContactoCliente();
-        String SQL = "{ call VENTAS.sp_EditarContactoCliente(?) }";
+        String SQL = "{ call CLIENTES.sp_EditarContactoCliente(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
+            pstmt.setLong(1, request.getIdContactoCliente());
+            pstmt.setString(2, request.getNombreContacto());
+            pstmt.setString(3, request.getTelefono());
+            pstmt.setString(4, request.getEmail());
+            pstmt.setInt(5, request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(6, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -55,14 +60,14 @@ public class ContactoClienteEdicionRepository implements IContactoClienteEdicion
     @Override
     public ResponseEditarEstadoContactoCliente EditarEstadoContactoCliente(RequestEditarEstadoContactoCliente request, int estado) {
         ResponseEditarEstadoContactoCliente rpt = new ResponseEditarEstadoContactoCliente();
-        String SQL = "{ call VENTAS.sp_EditarContactoCliente_Estado(?,?) }";
+        String SQL = "{ call CLIENTES.sp_EditarContactoCliente_Estado(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
-            pstmt.setInt(1, estado);
+            pstmt.setLong(1, request.getIdContactoCliente());
+            pstmt.setInt(2, estado);
             Long userId = 1L;
-            pstmt.setLong(2, userId);
+            pstmt.setLong(3, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -75,7 +80,7 @@ public class ContactoClienteEdicionRepository implements IContactoClienteEdicion
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en VENTAS.sp_EditarContactoCliente_Estado", e);
+            log.error("Error en CLIENTES.sp_EditarContactoCliente_Estado", e);
         }
         return rpt;
     }

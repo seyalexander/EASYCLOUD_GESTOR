@@ -28,7 +28,7 @@ public class DireccionesClientesDetalleRepository implements IDireccionesCliente
     @Override
     public ResponseDetalleDireccionesClientes DetalleDireccionesClientes(RequestDetalleDireccionesClientes request) {
         ResponseDetalleDireccionesClientes response = new ResponseDetalleDireccionesClientes();
-        String SQL = "{ call VENTAS.sp_ObtenerDireccionesClientesPorId(?) }";
+        String SQL = "{ call CLIENTES.sp_ObtenerDireccionClientePorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -46,6 +46,27 @@ public class DireccionesClientesDetalleRepository implements IDireccionesCliente
                     item.setDistrito(rs.getString("distrito"));
                     item.setReferencia(rs.getString("referencia"));
                     item.setEstado(rs.getInt("estado"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     response.setExito(true);
                     response.setMessage("DireccionesClientes obtenido correctamente.");
                     response.setDireccionesClientes(item);
@@ -57,7 +78,7 @@ public class DireccionesClientesDetalleRepository implements IDireccionesCliente
         } catch (SQLException e) {
             response.setExito(false);
             response.setMessage(e.getMessage());
-            log.error("Error en VENTAS.sp_ObtenerDireccionesClientesPorId", e);
+            log.error("Error en CLIENTES.sp_ObtenerDireccionClientePorId", e);
         }
         return response;
     }

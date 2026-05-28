@@ -19,4 +19,7 @@ public class RequestListaDireccionesClientes {
     @Max(value = 2, message = "El estado máximo permitido es 2")
     private int estado;
 
+    @Min(value = 1, message = "El id debe ser mayor a 0")
+    private long idCliente;
+
 }

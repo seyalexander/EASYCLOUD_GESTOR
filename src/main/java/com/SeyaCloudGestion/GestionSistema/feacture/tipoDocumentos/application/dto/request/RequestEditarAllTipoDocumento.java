@@ -12,7 +12,7 @@ public class RequestEditarAllTipoDocumento {
     private long idTipoDocumento;
 
     @NotBlank(message = "La descripción es obligatoria")
-    @Size(max = 255, message = "La descripción no debe superar los 255 caracteres")
+    @Size(max = 50, message = "La descripción no debe superar los 50 caracteres")
     private String descripcion;
 
     @Min(value = 1, message = "La longitud minima no puede ser negativa")
@@ -31,4 +31,5 @@ public class RequestEditarAllTipoDocumento {
 
     @Min(value = 1, message = "El tipo de caracter debe ser mayor a 0")
     private int tipoCaracter;
+
 }

@@ -1,5 +1,10 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.contactosClientes.application.dto.request;
 
-public class RequestEditarEstadoContactoCliente {
+import jakarta.validation.constraints.Min;
+import lombok.Data;
 
+@Data
+public class RequestEditarEstadoContactoCliente {
+    @Min(value = 1, message = "El id debe ser mayor a 0")
+    private long idContactoCliente;
 }

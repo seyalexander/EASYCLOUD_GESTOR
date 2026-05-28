@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.dto.r
 import com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.dto.response.ResponseListaParametros;
 
 public interface IParametrosListado {
-    ResponseListaParametros listaParametros(RequestListaParametros request);
+    ResponseListaParametros ListaParametros(RequestListaParametros request);
 }

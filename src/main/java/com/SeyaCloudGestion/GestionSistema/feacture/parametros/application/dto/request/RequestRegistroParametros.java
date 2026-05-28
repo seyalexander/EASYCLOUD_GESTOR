@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class RequestRegistroParametros {
     @NotBlank(message = "La clave es obligatoria")
-    @Size(max = 250, message = "La clave no debe superar los 250 caracteres")
+    @Size(max = 100, message = "La clave no debe superar los 100 caracteres")
     private String clave;
 
     @NotBlank(message = "El valor es obligatorio")
@@ -14,6 +14,6 @@ public class RequestRegistroParametros {
     private String valor;
 
     @NotBlank(message = "La descripción es obligatoria")
-    @Size(max = 250, message = "La descripción no debe superar los 250 caracteres")
+    @Size(max = 200, message = "La descripción no debe superar los 200 caracteres")
     private String descripcion;
 }

@@ -1,20 +1,21 @@
 ﻿package com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.dto.request.RequestRegistroParametros;
-import com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.dto.response.ResponseRegistroParametros;
+import com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.dto.request.RequestEditarAllParametros;
+import com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.dto.response.ResponseEditarAllParametros;
 import com.SeyaCloudGestion.GestionSistema.feacture.parametros.domain.services.ParametrosService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RegistroParametrosUseCase {
+public class EdicionAllParametrosUseCase {
     private final ParametrosService parametrosService;
 
-    public RegistroParametrosUseCase(ParametrosService parametrosService) {
+    public EdicionAllParametrosUseCase(ParametrosService parametrosService) {
         this.parametrosService = parametrosService;
     }
-    public ResponseRegistroParametros RegistroParametro(RequestRegistroParametros request) {
+
+    public ResponseEditarAllParametros EditarAllParametros(RequestEditarAllParametros request) {
         try {
-            ResponseRegistroParametros response = parametrosService.RegistroParametros(request);
+            ResponseEditarAllParametros response = parametrosService.EditarAllParametros(request);
 
             if (response.isExito()) {
             }
@@ -23,7 +24,7 @@ public class RegistroParametrosUseCase {
 
         } catch (IllegalArgumentException | SecurityException e) {
 
-            ResponseRegistroParametros response = new ResponseRegistroParametros();
+            ResponseEditarAllParametros response = new ResponseEditarAllParametros();
             response.setExito(false);
             response.setMessage(e.getMessage());
 
@@ -31,10 +32,10 @@ public class RegistroParametrosUseCase {
 
         } catch (Exception e) {
 
-            String mensajeError = "Error inesperado al registrar el parámetro: " + e.getMessage();
+            String mensajeError = "Error inesperado al editar los parámetros: " + e.getMessage();
             System.err.println("[ERROR] " + mensajeError);
 
-            ResponseRegistroParametros response = new ResponseRegistroParametros();
+            ResponseEditarAllParametros response = new ResponseEditarAllParametros();
             response.setExito(false);
             response.setMessage(mensajeError);
 

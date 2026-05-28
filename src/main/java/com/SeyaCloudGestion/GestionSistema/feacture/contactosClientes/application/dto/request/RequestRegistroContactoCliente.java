@@ -9,13 +9,13 @@ public class RequestRegistroContactoCliente {
     private long idCliente;
 
     @NotBlank(message = "El nombre del contacto es obligatorio")
-    @Size(max = 250, message = "El nombre del contacto no debe superar los 250 caracteres")
+    @Size(max = 150, message = "El nombre del contacto no debe superar los 150 caracteres")
     private String nombreContacto;
 
     @Size(max = 20, message = "El teléfono no debe superar los 20 caracteres")
     private String telefono;
 
     @Email(message = "El email no tiene un formato válido")
-    @Size(max = 250, message = "El email no debe superar los 250 caracteres")
+    @Size(max = 150, message = "El email no debe superar los 150 caracteres")
     private String email;
 }

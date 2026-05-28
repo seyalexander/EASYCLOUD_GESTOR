@@ -28,14 +28,13 @@ public class ParametrosDetalleRepository implements IParametrosDetalle {
     @Override
     public ResponseDetalleParametros DetalleParametros(RequestDetalleParametros request) {
         ResponseDetalleParametros response = new ResponseDetalleParametros();
-        String SQL = "{ call CONFIGURACION.sp_ObtenerParametrosPorId(?) }";
+        String SQL = "{ call CONFIGURACION.sp_ObtenerParametroSistemaPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdParametros());
-
-            try (ResultSet rs = pstmt.executeQuery()) {
+            pstmt.setLong(1, request.getIdParametros());
+            ResultSet rs = pstmt.executeQuery();
                 if (rs.next()) {
                     ParametrosModel item = new ParametrosModel();
                     item.setIdParametroSistema(rs.getLong("idParametroSistema"));
@@ -43,6 +42,7 @@ public class ParametrosDetalleRepository implements IParametrosDetalle {
                     item.setValor(rs.getString("valor"));
                     item.setDescripcion(rs.getString("descripcion"));
                     item.setEstado(rs.getInt("estado"));
+
                     response.setExito(true);
                     response.setMessage("Parametros obtenido correctamente.");
                     response.setParametros(item);
@@ -50,7 +50,6 @@ public class ParametrosDetalleRepository implements IParametrosDetalle {
                     response.setExito(false);
                     response.setMessage("No se encontró Parametros.");
                 }
-            }
         } catch (SQLException e) {
             response.setExito(false);
             response.setMessage(e.getMessage());

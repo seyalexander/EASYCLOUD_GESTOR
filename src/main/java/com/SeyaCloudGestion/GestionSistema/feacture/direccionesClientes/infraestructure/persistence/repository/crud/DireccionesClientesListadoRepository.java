@@ -28,17 +28,19 @@ public class DireccionesClientesListadoRepository implements IDireccionesCliente
     private DataSource con;
 
     @Override
-    public ResponseListaDireccionesClientes listaDireccionesClientes(RequestListaDireccionesClientes request) {
+    public ResponseListaDireccionesClientes ListaDireccionesClientes(RequestListaDireccionesClientes request) {
         ResponseListaDireccionesClientes rpt = new ResponseListaDireccionesClientes();
         List<DireccionesClientesModel> registros = new ArrayList<>();
-        String SQL = "{ call VENTAS.sp_ListarDireccionesClientes(?) }";
+        String SQL = "{ call CLIENTES.sp_ListarDireccionCliente(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getEstado());
+            setParameter(pstmt, 1, request.getIdCliente());
+            setParameter(pstmt, 2, request.getEstado());
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            ResultSet rs = pstmt.executeQuery();
+
                 while (rs.next()) {
                     DireccionesClientesModel item = new DireccionesClientesModel();
                 item.setIdDireccionCliente(rs.getLong("idDireccionCliente"));
@@ -49,10 +51,29 @@ public class DireccionesClientesListadoRepository implements IDireccionesCliente
                 item.setDistrito(rs.getString("distrito"));
                 item.setReferencia(rs.getString("referencia"));
                 item.setEstado(rs.getInt("estado"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     registros.add(item);
                 }
-            }
-
             rpt.setExito(true);
             rpt.setDireccionesClientes(registros);
             rpt.setMessage("Consulta realizada correctamente.");

@@ -28,12 +28,12 @@ public class ContactoClienteDetalleRepository implements IContactoClienteDetalle
     @Override
     public ResponseDetalleContactoCliente DetalleContactoCliente(RequestDetalleContactoCliente request) {
         ResponseDetalleContactoCliente response = new ResponseDetalleContactoCliente();
-        String SQL = "{ call VENTAS.sp_ObtenerContactoClientePorId() }";
+        String SQL = "{ call CLIENTES.sp_ObtenerContactoClientePorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetro id definido en el request.
+            pstmt.setLong(1, request.getIdContactoCliente());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -44,6 +44,28 @@ public class ContactoClienteDetalleRepository implements IContactoClienteDetalle
                     item.setTelefono(rs.getString("telefono"));
                     item.setEmail(rs.getString("email"));
                     item.setEstado(rs.getInt("estado"));
+
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     response.setExito(true);
                     response.setMessage("ContactoCliente obtenido correctamente.");
                     response.setContactoCliente(item);

@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.contactosClientes.applicatio
 import com.SeyaCloudGestion.GestionSistema.feacture.contactosClientes.application.dto.response.ResponseListaContactoCliente;
 
 public interface IContactoClienteListado {
-    ResponseListaContactoCliente listaContactoCliente(RequestListaContactoCliente request);
+    ResponseListaContactoCliente ListaContactoCliente(RequestListaContactoCliente request);
 }

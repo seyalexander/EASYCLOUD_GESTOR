@@ -28,17 +28,18 @@ public class ContactoClienteListadoRepository implements IContactoClienteListado
     private DataSource con;
 
     @Override
-    public ResponseListaContactoCliente listaContactoCliente(RequestListaContactoCliente request) {
+    public ResponseListaContactoCliente ListaContactoCliente(RequestListaContactoCliente request) {
         ResponseListaContactoCliente rpt = new ResponseListaContactoCliente();
         List<ContactoClienteModel> registros = new ArrayList<>();
-        String SQL = "{ call VENTAS.sp_ListarContactoCliente() }";
+        String SQL = "{ call CLIENTES.sp_ListarContactoCliente(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetros de filtro definidos en el request.
+            pstmt.setLong(1, request.getIdCliente());
+            pstmt.setInt(2, request.getEstado());
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     ContactoClienteModel item = new ContactoClienteModel();
                 item.setIdContactoCliente(rs.getLong("idContactoCliente"));
@@ -47,8 +48,28 @@ public class ContactoClienteListadoRepository implements IContactoClienteListado
                 item.setTelefono(rs.getString("telefono"));
                 item.setEmail(rs.getString("email"));
                 item.setEstado(rs.getInt("estado"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     registros.add(item);
-                }
             }
 
             rpt.setExito(true);

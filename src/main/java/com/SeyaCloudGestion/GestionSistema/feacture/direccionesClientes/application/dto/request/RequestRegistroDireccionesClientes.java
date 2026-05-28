@@ -5,22 +5,27 @@ import lombok.Data;
 
 @Data
 public class RequestRegistroDireccionesClientes {
-    @Min(value = 1, message = "El id de cliente debe ser mayor a 0")
+    @Min(value = 1, message = "El id del cliente es obligatorio")
     private long idCliente;
 
     @NotBlank(message = "La dirección es obligatoria")
-    @Size(max = 250, message = "La dirección no debe superar los 250 caracteres")
+    @Size(max = 255, message = "La dirección no debe superar los 255 caracteres")
     private String direccion;
 
-    @Size(max = 250, message = "El departamento no debe superar los 250 caracteres")
+    @NotBlank(message = "El departamento es obligatorio")
+    @Size(max = 100, message = "El departamento no debe superar los 100 caracteres")
     private String departamento;
 
-    @Size(max = 250, message = "La provincia no debe superar los 250 caracteres")
+    @NotBlank(message = "La provincia es obligatoria")
+    @Size(max = 100, message = "La provincia no debe superar los 100 caracteres")
     private String provincia;
 
-    @Size(max = 250, message = "El distrito no debe superar los 250 caracteres")
+    @NotBlank(message = "El distrito es obligatorio")
+    @Size(max = 100, message = "El distrito no debe superar los 100 caracteres")
     private String distrito;
 
-    @Size(max = 250, message = "La referencia no debe superar los 250 caracteres")
+    @NotBlank(message = "La referencia es obligatoria")
+    @Size(max = 255, message = "La referencia no debe superar los 255 caracteres")
     private String referencia;
+
 }

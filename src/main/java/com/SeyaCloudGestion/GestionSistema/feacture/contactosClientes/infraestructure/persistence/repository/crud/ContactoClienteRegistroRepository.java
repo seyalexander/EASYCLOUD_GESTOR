@@ -26,7 +26,7 @@ public class ContactoClienteRegistroRepository implements IContactoClienteRegist
     @Override
     public ResponseRegistroContactoCliente RegistroContactoCliente(RequestRegistroContactoCliente request) {
         ResponseRegistroContactoCliente rpt = new ResponseRegistroContactoCliente();
-        String SQL = "{ call VENTAS.sp_RegistroContactoCliente(?,?,?,?,?) }";
+        String SQL = "{ call CLIENTES.sp_RegistroContactoCliente(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {

@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.applicat
 import com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.application.dto.response.ResponseListaDireccionesClientes;
 
 public interface IDireccionesClientesListado {
-    ResponseListaDireccionesClientes listaDireccionesClientes(RequestListaDireccionesClientes request);
+    ResponseListaDireccionesClientes ListaDireccionesClientes(RequestListaDireccionesClientes request);
 }

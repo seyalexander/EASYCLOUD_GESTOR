@@ -26,9 +26,10 @@ public class DireccionesClientesRegistroRepository implements IDireccionesClient
     @Override
     public ResponseRegistroDireccionesClientes RegistroDireccionesClientes(RequestRegistroDireccionesClientes request) {
         ResponseRegistroDireccionesClientes rpt = new ResponseRegistroDireccionesClientes();
-        String SQL = "{ call VENTAS.sp_RegistroDireccionesClientes(?,?,?,?,?,?,?) }";
+        String SQL = "{ call CLIENTES.sp_RegistroDireccionCliente(?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
+
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdCliente());
@@ -37,6 +38,7 @@ public class DireccionesClientesRegistroRepository implements IDireccionesClient
             setParameter(pstmt, 4, request.getProvincia());
             setParameter(pstmt, 5, request.getDistrito());
             setParameter(pstmt, 6, request.getReferencia());
+
             Long userId = 1L;
             pstmt.setLong(7, userId);
 

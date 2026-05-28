@@ -23,7 +23,7 @@ public class EdicionEstadoTipoDocumentoUseCase {
         try {
 
             RequestEditarEstadoTipoDocumento request  = new RequestEditarEstadoTipoDocumento();
-            request.setIdTipoDocumentos(idTipoDocumentos);
+            request.setIdTipoDocumento(idTipoDocumentos);
 
             // VALIDACIÓN DE CAMPOS
             if (request == null) {
@@ -31,7 +31,7 @@ public class EdicionEstadoTipoDocumentoUseCase {
                 throw new IllegalArgumentException(mensajeError);
             }
 
-            if (request.getIdTipoDocumentos() == 0) {
+            if (request.getIdTipoDocumento() == 0) {
                 String mensajeError = "No se está enviando correctamente el código del tipo de documento";
                 throw new IllegalArgumentException(mensajeError);
             }
@@ -66,7 +66,7 @@ public class EdicionEstadoTipoDocumentoUseCase {
         try {
 
             RequestEditarEstadoTipoDocumento request  = new RequestEditarEstadoTipoDocumento();
-            request.setIdTipoDocumentos(idTipoDocumentos);
+            request.setIdTipoDocumento(idTipoDocumentos);
 
             // VALIDACIÓN DE CAMPOS
             if (request == null) {
@@ -74,7 +74,7 @@ public class EdicionEstadoTipoDocumentoUseCase {
                 throw new IllegalArgumentException(mensajeError);
             }
 
-            if (request.getIdTipoDocumentos() == 0) {
+            if (request.getIdTipoDocumento() == 0) {
                 String mensajeError = "No se está enviando correctamente el código del tipo de documento";
                 throw new IllegalArgumentException(mensajeError);
             }

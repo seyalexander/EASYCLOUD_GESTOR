@@ -28,13 +28,17 @@ public class ParametrosEdicionRepository implements IParametrosEdicion {
     @Override
     public ResponseEditarAllParametros EditarAllParametros(RequestEditarAllParametros request) {
         ResponseEditarAllParametros rpt = new ResponseEditarAllParametros();
-        String SQL = "{ call CONFIGURACION.sp_EditarParametros(?) }";
+        String SQL = "{ call CONFIGURACION.sp_EditarParametroSistema(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
-            Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(1, request.getIdParametros());
+            pstmt.setString(2, request.getClave());
+            pstmt.setString(3, request.getValor());
+            pstmt.setString(4, request.getDescripcion());
+            pstmt.setInt(5, request.getEstado());
+            //Long userId = 1L;
+            //pstmt.setLong(1, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -55,15 +59,15 @@ public class ParametrosEdicionRepository implements IParametrosEdicion {
     @Override
     public ResponseEditarEstadoParametros EditarEstadoParametros(RequestEditarEstadoParametros request, int estado) {
         ResponseEditarEstadoParametros rpt = new ResponseEditarEstadoParametros();
-        String SQL = "{ call CONFIGURACION.sp_EditarParametros_Estado(?,?,?) }";
+        String SQL = "{ call CONFIGURACION.sp_EditarParametroSistema_Estado(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdParametros());
             pstmt.setInt(2, estado);
-            Long userId = 1L;
-            pstmt.setLong(3, userId);
+            //Long userId = 1L;
+            //pstmt.setLong(3, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

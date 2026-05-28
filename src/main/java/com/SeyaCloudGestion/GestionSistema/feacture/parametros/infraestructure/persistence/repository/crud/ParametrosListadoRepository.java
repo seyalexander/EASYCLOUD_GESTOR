@@ -28,17 +28,16 @@ public class ParametrosListadoRepository implements IParametrosListado {
     private DataSource con;
 
     @Override
-    public ResponseListaParametros listaParametros(RequestListaParametros request) {
+    public ResponseListaParametros ListaParametros(RequestListaParametros request) {
         ResponseListaParametros rpt = new ResponseListaParametros();
         List<ParametrosModel> registros = new ArrayList<>();
-        String SQL = "{ call CONFIGURACION.sp_ListarParametros(?) }";
+        String SQL = "{ call CONFIGURACION.sp_ListarParametroSistema(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getEstado());
-
-            try (ResultSet rs = pstmt.executeQuery()) {
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     ParametrosModel item = new ParametrosModel();
                 item.setIdParametroSistema(rs.getLong("idParametroSistema"));
@@ -48,7 +47,6 @@ public class ParametrosListadoRepository implements IParametrosListado {
                 item.setEstado(rs.getInt("estado"));
                     registros.add(item);
                 }
-            }
 
             rpt.setExito(true);
             rpt.setParametros(registros);
