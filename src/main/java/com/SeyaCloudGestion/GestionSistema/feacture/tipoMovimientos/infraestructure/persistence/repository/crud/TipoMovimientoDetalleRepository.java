@@ -28,12 +28,12 @@ public class TipoMovimientoDetalleRepository implements ITipoMovimientoDetalle {
     @Override
     public ResponseDetalleTipoMovimiento DetalleTipoMovimiento(RequestDetalleTipoMovimiento request) {
         ResponseDetalleTipoMovimiento response = new ResponseDetalleTipoMovimiento();
-        String SQL = "{ call ALMACEN.sp_ObtenerTipoMovimientoPorId() }";
+        String SQL = "{ call INVENTARIO.sp_ObtenerTipoMovimientoPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetro id definido en el request.
+            pstmt.setLong(1, request.getIdTipoMovimiento());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -43,7 +43,27 @@ public class TipoMovimientoDetalleRepository implements ITipoMovimientoDetalle {
                     item.setEsEntrada(rs.getInt("esEntrada"));
                     item.setEstado(rs.getInt("estado"));
                     item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
-                    response.setExito(true);
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     response.setMessage("TipoMovimiento obtenido correctamente.");
                     response.setTipoMovimiento(item);
                 } else {

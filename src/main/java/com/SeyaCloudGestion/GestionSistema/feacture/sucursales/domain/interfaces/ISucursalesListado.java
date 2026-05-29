@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.sucursales.application.dto.r
 import com.SeyaCloudGestion.GestionSistema.feacture.sucursales.application.dto.response.ResponseListaSucursales;
 
 public interface ISucursalesListado {
-    ResponseListaSucursales listaSucursales(RequestListaSucursales request);
+    ResponseListaSucursales ListaSucursales(RequestListaSucursales request);
 }

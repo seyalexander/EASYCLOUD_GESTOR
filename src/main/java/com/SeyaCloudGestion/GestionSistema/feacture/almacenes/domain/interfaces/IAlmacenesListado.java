@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.re
 import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseListaAlmacenes;
 
 public interface IAlmacenesListado {
-    ResponseListaAlmacenes listaAlmacenes(RequestListaAlmacenes request);
+    ResponseListaAlmacenes ListaAlmacenes(RequestListaAlmacenes request);
 }

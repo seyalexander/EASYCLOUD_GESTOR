@@ -64,6 +64,7 @@ public class ArticuloDetalleRepository implements IArticulosDetalle {
                     item.setUsuarioCreacion(rs.getString("usuarioCreacion"));
                     item.setUsuarioEdicion(rs.getString("usuarioEdicion"));
                     item.setUsuarioAnulacion(rs.getString("usuarioAnulacion"));
+
                     response.setExito(true);
                     response.setMessage("Articulos obtenido correctamente.");
                     response.setArticulos(item);

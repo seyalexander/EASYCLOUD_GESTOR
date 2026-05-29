@@ -28,25 +28,44 @@ public class SucursalesListadoRepository implements ISucursalesListado {
     private DataSource con;
 
     @Override
-    public ResponseListaSucursales listaSucursales(RequestListaSucursales request) {
+    public ResponseListaSucursales ListaSucursales(RequestListaSucursales request) {
         ResponseListaSucursales rpt = new ResponseListaSucursales();
         List<SucursalesModel> registros = new ArrayList<>();
-        String SQL = "{ call CONFIGURACION.sp_ListarSucursales(?) }";
+        String SQL = "{ call INVENTARIO.sp_ListarSucursales(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getEstado());
-
-            try (ResultSet rs = pstmt.executeQuery()) {
+            pstmt.setLong(1, request.getEstado());
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     SucursalesModel item = new SucursalesModel();
                 item.setIdSucursales(rs.getLong("idSucursales"));
                 item.setDescripcion(rs.getString("descripcion"));
                 item.setEstado(rs.getInt("estado"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     registros.add(item);
                 }
-            }
 
             rpt.setExito(true);
             rpt.setSucursales(registros);
@@ -54,7 +73,7 @@ public class SucursalesListadoRepository implements ISucursalesListado {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en CONFIGURACION.sp_ListarSucursales", e);
+            log.error("Error en INVENTARIO.sp_ListarSucursales", e);
         }
         return rpt;
     }

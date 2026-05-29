@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.re
 import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseListaArticulo;
 
 public interface IArticulosListado {
-    ResponseListaArticulo listaArticulos(RequestListaArticulo request);
+    ResponseListaArticulo ListaArticulos(RequestListaArticulo request);
 }

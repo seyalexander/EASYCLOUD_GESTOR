@@ -26,7 +26,7 @@ public class AlmacenesRegistroRepository implements IAlmacenesRegistro {
     @Override
     public ResponseRegistroAlmacenes RegistroAlmacenes(RequestRegistroAlmacenes request) {
         ResponseRegistroAlmacenes rpt = new ResponseRegistroAlmacenes();
-        String SQL = "{ call ALMACEN.sp_RegistroAlmacenes(?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_RegistroAlmacenes(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {

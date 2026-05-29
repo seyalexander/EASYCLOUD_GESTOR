@@ -26,16 +26,15 @@ public class TipoMovimientoRegistroRepository implements ITipoMovimientoRegistro
     @Override
     public ResponseRegistroTipoMovimiento RegistroTipoMovimiento(RequestRegistroTipoMovimiento request) {
         ResponseRegistroTipoMovimiento rpt = new ResponseRegistroTipoMovimiento();
-        String SQL = "{ call ALMACEN.sp_RegistroTipoMovimiento(?,?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_RegistroTipoMovimiento(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getDescripcion());
             setParameter(pstmt, 2, request.getEsEntrada());
-            setParameter(pstmt, 3, request.getFechaIngreso());
             Long userId = 1L;
-            pstmt.setLong(4, userId);
+            pstmt.setLong(3, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 

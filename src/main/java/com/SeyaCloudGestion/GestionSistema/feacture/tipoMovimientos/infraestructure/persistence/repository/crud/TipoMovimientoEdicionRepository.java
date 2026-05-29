@@ -28,13 +28,16 @@ public class TipoMovimientoEdicionRepository implements ITipoMovimientoEdicion {
     @Override
     public ResponseEditarAllTipoMovimiento EditarAllTipoMovimiento(RequestEditarAllTipoMovimiento request) {
         ResponseEditarAllTipoMovimiento rpt = new ResponseEditarAllTipoMovimiento();
-        String SQL = "{ call ALMACEN.sp_EditarTipoMovimiento(?) }";
+        String SQL = "{ call INVENTARIO.sp_EditarTipoMovimiento(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
+            pstmt.setLong(1, request.getIdTipoMovimiento());
+            setParameter(pstmt, 2, request.getDescripcion());
+            setParameter(pstmt, 3, request.getEsEntrada());
+            setParameter(pstmt, 4, request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(5, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -55,14 +58,15 @@ public class TipoMovimientoEdicionRepository implements ITipoMovimientoEdicion {
     @Override
     public ResponseEditarEstadoTipoMovimiento EditarEstadoTipoMovimiento(RequestEditarEstadoTipoMovimiento request, int estado) {
         ResponseEditarEstadoTipoMovimiento rpt = new ResponseEditarEstadoTipoMovimiento();
-        String SQL = "{ call ALMACEN.sp_EditarTipoMovimiento_Estado(?,?) }";
+        String SQL = "{ call INVENTARIO.sp_EditarTipoMovimiento_Estado(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            pstmt.setInt(1, estado);
+            pstmt.setLong(1, request.getIdTipoMovimiento());
+            pstmt.setInt(2, estado);
             Long userId = 1L;
-            pstmt.setLong(2, userId);
+            pstmt.setLong(3, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

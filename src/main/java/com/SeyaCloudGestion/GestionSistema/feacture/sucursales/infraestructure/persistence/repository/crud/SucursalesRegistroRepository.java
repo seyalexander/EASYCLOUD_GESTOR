@@ -26,7 +26,7 @@ public class SucursalesRegistroRepository implements ISucursalesRegistro {
     @Override
     public ResponseRegistroSucursales RegistroSucursales(RequestRegistroSucursales request) {
         ResponseRegistroSucursales rpt = new ResponseRegistroSucursales();
-        String SQL = "{ call CONFIGURACION.sp_RegistroSucursales(?,?) }";
+        String SQL = "{ call INVENTARIO.sp_RegistroSucursales(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -47,7 +47,7 @@ public class SucursalesRegistroRepository implements ISucursalesRegistro {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en CONFIGURACION.sp_RegistroSucursales", e);
+            log.error("Error en INVENTARIO.sp_RegistroSucursales", e);
         }
         return rpt;
     }

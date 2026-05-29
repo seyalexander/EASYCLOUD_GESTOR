@@ -1,20 +1,20 @@
 ﻿package com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.request.RequestRegistroAlmacenes;
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseRegistroAlmacenes;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.request.RequestEditarAllAlmacenes;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseEditarAllAlmacenes;
 import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.domain.services.AlmacenesService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RegistroAlmacenesUseCase {
+public class EdicionAllAlmacenesUseCase {
     private final AlmacenesService almacenesService;
 
-    public RegistroAlmacenesUseCase(AlmacenesService almacenesService) {
+    public EdicionAllAlmacenesUseCase(AlmacenesService almacenesService) {
         this.almacenesService = almacenesService;
     }
-    public ResponseRegistroAlmacenes RegistroAlmacenes(RequestRegistroAlmacenes request) {
+    public ResponseEditarAllAlmacenes EdicionAllAlmacenes(RequestEditarAllAlmacenes request) {
         try {
-            ResponseRegistroAlmacenes response = almacenesService.RegistroAlmacenes(request);
+            ResponseEditarAllAlmacenes response = almacenesService.EditarAllAlmacenes(request);
 
             if (response.isExito()) {
             }
@@ -22,16 +22,16 @@ public class RegistroAlmacenesUseCase {
             return response;
 
         } catch (IllegalArgumentException | SecurityException e) {
-            ResponseRegistroAlmacenes response = new ResponseRegistroAlmacenes();
+            ResponseEditarAllAlmacenes response = new ResponseEditarAllAlmacenes();
             response.setExito(false);
             response.setMessage(e.getMessage());
             return response;
 
         } catch (Exception e) {
-            String mensajeError = "Error inesperado al registrar el almacén: " + e.getMessage();
+            String mensajeError = "Error inesperado al actualizar el almacén: " + e.getMessage();
             System.err.println("[ERROR] " + mensajeError);
 
-            ResponseRegistroAlmacenes response = new ResponseRegistroAlmacenes();
+            ResponseEditarAllAlmacenes response = new ResponseEditarAllAlmacenes();
             response.setExito(false);
             response.setMessage(mensajeError);
             return response;

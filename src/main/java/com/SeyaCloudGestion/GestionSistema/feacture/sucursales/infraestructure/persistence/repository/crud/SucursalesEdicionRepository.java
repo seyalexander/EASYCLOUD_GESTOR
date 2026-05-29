@@ -28,13 +28,16 @@ public class SucursalesEdicionRepository implements ISucursalesEdicion {
     @Override
     public ResponseEditarAllSucursales EditarAllSucursales(RequestEditarAllSucursales request) {
         ResponseEditarAllSucursales rpt = new ResponseEditarAllSucursales();
-        String SQL = "{ call CONFIGURACION.sp_EditarSucursales(?) }";
+        String SQL = "{ call INVENTARIO.sp_EditarSucursales(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
+            pstmt.setLong(1, request.getIdSucursales());
+            pstmt.setString(2, request.getDescripcion());
+            pstmt.setInt(3, request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(4, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -47,7 +50,7 @@ public class SucursalesEdicionRepository implements ISucursalesEdicion {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en CONFIGURACION.sp_EditarSucursales", e);
+            log.error("Error en INVENTARIO.sp_EditarSucursales", e);
         }
         return rpt;
     }
@@ -55,12 +58,12 @@ public class SucursalesEdicionRepository implements ISucursalesEdicion {
     @Override
     public ResponseEditarEstadoSucursales EditarEstadoSucursales(RequestEditarEstadoSucursales request, int estado) {
         ResponseEditarEstadoSucursales rpt = new ResponseEditarEstadoSucursales();
-        String SQL = "{ call CONFIGURACION.sp_EditarSucursales_Estado(?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_EditarSucursales_Estado(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdSucursales());
+            pstmt.setLong(1, request.getIdSucursales());
             pstmt.setInt(2, estado);
             Long userId = 1L;
             pstmt.setLong(3, userId);
@@ -76,7 +79,7 @@ public class SucursalesEdicionRepository implements ISucursalesEdicion {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en CONFIGURACION.sp_EditarSucursales_Estado", e);
+            log.error("Error en INVENTARIO.sp_EditarSucursales_Estado", e);
         }
         return rpt;
     }

@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.response.ResponseListaTipoMovimiento;
 
 public interface ITipoMovimientoListado {
-    ResponseListaTipoMovimiento listaTipoMovimiento(RequestListaTipoMovimiento request);
+    ResponseListaTipoMovimiento ListaTipoMovimiento(RequestListaTipoMovimiento request);
 }

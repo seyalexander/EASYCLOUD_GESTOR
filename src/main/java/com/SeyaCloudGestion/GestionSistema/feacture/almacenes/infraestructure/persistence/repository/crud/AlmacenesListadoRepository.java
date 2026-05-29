@@ -28,26 +28,45 @@ public class AlmacenesListadoRepository implements IAlmacenesListado {
     private DataSource con;
 
     @Override
-    public ResponseListaAlmacenes listaAlmacenes(RequestListaAlmacenes request) {
+    public ResponseListaAlmacenes ListaAlmacenes(RequestListaAlmacenes request) {
         ResponseListaAlmacenes rpt = new ResponseListaAlmacenes();
         List<AlmacenesModel> registros = new ArrayList<>();
-        String SQL = "{ call ALMACEN.sp_ListarAlmacenes(?) }";
+        String SQL = "{ call INVENTARIO.sp_ListarAlmacenes(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getEstado());
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     AlmacenesModel item = new AlmacenesModel();
                 item.setIdAlmacenes(rs.getLong("idAlmacenes"));
                 item.setDescripcion(rs.getString("descripcion"));
                 item.setEstado(rs.getInt("estado"));
                 item.setIdSucursales(rs.getLong("idSucursales"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
                     registros.add(item);
                 }
-            }
 
             rpt.setExito(true);
             rpt.setAlmacenes(registros);

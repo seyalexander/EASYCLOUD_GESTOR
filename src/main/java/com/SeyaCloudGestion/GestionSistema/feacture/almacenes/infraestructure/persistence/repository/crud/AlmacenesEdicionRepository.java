@@ -28,13 +28,16 @@ public class AlmacenesEdicionRepository implements IAlmacenesEdicion {
     @Override
     public ResponseEditarAllAlmacenes EditarAllAlmacenes(RequestEditarAllAlmacenes request) {
         ResponseEditarAllAlmacenes rpt = new ResponseEditarAllAlmacenes();
-        String SQL = "{ call ALMACEN.sp_EditarAlmacenes(?) }";
+        String SQL = "{ call INVENTARIO.sp_EditarAlmacenes(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
+            setParameter(pstmt, 1, request.getIdAlmacenes());
+            setParameter(pstmt, 2, request.getDescripcion());
+            setParameter(pstmt, 3, request.getIdSucursales());
+            pstmt.setInt(4, request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(5, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

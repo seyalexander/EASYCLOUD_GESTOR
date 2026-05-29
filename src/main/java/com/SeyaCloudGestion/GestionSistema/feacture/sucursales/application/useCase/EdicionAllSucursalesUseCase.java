@@ -1,21 +1,20 @@
 ﻿package com.SeyaCloudGestion.GestionSistema.feacture.sucursales.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.sucursales.application.dto.request.RequestRegistroSucursales;
-import com.SeyaCloudGestion.GestionSistema.feacture.sucursales.application.dto.response.ResponseRegistroSucursales;
+import com.SeyaCloudGestion.GestionSistema.feacture.sucursales.application.dto.request.RequestEditarAllSucursales;
+import com.SeyaCloudGestion.GestionSistema.feacture.sucursales.application.dto.response.ResponseEditarAllSucursales;
 import com.SeyaCloudGestion.GestionSistema.feacture.sucursales.domain.services.SucursalesService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RegistroSucursalesUseCase {
+public class EdicionAllSucursalesUseCase {
     private final SucursalesService sucursalesService;
 
-    public RegistroSucursalesUseCase(SucursalesService sucursalesService) {
+    public EdicionAllSucursalesUseCase(SucursalesService sucursalesService) {
         this.sucursalesService = sucursalesService;
     }
-
-    public ResponseRegistroSucursales RegistroSucursales(RequestRegistroSucursales request) {
+    public ResponseEditarAllSucursales EdicionAllSucursales(RequestEditarAllSucursales request) {
         try {
-            ResponseRegistroSucursales response = sucursalesService.RegistroSucursales(request);
+            ResponseEditarAllSucursales response = sucursalesService.EditarAllSucursales(request);
 
             if (response.isExito()) {
             }
@@ -23,16 +22,16 @@ public class RegistroSucursalesUseCase {
             return response;
 
         } catch (IllegalArgumentException | SecurityException e) {
-            ResponseRegistroSucursales response = new ResponseRegistroSucursales();
+            ResponseEditarAllSucursales response = new ResponseEditarAllSucursales();
             response.setExito(false);
             response.setMessage(e.getMessage());
             return response;
 
         } catch (Exception e) {
-            String mensajeError = "Error inesperado al registrar la sucursal: " + e.getMessage();
+            String mensajeError = "Error inesperado al actualizar la sucursal: " + e.getMessage();
             System.err.println("[ERROR] " + mensajeError);
 
-            ResponseRegistroSucursales response = new ResponseRegistroSucursales();
+            ResponseEditarAllSucursales response = new ResponseEditarAllSucursales();
             response.setExito(false);
             response.setMessage(mensajeError);
             return response;

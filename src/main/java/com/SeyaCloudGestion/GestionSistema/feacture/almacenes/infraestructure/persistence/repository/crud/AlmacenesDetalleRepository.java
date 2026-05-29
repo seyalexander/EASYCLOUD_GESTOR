@@ -28,7 +28,7 @@ public class AlmacenesDetalleRepository implements IAlmacenesDetalle {
     @Override
     public ResponseDetalleAlmacenes DetalleAlmacenes(RequestDetalleAlmacenes request) {
         ResponseDetalleAlmacenes response = new ResponseDetalleAlmacenes();
-        String SQL = "{ call ALMACEN.sp_ObtenerAlmacenesPorId(?) }";
+        String SQL = "{ call INVENTARIO.sp_ObtenerAlmacenesPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -42,6 +42,27 @@ public class AlmacenesDetalleRepository implements IAlmacenesDetalle {
                     item.setDescripcion(rs.getString("descripcion"));
                     item.setEstado(rs.getInt("estado"));
                     item.setIdSucursales(rs.getLong("idSucursales"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     response.setExito(true);
                     response.setMessage("Almacenes obtenido correctamente.");
                     response.setAlmacenes(item);

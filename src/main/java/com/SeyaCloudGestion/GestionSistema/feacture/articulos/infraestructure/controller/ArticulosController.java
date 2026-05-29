@@ -1,17 +1,14 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.articulos.infraestructure.controller;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.request.RequestRegistroArticulo;
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseDetalleArticulo;
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseEditarAllArticulo;
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseEditarEstadoArticulo;
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseRegistroArticulo;
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.useCase.RegistroArticuloUseCase;
+import com.SeyaCloudGestion.GestionSistema.common.enums.TipoNotificacion;
+import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.request.*;
+import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.*;
+import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.useCase.*;
 import com.SeyaCloudGestion.GestionSistema.websockets.application.dto.NotificacionArticuloDTO;
 import com.SeyaCloudGestion.GestionSistema.websockets.domain.services.NotificacionArticuloService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,11 +18,29 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/articulos")
 public class ArticulosController {
 
-    @Autowired
-    private RegistroArticuloUseCase registroArticuloUseCase;
+    private final ListaArticuloUseCase listaArticuloUseCase;
+    private final RegistroArticuloUseCase registroArticuloUseCase;
+    private final EdicionAllArticuloUseCase edicionAllArticuloUseCase;
+    private final EdicionEstadoArticuloUseCase edicionEstadoArticuloUseCase;
+    private final DetalleArticuloUseCase detalleArticuloUseCase;
+    private final NotificacionArticuloService notificacionArticuloService;
 
-    @Autowired
-    private NotificacionArticuloService notificacionArticuloService;
+    public ArticulosController(ListaArticuloUseCase listaArticuloUseCase, RegistroArticuloUseCase registroArticuloUseCase, EdicionAllArticuloUseCase edicionAllArticuloUseCase, EdicionEstadoArticuloUseCase edicionEstadoArticuloUseCase, DetalleArticuloUseCase detalleArticuloUseCase, NotificacionArticuloService notificacionArticuloService) {
+        this.listaArticuloUseCase = listaArticuloUseCase;
+        this.registroArticuloUseCase = registroArticuloUseCase;
+        this.edicionAllArticuloUseCase = edicionAllArticuloUseCase;
+        this.edicionEstadoArticuloUseCase = edicionEstadoArticuloUseCase;
+        this.detalleArticuloUseCase = detalleArticuloUseCase;
+        this.notificacionArticuloService = notificacionArticuloService;
+    }
+
+    @GetMapping
+    @Operation(summary = "Listar artículos by estado", description = "Obtiene la lista de artículos según su estado")
+    public ResponseEntity<ResponseListaArticulo> listaArticulo(@Validated @ModelAttribute RequestListaArticulo request) {
+        ResponseListaArticulo response = listaArticuloUseCase.ListaArticulo(request);
+
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping
     @Operation(summary = "Registrar artículo", description = "Permite registrar un nuevo artículo")
@@ -77,6 +92,7 @@ public class ArticulosController {
             NotificacionArticuloDTO notificacion = new NotificacionArticuloDTO();
             notificacion.setTipo(String.valueOf(TipoNotificacion.ANULACION));
             notificacion.setMensaje("Registro de Articulo anulado");
+            notificacion.setIdArticulos(idArticulo);
             notificacionArticuloService.enviarNotificacionArticulo_Anular(notificacion);
             return ResponseEntity.ok(response);
         }
@@ -93,6 +109,7 @@ public class ArticulosController {
             NotificacionArticuloDTO notificacion = new NotificacionArticuloDTO();
             notificacion.setTipo(String.valueOf(TipoNotificacion.ACTIVACION));
             notificacion.setMensaje("Registro de Articulo activado");
+            notificacion.setIdArticulos(idArticulo);
             notificacionArticuloService.enviarNotificacionArticulo_Activar(notificacion);
             return ResponseEntity.ok(response);
         }
