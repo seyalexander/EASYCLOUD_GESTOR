@@ -14,7 +14,7 @@ public class EdicionAllArticuloUseCase {
     }
     public ResponseEditarAllArticulo EdicionAllArticulo(RequestEditarAllArticulo request) {
         try {
-            ResponseEditarAllArticulo response = articulosService.EdicionAllArticulo(request);
+            ResponseEditarAllArticulo response = articulosService.EditarAllArticulos(request);
 
             if (response.isExito()) {
             }

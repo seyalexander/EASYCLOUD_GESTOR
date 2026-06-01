@@ -7,5 +7,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.dto
 
 public interface ICodigoBarraEdicion {
     ResponseEditarAllCodigoBarra EditarAllCodigoBarra(RequestEditarAllCodigoBarra request);
-    ResponseEditarEstadoCodigoBarra EditarEstadoCodigoBarra(RequestEditarEstadoCodigoBarra request, int estado);
+    //ResponseEditarEstadoCodigoBarra EditarEstadoCodigoBarra(RequestEditarEstadoCodigoBarra request, int estado);
 }

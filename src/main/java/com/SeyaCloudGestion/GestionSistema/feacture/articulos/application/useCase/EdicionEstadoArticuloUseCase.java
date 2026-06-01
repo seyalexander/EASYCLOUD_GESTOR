@@ -17,7 +17,7 @@ public class EdicionEstadoArticuloUseCase {
             RequestEditarEstadoArticulo request = new RequestEditarEstadoArticulo();
             request.setIdArticulo(idArticulos);
 
-            ResponseEditarEstadoArticulo response = articulosService.EditarEstadoArticulo(request, 0);
+            ResponseEditarEstadoArticulo response = articulosService.EditarEstadoArticulos(request, 0);
 
             if (response.isExito()) {
             }
@@ -46,7 +46,7 @@ public class EdicionEstadoArticuloUseCase {
             RequestEditarEstadoArticulo request = new RequestEditarEstadoArticulo();
             request.setIdArticulo(idArticulos);
 
-            ResponseEditarEstadoArticulo response = articulosService.EditarEstadoArticulo(request, 1);
+            ResponseEditarEstadoArticulo response = articulosService.EditarEstadoArticulos(request, 1);
 
             if (response.isExito()) {
             }

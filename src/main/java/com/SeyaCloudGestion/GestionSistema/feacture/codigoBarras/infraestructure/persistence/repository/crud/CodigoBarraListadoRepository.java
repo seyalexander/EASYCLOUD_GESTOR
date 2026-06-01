@@ -28,17 +28,16 @@ public class CodigoBarraListadoRepository implements ICodigoBarraListado {
     private DataSource con;
 
     @Override
-    public ResponseListaCodigoBarra listaCodigoBarra(RequestListaCodigoBarra request) {
+    public ResponseListaCodigoBarra ListaCodigoBarra( ) {
         ResponseListaCodigoBarra rpt = new ResponseListaCodigoBarra();
         List<CodigoBarraModel> registros = new ArrayList<>();
-        String SQL = "{ call PRODUCTOS.sp_ListarCodigoBarra() }";
+        String SQL = "{ call PRODUCTOS.sp_ListarCodigoBarra }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetros de filtro definidos en el request.
+            ResultSet rs = pstmt.executeQuery();
 
-            try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     CodigoBarraModel item = new CodigoBarraModel();
                 item.setIdCodigoBarra(rs.getLong("idCodigoBarra"));
@@ -46,9 +45,28 @@ public class CodigoBarraListadoRepository implements ICodigoBarraListado {
                 item.setCodigo(rs.getString("codigo"));
                 item.setPrincipal(rs.getInt("principal"));
                 item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
                     registros.add(item);
                 }
-            }
 
             rpt.setExito(true);
             rpt.setCodigoBarras(registros);

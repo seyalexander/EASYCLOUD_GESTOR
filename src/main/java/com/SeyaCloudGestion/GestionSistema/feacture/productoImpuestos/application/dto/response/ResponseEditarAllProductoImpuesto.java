@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.dto.response;
 
-public class ResponseEditarAllProductoImpuesto {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseEditarAllProductoImpuesto extends ResponseGeneral {
 
 }

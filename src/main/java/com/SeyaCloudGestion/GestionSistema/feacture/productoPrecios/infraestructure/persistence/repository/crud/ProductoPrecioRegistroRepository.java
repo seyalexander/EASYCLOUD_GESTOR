@@ -14,6 +14,9 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static com.SeyaCloudGestion.GestionSistema.common.sqlParametersDate.SqlParameterDate.setLocalDateTime;
+import static com.SeyaCloudGestion.GestionSistema.common.sqlParametersDate.SqlParameterDate.setLocalDateTimeOrNull;
+
 @Slf4j
 @Repository
 @Transactional("sqlServerTransactionManager")
@@ -26,13 +29,17 @@ public class ProductoPrecioRegistroRepository implements IProductoPrecioRegistro
     @Override
     public ResponseRegistroProductoPrecio RegistroProductoPrecio(RequestRegistroProductoPrecio request) {
         ResponseRegistroProductoPrecio rpt = new ResponseRegistroProductoPrecio();
-        String SQL = "{ call PRODUCTOS.sp_RegistroProductoPrecio(?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroProductoPrecio(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
+            pstmt.setLong(1,request.getIdArticulo());
+            pstmt.setLong(2,request.getIdListaPrecio());
+            pstmt.setDouble(3,request.getPrecio());
+            setLocalDateTime(pstmt, 4, request.getFechaInicio());
+            setLocalDateTimeOrNull(pstmt, 5, request.getFechaFin());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(6, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 

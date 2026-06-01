@@ -14,7 +14,7 @@ public class ListaArticuloUseCase {
     }
     public ResponseListaArticulo ListaArticulo(RequestListaArticulo request) {
         try {
-            ResponseListaArticulo response = articulosService.ListaArticulo(request);
+            ResponseListaArticulo response = articulosService.ListaArticulos(request);
 
             if (response.isExito()) {
             }

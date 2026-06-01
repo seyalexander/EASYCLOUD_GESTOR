@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.applicatio
 import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.dto.response.ResponseListaProductoImpuesto;
 
 public interface IProductoImpuestoListado {
-    ResponseListaProductoImpuesto listaProductoImpuesto(RequestListaProductoImpuesto request);
+    ResponseListaProductoImpuesto ListaProductoImpuesto(RequestListaProductoImpuesto request);
 }

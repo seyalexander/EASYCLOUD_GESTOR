@@ -15,7 +15,4 @@ public class RequestRegistroProductoImpuesto {
     @DecimalMax(value = "100.00", message = "El porcentaje no debe superar el 100")
     private double porcentaje;
 
-    @NotNull(message = "La fecha de ingreso es obligatoria")
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime fechaIngreso;
 }

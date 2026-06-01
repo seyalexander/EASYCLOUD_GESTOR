@@ -16,6 +16,9 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static com.SeyaCloudGestion.GestionSistema.common.sqlParametersDate.SqlParameterDate.setLocalDateTime;
+import static com.SeyaCloudGestion.GestionSistema.common.sqlParametersDate.SqlParameterDate.setLocalDateTimeOrNull;
+
 @Slf4j
 @Repository
 @Transactional("sqlServerTransactionManager")
@@ -28,13 +31,19 @@ public class ProductoPrecioEdicionRepository implements IProductoPrecioEdicion {
     @Override
     public ResponseEditarAllProductoPrecio EditarAllProductoPrecio(RequestEditarAllProductoPrecio request) {
         ResponseEditarAllProductoPrecio rpt = new ResponseEditarAllProductoPrecio();
-        String SQL = "{ call PRODUCTOS.sp_EditarProductoPrecio(?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarProductoPrecio(?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
+            pstmt.setLong(1,request.getIdProductoPrecio());
+            pstmt.setLong(2,request.getIdArticulo());
+            pstmt.setLong(3,request.getIdListaPrecio());
+            pstmt.setDouble(4,request.getPrecio());
+            setLocalDateTime(pstmt, 5, request.getFechaInicio());
+            setLocalDateTimeOrNull(pstmt, 6, request.getFechaFin());
+            pstmt.setInt(7,request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(8, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -59,10 +68,10 @@ public class ProductoPrecioEdicionRepository implements IProductoPrecioEdicion {
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
-            pstmt.setInt(1, estado);
+            pstmt.setLong(1,request.getIdProductoPrecio());
+            pstmt.setInt(2, estado);
             Long userId = 1L;
-            pstmt.setLong(2, userId);
+            pstmt.setLong(3, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

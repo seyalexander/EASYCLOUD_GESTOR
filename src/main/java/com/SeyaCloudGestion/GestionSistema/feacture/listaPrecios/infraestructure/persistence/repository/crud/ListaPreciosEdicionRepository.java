@@ -28,13 +28,15 @@ public class ListaPreciosEdicionRepository implements IListaPreciosEdicion {
     @Override
     public ResponseEditarAllListaPrecios EditarAllListaPrecios(RequestEditarAllListaPrecios request) {
         ResponseEditarAllListaPrecios rpt = new ResponseEditarAllListaPrecios();
-        String SQL = "{ call PRODUCTOS.sp_EditarListaPrecios(?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarListaPrecio(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
+            pstmt.setLong(1, request.getIdListaPrecios());
+            pstmt.setString(2,request.getDescripcion());
+            pstmt.setInt(3,request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(4, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -55,7 +57,7 @@ public class ListaPreciosEdicionRepository implements IListaPreciosEdicion {
     @Override
     public ResponseEditarEstadoListaPrecios EditarEstadoListaPrecios(RequestEditarEstadoListaPrecios request, int estado) {
         ResponseEditarEstadoListaPrecios rpt = new ResponseEditarEstadoListaPrecios();
-        String SQL = "{ call PRODUCTOS.sp_EditarListaPrecios_Estado(?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarListaPrecio_Estado(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -76,7 +78,7 @@ public class ListaPreciosEdicionRepository implements IListaPreciosEdicion {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en PRODUCTOS.sp_EditarListaPrecios_Estado", e);
+            log.error("Error en PRODUCTOS.sp_EditarListaPrecio_Estado", e);
         }
         return rpt;
     }

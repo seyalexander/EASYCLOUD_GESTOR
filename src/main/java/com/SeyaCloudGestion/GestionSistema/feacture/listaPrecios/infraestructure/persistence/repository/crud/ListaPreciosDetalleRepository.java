@@ -41,15 +41,26 @@ public class ListaPreciosDetalleRepository implements IListaPreciosDetalle {
                     item.setIdListaPrecio(rs.getLong("idListaPrecio"));
                     item.setDescripcion(rs.getString("descripcion"));
                     item.setEstado(rs.getInt("estado"));
-                    item.setFechaCreacion((rs.getTimestamp("fechaCreacion") != null ? rs.getTimestamp("fechaCreacion").toLocalDateTime() : null));
-                    item.setFechaEdicion((rs.getTimestamp("fechaEdicion") != null ? rs.getTimestamp("fechaEdicion").toLocalDateTime() : null));
-                    item.setFechaAnulacion((rs.getTimestamp("fechaAnulacion") != null ? rs.getTimestamp("fechaAnulacion").toLocalDateTime() : null));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
                     item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
                     item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
                     item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
-                    item.setUsuarioCreacion(rs.getString("usuarioCreacion"));
-                    item.setUsuarioEdicion(rs.getString("usuarioEdicion"));
-                    item.setUsuarioAnulacion(rs.getString("usuarioAnulacion"));
                     response.setExito(true);
                     response.setMessage("ListaPrecios obtenido correctamente.");
                     response.setListaPrecios(item);

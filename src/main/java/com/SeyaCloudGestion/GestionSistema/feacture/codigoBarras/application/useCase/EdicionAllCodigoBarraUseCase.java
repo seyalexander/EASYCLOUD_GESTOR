@@ -1,38 +1,37 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.dto.response.ResponseListaCodigoBarra;
+import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.dto.request.RequestEditarAllCodigoBarra;
+import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.dto.response.ResponseEditarAllCodigoBarra;
 import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.domain.services.CodigoBarraService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ListaCodigoBarraUseCase {
+public class EdicionAllCodigoBarraUseCase {
     private  final CodigoBarraService codigoBarraService;
 
-    public ListaCodigoBarraUseCase(CodigoBarraService codigoBarraService) {
+    public EdicionAllCodigoBarraUseCase(CodigoBarraService codigoBarraService) {
         this.codigoBarraService = codigoBarraService;
     }
-    public ResponseListaCodigoBarra ListaCodigoBarra() {
+    public ResponseEditarAllCodigoBarra EdicionAllCodigoBarra(RequestEditarAllCodigoBarra request) {
         try {
-            ResponseListaCodigoBarra response = codigoBarraService.ListaCodigoBarra();
+            ResponseEditarAllCodigoBarra response = codigoBarraService.EditarAllCodigoBarra(request);
 
             if (response.isExito()) {}
 
             return response;
 
         } catch (IllegalArgumentException | SecurityException e) {
-            ResponseListaCodigoBarra response = new ResponseListaCodigoBarra();
+            ResponseEditarAllCodigoBarra response = new ResponseEditarAllCodigoBarra();
             response.setExito(false);
             response.setMessage(e.getMessage());
-            response.setCodigoBarras(java.util.List.of());
             return response;
         } catch (Exception e) {
-            String mensajeError = "Error inesperado al listar los códigos de barra: " + e.getMessage();
+            String mensajeError = "Error inesperado al actualizar el código de barra: " + e.getMessage();
             System.err.println("[ERROR] " + mensajeError);
 
-            ResponseListaCodigoBarra response = new ResponseListaCodigoBarra();
+            ResponseEditarAllCodigoBarra response = new ResponseEditarAllCodigoBarra();
             response.setExito(false);
             response.setMessage(mensajeError);
-            response.setCodigoBarras(java.util.List.of());
             return response;
         }
     }

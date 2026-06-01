@@ -4,5 +4,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.dto
 import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.dto.response.ResponseListaCodigoBarra;
 
 public interface ICodigoBarraListado {
-    ResponseListaCodigoBarra listaCodigoBarra(RequestListaCodigoBarra request);
+    ResponseListaCodigoBarra ListaCodigoBarra( );
+    //ResponseListaCodigoBarra listaCodigoBarra(RequestListaCodigoBarra request);
+
 }

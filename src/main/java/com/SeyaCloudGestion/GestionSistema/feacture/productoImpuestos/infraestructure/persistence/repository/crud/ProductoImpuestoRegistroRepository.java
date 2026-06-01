@@ -26,16 +26,15 @@ public class ProductoImpuestoRegistroRepository implements IProductoImpuestoRegi
     @Override
     public ResponseRegistroProductoImpuesto RegistroProductoImpuesto(RequestRegistroProductoImpuesto request) {
         ResponseRegistroProductoImpuesto rpt = new ResponseRegistroProductoImpuesto();
-        String SQL = "{ call PRODUCTOS.sp_RegistroProductoImpuesto(?,?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroProductoImpuesto(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdArticulo());
             setParameter(pstmt, 2, request.getPorcentaje());
-            setParameter(pstmt, 3, request.getFechaIngreso());
             Long userId = 1L;
-            pstmt.setLong(4, userId);
+            pstmt.setLong(3, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 

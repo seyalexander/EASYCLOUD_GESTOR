@@ -28,12 +28,12 @@ public class ProductoPrecioDetalleRepository implements IProductoPrecioDetalle {
     @Override
     public ResponseDetalleProductoPrecio DetalleProductoPrecio(RequestDetalleProductoPrecio request) {
         ResponseDetalleProductoPrecio response = new ResponseDetalleProductoPrecio();
-        String SQL = "{ call PRODUCTOS.sp_ObtenerProductoPrecioPorId() }";
+        String SQL = "{ call PRODUCTOS.sp_ObtenerProductoPrecioPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetro id definido en el request.
+            pstmt.setLong(1,request.getIdProductoPrecio());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -42,10 +42,26 @@ public class ProductoPrecioDetalleRepository implements IProductoPrecioDetalle {
                     item.setIdArticulo(rs.getLong("idArticulo"));
                     item.setIdListaPrecio(rs.getLong("idListaPrecio"));
                     item.setPrecio(rs.getDouble("precio"));
-                    item.setFechaInicio(rs.getString("fechaInicio"));
-                    item.setFechaFin(rs.getString("fechaFin"));
-                    item.setEstado(rs.getInt("estado"));
-                    item.setFechaIngreso(rs.getString("fechaIngreso"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
                     response.setExito(true);
                     response.setMessage("ProductoPrecio obtenido correctamente.");
                     response.setProductoPrecio(item);

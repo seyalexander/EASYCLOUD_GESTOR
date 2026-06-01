@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.dto.response;
 
-public class ResponseEditarEstadoCodigoBarra {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseEditarEstadoCodigoBarra extends ResponseGeneral {
 
 }

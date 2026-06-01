@@ -1,5 +1,10 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.request;
 
-public class RequestEditarEstadoProductoPrecio {
+import jakarta.validation.constraints.Min;
+import lombok.Data;
 
+@Data
+public class RequestEditarEstadoProductoPrecio {
+    @Min(value = 1, message = "El id debe ser mayor a 0")
+    private long idProductoPrecio;
 }

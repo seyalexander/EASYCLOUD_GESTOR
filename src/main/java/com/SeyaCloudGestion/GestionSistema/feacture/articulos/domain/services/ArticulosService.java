@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class ArticulosService implements IArticulosRegistro, IArticulosRegistro, IArticulosEdicion, IArticulosDetalle {
+public class ArticulosService implements IArticulosRegistro, IArticulosListado, IArticulosEdicion, IArticulosDetalle {
 
     private final ArticulosRegistroRepository articulosRegistroRepository;
     private final ArticuloListadoRepository articuloListadoRepository;
@@ -26,7 +26,7 @@ public class ArticulosService implements IArticulosRegistro, IArticulosRegistro,
     }
     @Override
     @Cacheable(value = "articulos_lista", key = "#request.estado")
-    public ResponseListaArticulo ListaArticulo(RequestListaArticulo request) {
+    public ResponseListaArticulo ListaArticulos(RequestListaArticulo request) {
         return articuloListadoRepository.ListaArticulos(request);
     }
     @Override
@@ -37,19 +37,19 @@ public class ArticulosService implements IArticulosRegistro, IArticulosRegistro,
 
     @Override
     @CacheEvict(value = {"articulos_lista", "articulo_detalle"}, allEntries = true)
-    public ResponseEditarAllArticulo EdicionAllArticulo(RequestEditarAllArticulo request) {
+    public ResponseEditarAllArticulo EditarAllArticulos(RequestEditarAllArticulo request) {
         return articulosEdicionRepository.EditarAllArticulos(request);
     }
 
     @Override
     @CacheEvict(value = {"articulos_lista", "articulo_detalle"}, allEntries = true)
-    public ResponseEditarEstadoArticulo EditarEstadoArticulo(RequestEditarEstadoArticulo request, int estado) {
+    public ResponseEditarEstadoArticulo EditarEstadoArticulos(RequestEditarEstadoArticulo request, int estado) {
         return articulosEdicionRepository.EditarEstadoArticulos(request, estado);
     }
 
     @Override
     @Cacheable(value = "articulo_detalle", key = "#request.idArticulos")
-    public ResponseDetalleArticulo DetalleArticulo(RequestDetalleArticulo request) {
+    public ResponseDetalleArticulo DetalleArticulos(RequestDetalleArticulo request) {
         return articuloDetalleRepository.DetalleArticulos(request);
     }
 }

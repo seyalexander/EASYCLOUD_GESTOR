@@ -28,13 +28,17 @@ public class ProductoImpuestoEdicionRepository implements IProductoImpuestoEdici
     @Override
     public ResponseEditarAllProductoImpuesto EditarAllProductoImpuesto(RequestEditarAllProductoImpuesto request) {
         ResponseEditarAllProductoImpuesto rpt = new ResponseEditarAllProductoImpuesto();
-        String SQL = "{ call PRODUCTOS.sp_EditarProductoImpuesto(?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarProductoImpuesto(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
+            pstmt.setLong(1,request.getIdProductoImpuesto());
+            pstmt.setLong(2,request.getIdArticulo());
+            pstmt.setDouble(3,request.getPorcentaje());
+            pstmt.setInt(1,request.getEstado());
 
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(5, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -55,14 +59,14 @@ public class ProductoImpuestoEdicionRepository implements IProductoImpuestoEdici
     @Override
     public ResponseEditarEstadoProductoImpuesto EditarEstadoProductoImpuesto(RequestEditarEstadoProductoImpuesto request, int estado) {
         ResponseEditarEstadoProductoImpuesto rpt = new ResponseEditarEstadoProductoImpuesto();
-        String SQL = "{ call PRODUCTOS.sp_EditarProductoImpuesto_Estado(?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarProductoImpuesto_Estado(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
-            pstmt.setInt(1, estado);
+            pstmt.setLong(1, request.getIdProductoImpuesto());
+            pstmt.setInt(2, estado);
             Long userId = 1L;
-            pstmt.setLong(2, userId);
+            pstmt.setLong(3, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

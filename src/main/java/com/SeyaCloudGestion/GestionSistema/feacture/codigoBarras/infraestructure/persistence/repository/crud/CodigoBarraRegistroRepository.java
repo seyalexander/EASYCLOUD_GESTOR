@@ -26,17 +26,17 @@ public class CodigoBarraRegistroRepository implements ICodigoBarraRegistro {
     @Override
     public ResponseRegistroCodigoBarra RegistroCodigoBarra(RequestRegistroCodigoBarra request) {
         ResponseRegistroCodigoBarra rpt = new ResponseRegistroCodigoBarra();
-        String SQL = "{ call PRODUCTOS.sp_RegistroCodigoBarra(?,?,?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroCodigoBarra(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
+
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdArticulo());
             setParameter(pstmt, 2, request.getCodigo());
             setParameter(pstmt, 3, request.getPrincipal());
-            setParameter(pstmt, 4, request.getFechaIngreso());
             Long userId = 1L;
-            pstmt.setLong(5, userId);
+            pstmt.setLong(4, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 

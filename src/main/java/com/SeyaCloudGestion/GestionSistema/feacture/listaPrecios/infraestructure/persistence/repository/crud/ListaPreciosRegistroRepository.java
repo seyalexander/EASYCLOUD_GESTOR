@@ -26,13 +26,14 @@ public class ListaPreciosRegistroRepository implements IListaPreciosRegistro {
     @Override
     public ResponseRegistroListaPrecios RegistroListaPrecios(RequestRegistroListaPrecios request) {
         ResponseRegistroListaPrecios rpt = new ResponseRegistroListaPrecios();
-        String SQL = "{ call PRODUCTOS.sp_RegistroListaPrecios(?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroListaPrecio(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
+            pstmt.setString(1,request.getDescripcion());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(2, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -46,7 +47,7 @@ public class ListaPreciosRegistroRepository implements IListaPreciosRegistro {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en PRODUCTOS.sp_RegistroListaPrecios", e);
+            log.error("Error en PRODUCTOS.sp_RegistroListaPrecio", e);
         }
         return rpt;
     }

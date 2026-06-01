@@ -1,9 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.infraestructure.persistence.repository.crud;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.dto.request.RequestEditarAllCodigoBarra;
-import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.dto.request.RequestEditarEstadoCodigoBarra;
 import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.dto.response.ResponseEditarAllCodigoBarra;
-import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.dto.response.ResponseEditarEstadoCodigoBarra;
 import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.domain.interfaces.ICodigoBarraEdicion;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,7 @@ import java.sql.SQLException;
 @Slf4j
 @Repository
 @Transactional("sqlServerTransactionManager")
-public class CodigoBarraEdicionRepository implements ICodigoBarraEdicion {
+public class CodigoBarraEdicionAllRepository implements ICodigoBarraEdicion {
 
     @Autowired
     @Qualifier("SQLSERVER")
@@ -28,13 +26,16 @@ public class CodigoBarraEdicionRepository implements ICodigoBarraEdicion {
     @Override
     public ResponseEditarAllCodigoBarra EditarAllCodigoBarra(RequestEditarAllCodigoBarra request) {
         ResponseEditarAllCodigoBarra rpt = new ResponseEditarAllCodigoBarra();
-        String SQL = "{ call PRODUCTOS.sp_EditarCodigoBarra(?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarCodigoBarra(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
+            pstmt.setLong(1,request.getIdCodigoBarra());
+            pstmt.setLong(2,request.getIdArticulo());
+            pstmt.setString(3,request.getCodigo());
+            pstmt.setInt(4,request.getPrincipal());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(5, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -51,7 +52,7 @@ public class CodigoBarraEdicionRepository implements ICodigoBarraEdicion {
         }
         return rpt;
     }
-
+    /*
     @Override
     public ResponseEditarEstadoCodigoBarra EditarEstadoCodigoBarra(RequestEditarEstadoCodigoBarra request, int estado) {
         ResponseEditarEstadoCodigoBarra rpt = new ResponseEditarEstadoCodigoBarra();
@@ -83,4 +84,5 @@ public class CodigoBarraEdicionRepository implements ICodigoBarraEdicion {
     private void setParameter(CallableStatement pstmt, int index, Object value) throws SQLException {
         pstmt.setObject(index, value);
     }
+     */
 }

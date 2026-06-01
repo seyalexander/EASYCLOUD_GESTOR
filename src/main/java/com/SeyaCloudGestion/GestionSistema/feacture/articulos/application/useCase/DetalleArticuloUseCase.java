@@ -17,7 +17,7 @@ public class DetalleArticuloUseCase {
             RequestDetalleArticulo request = new RequestDetalleArticulo();
             request.setIdArticulo(idArticulos);
 
-            ResponseDetalleArticulo response = articulosService.DetalleArticulo(request);
+            ResponseDetalleArticulo response = articulosService.DetalleArticulos(request);
 
             if (response.isExito()) {
             }

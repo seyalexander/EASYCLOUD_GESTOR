@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.
 import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.response.ResponseListaProductoPrecio;
 
 public interface IProductoPrecioListado {
-    ResponseListaProductoPrecio listaProductoPrecio(RequestListaProductoPrecio request);
+    ResponseListaProductoPrecio ListaProductoPrecio(RequestListaProductoPrecio request);
 }
