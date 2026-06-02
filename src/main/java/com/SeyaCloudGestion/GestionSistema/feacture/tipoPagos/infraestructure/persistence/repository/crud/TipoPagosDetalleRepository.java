@@ -28,12 +28,12 @@ public class TipoPagosDetalleRepository implements ITipoPagosDetalle {
     @Override
     public ResponseDetalleTipoPagos DetalleTipoPagos(RequestDetalleTipoPagos request) {
         ResponseDetalleTipoPagos response = new ResponseDetalleTipoPagos();
-        String SQL = "{ call CONFIGURACION.sp_ObtenerTipoPagosPorId(?) }";
+        String SQL = "{ call VENTAS.sp_ObtenerTipoPagoPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdTipoPagos());
+            setParameter(pstmt, 1, request.getIdTipoPago());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -43,6 +43,27 @@ public class TipoPagosDetalleRepository implements ITipoPagosDetalle {
                     item.setImagenUrl(rs.getString("imagenUrl"));
                     item.setEstado(rs.getInt("estado"));
                     item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     response.setExito(true);
                     response.setMessage("TipoPagos obtenido correctamente.");
                     response.setTipoPagos(item);

@@ -28,13 +28,16 @@ public class TurnoCajaEdicionRepository implements ITurnoCajaEdicion {
     @Override
     public ResponseEditarAllTurnoCaja EditarAllTurnoCaja(RequestEditarAllTurnoCaja request) {
         ResponseEditarAllTurnoCaja rpt = new ResponseEditarAllTurnoCaja();
-        String SQL = "{ call CAJA.sp_EditarTurnoCaja(?) }";
+        String SQL = "{ call VENTAS.sp_EditarTurnoCaja(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
+            setParameter(pstmt, 1, request.getIdTurnoCaja());
+            setParameter(pstmt, 2, request.getFechaCierre());
+            setParameter(pstmt, 3, request.getMontoFinal());
+            setParameter(pstmt, 4, request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(5, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

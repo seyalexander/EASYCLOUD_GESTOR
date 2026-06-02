@@ -26,7 +26,7 @@ public class TurnoCajaRegistroRepository implements ITurnoCajaRegistro {
     @Override
     public ResponseRegistroTurnoCaja RegistroTurnoCaja(RequestRegistroTurnoCaja request) {
         ResponseRegistroTurnoCaja rpt = new ResponseRegistroTurnoCaja();
-        String SQL = "{ call CAJA.sp_RegistroTurnoCaja(?,?,?,?,?,?,?,?) }";
+        String SQL = "{ call VENTAS.sp_RegistroTurnoCaja(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -34,12 +34,9 @@ public class TurnoCajaRegistroRepository implements ITurnoCajaRegistro {
             setParameter(pstmt, 1, request.getIdUsuario());
             setParameter(pstmt, 2, request.getIdSucursal());
             setParameter(pstmt, 3, request.getFechaApertura());
-            setParameter(pstmt, 4, request.getFechaCierre());
-            setParameter(pstmt, 5, request.getMontoInicial());
-            setParameter(pstmt, 6, request.getMontoFinal());
-            setParameter(pstmt, 7, request.getEstado());
+            setParameter(pstmt, 4, request.getMontoInicial());
             Long userId = 1L;
-            pstmt.setLong(8, userId);
+            pstmt.setLong(5, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -53,7 +50,7 @@ public class TurnoCajaRegistroRepository implements ITurnoCajaRegistro {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en CAJA.sp_RegistroTurnoCaja", e);
+            log.error("Error en VENTAS.sp_RegistroTurnoCaja", e);
         }
         return rpt;
     }

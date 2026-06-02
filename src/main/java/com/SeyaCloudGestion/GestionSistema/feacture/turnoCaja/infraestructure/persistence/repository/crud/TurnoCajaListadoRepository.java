@@ -28,17 +28,16 @@ public class TurnoCajaListadoRepository implements ITurnoCajaListado {
     private DataSource con;
 
     @Override
-    public ResponseListaTurnoCaja listaTurnoCaja(RequestListaTurnoCaja request) {
+    public ResponseListaTurnoCaja ListaTurnoCaja(RequestListaTurnoCaja request) {
         ResponseListaTurnoCaja rpt = new ResponseListaTurnoCaja();
         List<TurnoCajaModel> registros = new ArrayList<>();
-        String SQL = "{ call CAJA.sp_ListarTurnoCaja(?) }";
+        String SQL = "{ call VENTAS.sp_ListarTurnoCaja(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getEstado());
-
-            try (ResultSet rs = pstmt.executeQuery()) {
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     TurnoCajaModel item = new TurnoCajaModel();
                 item.setIdTurnoCaja(rs.getLong("idTurnoCaja"));
@@ -49,9 +48,28 @@ public class TurnoCajaListadoRepository implements ITurnoCajaListado {
                 item.setMontoInicial(rs.getDouble("montoInicial"));
                 item.setMontoFinal(rs.getDouble("montoFinal"));
                 item.setEstado(rs.getString("estado"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
                     registros.add(item);
                 }
-            }
 
             rpt.setExito(true);
             rpt.setTurnoCajas(registros);

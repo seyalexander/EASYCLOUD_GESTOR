@@ -28,17 +28,16 @@ public class TipoPagosListadoRepository implements ITipoPagosListado {
     private DataSource con;
 
     @Override
-    public ResponseListaTipoPagos listaTipoPagos(RequestListaTipoPagos request) {
+    public ResponseListaTipoPagos ListaTipoPagos(RequestListaTipoPagos request) {
         ResponseListaTipoPagos rpt = new ResponseListaTipoPagos();
         List<TipoPagosModel> registros = new ArrayList<>();
-        String SQL = "{ call CONFIGURACION.sp_ListarTipoPagos(?) }";
+        String SQL = "{ call VENTAS.sp_ListarTipoPago(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getEstado());
-
-            try (ResultSet rs = pstmt.executeQuery()) {
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     TipoPagosModel item = new TipoPagosModel();
                 item.setIdTipoPago(rs.getLong("idTipoPago"));
@@ -46,9 +45,29 @@ public class TipoPagosListadoRepository implements ITipoPagosListado {
                 item.setImagenUrl(rs.getString("imagenUrl"));
                 item.setEstado(rs.getInt("estado"));
                 item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     registros.add(item);
                 }
-            }
 
             rpt.setExito(true);
             rpt.setTipoPagos(registros);

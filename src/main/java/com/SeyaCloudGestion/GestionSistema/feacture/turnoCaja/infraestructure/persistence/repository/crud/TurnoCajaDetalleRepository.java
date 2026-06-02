@@ -28,7 +28,7 @@ public class TurnoCajaDetalleRepository implements ITurnoCajaDetalle {
     @Override
     public ResponseDetalleTurnoCaja DetalleTurnoCaja(RequestDetalleTurnoCaja request) {
         ResponseDetalleTurnoCaja response = new ResponseDetalleTurnoCaja();
-        String SQL = "{ call CAJA.sp_ObtenerTurnoCajaPorId(?) }";
+        String SQL = "{ call VENTAS.sp_ObtenerTurnoCajaPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -46,6 +46,27 @@ public class TurnoCajaDetalleRepository implements ITurnoCajaDetalle {
                     item.setMontoInicial(rs.getDouble("montoInicial"));
                     item.setMontoFinal(rs.getDouble("montoFinal"));
                     item.setEstado(rs.getString("estado"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     response.setExito(true);
                     response.setMessage("TurnoCaja obtenido correctamente.");
                     response.setTurnoCaja(item);

@@ -16,9 +16,7 @@ public class RequestRegistroCuentasPorCobrar {
 
     @NotNull(message = "La fecha de vencimiento es obligatoria")
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    @FutureOrPresent(message = "La fecha de vencimiento no puede ser una fecha pasada")
     private LocalDateTime fechaVencimiento;
 
-    @NotBlank(message = "El estado es obligatorio")
-    @Size(max = 250, message = "El estado no debe superar los 250 caracteres")
-    private String estado;
 }

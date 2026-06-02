@@ -28,13 +28,16 @@ public class TipoPagosEdicionRepository implements ITipoPagosEdicion {
     @Override
     public ResponseEditarAllTipoPagos EditarAllTipoPagos(RequestEditarAllTipoPagos request) {
         ResponseEditarAllTipoPagos rpt = new ResponseEditarAllTipoPagos();
-        String SQL = "{ call CONFIGURACION.sp_EditarTipoPagos(?) }";
+        String SQL = "{ call VENTAS.sp_EditarTipoPago(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
+            pstmt.setLong(1, request.getIdTipoPago());
+            setParameter(pstmt, 2, request.getDescripcion());
+            setParameter(pstmt, 3, request.getImagenUrl());
+            setParameter(pstmt, 4, request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(5, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -55,12 +58,12 @@ public class TipoPagosEdicionRepository implements ITipoPagosEdicion {
     @Override
     public ResponseEditarEstadoTipoPagos EditarEstadoTipoPagos(RequestEditarEstadoTipoPagos request, int estado) {
         ResponseEditarEstadoTipoPagos rpt = new ResponseEditarEstadoTipoPagos();
-        String SQL = "{ call CONFIGURACION.sp_EditarTipoPagos_Estado(?,?,?) }";
+        String SQL = "{ call VENTAS.sp_EditarTipoPago_Estado(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdTipoPagos());
+            setParameter(pstmt, 1, request.getIdTipoPago());
             pstmt.setInt(2, estado);
             Long userId = 1L;
             pstmt.setLong(3, userId);

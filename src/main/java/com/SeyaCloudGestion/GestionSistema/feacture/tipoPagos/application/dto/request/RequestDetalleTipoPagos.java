@@ -7,6 +7,6 @@ import jakarta.validation.constraints.Min;
 @Data
 public class RequestDetalleTipoPagos {
     @Min(value = 1, message = "El id debe ser mayor a 0")
-    private Long idTipoPagos;
+    private Long idTipoPago;
 
 }

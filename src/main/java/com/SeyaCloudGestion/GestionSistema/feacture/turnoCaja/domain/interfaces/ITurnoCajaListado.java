@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.re
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.ResponseListaTurnoCaja;
 
 public interface ITurnoCajaListado {
-    ResponseListaTurnoCaja listaTurnoCaja(RequestListaTurnoCaja request);
+    ResponseListaTurnoCaja ListaTurnoCaja(RequestListaTurnoCaja request);
 }

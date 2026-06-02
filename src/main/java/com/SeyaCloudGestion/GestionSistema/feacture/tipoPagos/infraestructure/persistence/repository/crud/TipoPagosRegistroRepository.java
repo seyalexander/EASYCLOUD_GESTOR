@@ -26,16 +26,15 @@ public class TipoPagosRegistroRepository implements ITipoPagosRegistro {
     @Override
     public ResponseRegistroTipoPagos RegistroTipoPagos(RequestRegistroTipoPagos request) {
         ResponseRegistroTipoPagos rpt = new ResponseRegistroTipoPagos();
-        String SQL = "{ call CONFIGURACION.sp_RegistroTipoPagos(?,?,?,?) }";
+        String SQL = "{ call VENTAS.sp_RegistroTipoPago(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getDescripcion());
             setParameter(pstmt, 2, request.getImagenUrl());
-            setParameter(pstmt, 3, request.getFechaIngreso());
             Long userId = 1L;
-            pstmt.setLong(4, userId);
+            pstmt.setLong(3, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -49,7 +48,7 @@ public class TipoPagosRegistroRepository implements ITipoPagosRegistro {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en CONFIGURACION.sp_RegistroTipoPagos", e);
+            log.error("Error en VENTAS.sp_RegistroTipoPago", e);
         }
         return rpt;
     }

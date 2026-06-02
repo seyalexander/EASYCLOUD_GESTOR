@@ -28,7 +28,7 @@ public class CuentasPorCobrarDetalleRepository implements ICuentasPorCobrarDetal
     @Override
     public ResponseDetalleCuentasPorCobrar DetalleCuentasPorCobrar(RequestDetalleCuentasPorCobrar request) {
         ResponseDetalleCuentasPorCobrar response = new ResponseDetalleCuentasPorCobrar();
-        String SQL = "{ call VENTAS.sp_ObtenerCuentasPorCobrarPorId(?) }";
+        String SQL = "{ call VENTAS.sp_ObtenerCuentaPorCobrarPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -43,6 +43,7 @@ public class CuentasPorCobrarDetalleRepository implements ICuentasPorCobrarDetal
                     item.setMontoPendiente(rs.getDouble("montoPendiente"));
                     item.setFechaVencimiento((rs.getTimestamp("fechaVencimiento") != null ? rs.getTimestamp("fechaVencimiento").toLocalDateTime() : null));
                     item.setEstado(rs.getString("estado"));
+
                     response.setExito(true);
                     response.setMessage("CuentasPorCobrar obtenido correctamente.");
                     response.setCuentasPorCobrar(item);

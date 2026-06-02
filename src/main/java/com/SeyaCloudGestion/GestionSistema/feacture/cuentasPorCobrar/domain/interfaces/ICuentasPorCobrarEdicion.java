@@ -7,5 +7,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application
 
 public interface ICuentasPorCobrarEdicion {
     ResponseEditarAllCuentasPorCobrar EditarAllCuentasPorCobrar(RequestEditarAllCuentasPorCobrar request);
-    ResponseEditarEstadoCuentasPorCobrar EditarEstadoCuentasPorCobrar(RequestEditarEstadoCuentasPorCobrar request, int estado);
+    ResponseEditarEstadoCuentasPorCobrar EditarEstadoCuentasPorCobrar(RequestEditarEstadoCuentasPorCobrar request, String estado);
 }

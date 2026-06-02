@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.re
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.response.ResponseListaTipoPagos;
 
 public interface ITipoPagosListado {
-    ResponseListaTipoPagos listaTipoPagos(RequestListaTipoPagos request);
+    ResponseListaTipoPagos ListaTipoPagos(RequestListaTipoPagos request);
 }

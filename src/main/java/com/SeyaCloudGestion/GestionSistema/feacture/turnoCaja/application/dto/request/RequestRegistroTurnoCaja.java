@@ -1,5 +1,6 @@
 ﻿package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request;
 
+import com.SeyaCloudGestion.GestionSistema.common.anotations.fechaPosterior.FechaFinPosterior;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -16,18 +17,10 @@ public class RequestRegistroTurnoCaja {
 
     @NotNull(message = "La fecha de apertura es obligatoria")
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    @FutureOrPresent(message = "La fecha de inicio no puede ser una fecha pasada")
     private LocalDateTime fechaApertura;
-
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime fechaCierre;
 
     @PositiveOrZero(message = "El monto inicial no puede ser negativo")
     private double montoInicial;
 
-    @PositiveOrZero(message = "El monto final no puede ser negativo")
-    private double montoFinal;
-
-    @NotBlank(message = "El estado es obligatorio")
-    @Size(max = 250, message = "El estado no debe superar los 250 caracteres")
-    private String estado;
 }
