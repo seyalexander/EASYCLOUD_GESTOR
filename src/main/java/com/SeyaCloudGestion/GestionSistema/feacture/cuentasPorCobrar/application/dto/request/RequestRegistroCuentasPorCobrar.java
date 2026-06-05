@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request;
+package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;

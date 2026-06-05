@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.devoluciones.application.dto.response;
 
-public class ResponseEditarEstadoDevolucion {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseEditarEstadoDevolucion extends ResponseGeneral {
 
 }

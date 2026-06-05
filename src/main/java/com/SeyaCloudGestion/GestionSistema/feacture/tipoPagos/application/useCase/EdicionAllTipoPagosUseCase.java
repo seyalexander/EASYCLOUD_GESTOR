@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.useCase;
+package com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.useCase;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.request.RequestEditarAllTipoPagos;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.request.RequestEditarEstadoTipoPagos;

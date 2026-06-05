@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.useCase;
+package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.useCase;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestEditarAllCuentasPorCobrar;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseEditarAllCuentasPorCobrar;

@@ -26,7 +26,7 @@ public class ListaPreciosRegistroRepository implements IListaPreciosRegistro {
     @Override
     public ResponseRegistroListaPrecios RegistroListaPrecios(RequestRegistroListaPrecios request) {
         ResponseRegistroListaPrecios rpt = new ResponseRegistroListaPrecios();
-        String SQL = "{ call PRODUCTOS.sp_RegistroListaPrecio(?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroListaPrecio(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {

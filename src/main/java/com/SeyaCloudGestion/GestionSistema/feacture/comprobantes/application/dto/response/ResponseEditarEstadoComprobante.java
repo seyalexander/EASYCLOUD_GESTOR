@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.application.dto.response;
 
-public class ResponseEditarEstadoComprobante {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseEditarEstadoComprobante extends ResponseGeneral {
 
 }

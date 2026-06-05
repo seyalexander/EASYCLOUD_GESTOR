@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.stockHistorico.application.dto.response;
 
-public class ResponseEditarEstadoStockHistorico {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseEditarEstadoStockHistorico extends ResponseGeneral {
 
 }

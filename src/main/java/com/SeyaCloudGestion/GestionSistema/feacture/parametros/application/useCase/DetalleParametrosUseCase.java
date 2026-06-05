@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.useCase;
+package com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.useCase;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.dto.request.RequestDetalleParametros;
 import com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.dto.response.ResponseDetalleParametros;

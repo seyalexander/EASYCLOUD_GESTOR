@@ -28,13 +28,16 @@ public class MarcaEdicionRepository implements IMarcaEdicion {
     @Override
     public ResponseEditarAllMarca EditarAllMarca(RequestEditarAllMarca request) {
         ResponseEditarAllMarca rpt = new ResponseEditarAllMarca();
-        String SQL = "{ call PRODUCTOS.sp_EditarMarca(?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarMarca(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
+            setParameter(pstmt, 1, request.getIdMarca());
+            setParameter(pstmt, 2, request.getDescripcion());
+            setParameter(pstmt, 3, request.getImagenUrl());
+            setParameter(pstmt, 4, request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(5, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

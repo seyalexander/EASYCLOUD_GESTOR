@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.sucursales.domain.services;
+package com.SeyaCloudGestion.GestionSistema.feacture.sucursales.domain.services;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.sucursales.application.dto.request.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.sucursales.application.dto.response.*;

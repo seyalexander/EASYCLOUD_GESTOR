@@ -28,13 +28,16 @@ public class UnidadMedidaEdicionRepository implements IUnidadMedidaEdicion {
     @Override
     public ResponseEditarAllUnidadMedida EditarAllUnidadMedida(RequestEditarAllUnidadMedida request) {
         ResponseEditarAllUnidadMedida rpt = new ResponseEditarAllUnidadMedida();
-        String SQL = "{ call PRODUCTOS.sp_EditarUnidadMedida(?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarUnidadMedida(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
+            setParameter(pstmt, 1, request.getIdUnidadMedida());
+            setParameter(pstmt, 2, request.getDescripcion());
+            setParameter(pstmt, 3, request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(4, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

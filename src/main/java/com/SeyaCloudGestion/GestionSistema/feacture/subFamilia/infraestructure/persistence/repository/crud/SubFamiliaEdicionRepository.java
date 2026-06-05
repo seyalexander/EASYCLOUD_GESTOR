@@ -27,7 +27,7 @@ public class SubFamiliaEdicionRepository implements ISubFamiliaEdicion {
     public ResponseEditarAllSubFamilia EdicionAllSubFamilia(RequestEditarAllSubFamilia request) {
         ResponseEditarAllSubFamilia rpt = new ResponseEditarAllSubFamilia();
 
-        String SQL = "{ call PRODUCTOS.sp_EditarSubFamilia(?,?,?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarSubFamilia(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {

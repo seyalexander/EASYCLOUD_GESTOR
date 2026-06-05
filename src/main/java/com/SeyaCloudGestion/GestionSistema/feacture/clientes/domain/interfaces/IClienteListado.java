@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.clientes.domain.interfaces;
+package com.SeyaCloudGestion.GestionSistema.feacture.clientes.domain.interfaces;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.dto.request.RequestListaCliente;
 import com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.dto.response.ResponseListaCliente;

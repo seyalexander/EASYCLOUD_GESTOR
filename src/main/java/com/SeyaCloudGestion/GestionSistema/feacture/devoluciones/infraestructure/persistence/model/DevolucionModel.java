@@ -2,9 +2,10 @@ package com.SeyaCloudGestion.GestionSistema.feacture.devoluciones.infraestructur
 
 import com.SeyaCloudGestion.GestionSistema.common.model.AuditableModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.time.LocalDateTime;
-
+@Data
 public class DevolucionModel extends AuditableModel {
     private long idDevolucion;
     private long idVenta;

@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.aperturaCaja.domain.interfaces;
+package com.SeyaCloudGestion.GestionSistema.feacture.aperturaCaja.domain.interfaces;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.aperturaCaja.application.dto.request.RequestEditarAllAperturaCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.aperturaCaja.application.dto.request.RequestEditarEstadoAperturaCaja;

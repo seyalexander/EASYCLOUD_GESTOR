@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.request;
+package com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.Data;

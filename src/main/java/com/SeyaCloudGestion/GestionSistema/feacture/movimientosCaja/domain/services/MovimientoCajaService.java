@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.domain.services;
+package com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.domain.services;
 
 public class MovimientoCajaService {
 

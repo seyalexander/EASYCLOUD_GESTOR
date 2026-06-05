@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.domain.interfaces;
+package com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.domain.interfaces;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.request.RequestEditarAllPagoProveedores;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.request.RequestEditarEstadoPagoProveedores;

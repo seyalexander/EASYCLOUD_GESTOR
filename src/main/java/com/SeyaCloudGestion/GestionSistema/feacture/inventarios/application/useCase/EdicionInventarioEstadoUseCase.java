@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.useCase;
+package com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.useCase;
 
 public class EdicionInventarioEstadoUseCase {
 

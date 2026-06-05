@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.reportes.domain.interfaces;
+package com.SeyaCloudGestion.GestionSistema.feacture.reportes.domain.interfaces;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.reportes.application.dto.request.RequestEditarAllReportes;
 import com.SeyaCloudGestion.GestionSistema.feacture.reportes.application.dto.request.RequestEditarEstadoReportes;

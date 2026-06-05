@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.useCase;
+package com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.useCase;
 
 public class ListaProveedoresUseCase {
 

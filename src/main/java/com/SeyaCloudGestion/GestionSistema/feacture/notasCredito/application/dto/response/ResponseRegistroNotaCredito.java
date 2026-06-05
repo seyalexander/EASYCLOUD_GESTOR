@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.notasCredito.application.dto.response;
 
-public class ResponseRegistroNotaCredito {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseRegistroNotaCredito extends ResponseGeneral {
 
 }

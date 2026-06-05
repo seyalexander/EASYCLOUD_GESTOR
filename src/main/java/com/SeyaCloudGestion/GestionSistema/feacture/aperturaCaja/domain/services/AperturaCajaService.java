@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.aperturaCaja.domain.services;
+package com.SeyaCloudGestion.GestionSistema.feacture.aperturaCaja.domain.services;
 
 public class AperturaCajaService {
 

@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.login.domain.interfaces;
+package com.SeyaCloudGestion.GestionSistema.feacture.login.domain.interfaces;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.login.application.dto.request.RequestEditarAllLogin;
 import com.SeyaCloudGestion.GestionSistema.feacture.login.application.dto.request.RequestEditarEstadoLogin;

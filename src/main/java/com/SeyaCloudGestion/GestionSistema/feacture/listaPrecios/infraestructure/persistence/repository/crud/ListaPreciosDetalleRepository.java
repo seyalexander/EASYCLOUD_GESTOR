@@ -28,7 +28,7 @@ public class ListaPreciosDetalleRepository implements IListaPreciosDetalle {
     @Override
     public ResponseDetalleListaPrecios DetalleListaPrecios(RequestDetalleListaPrecios request) {
         ResponseDetalleListaPrecios response = new ResponseDetalleListaPrecios();
-        String SQL = "{ call PRODUCTOS.sp_ObtenerListaPreciosPorId(?) }";
+        String SQL = "{ call PRODUCTOS.sp_ObtenerListaPrecioPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {

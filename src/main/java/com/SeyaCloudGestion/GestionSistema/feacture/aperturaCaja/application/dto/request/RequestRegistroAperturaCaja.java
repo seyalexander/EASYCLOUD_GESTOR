@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.aperturaCaja.application.dto.request;
+package com.SeyaCloudGestion.GestionSistema.feacture.aperturaCaja.application.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;

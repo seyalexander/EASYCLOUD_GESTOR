@@ -4,6 +4,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.aperturaCaja.application.dto
 import com.SeyaCloudGestion.GestionSistema.feacture.aperturaCaja.application.dto.response.ResponseListaAperturaCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.aperturaCaja.domain.interfaces.IAperturaCajaListado;
 import com.SeyaCloudGestion.GestionSistema.feacture.aperturaCaja.infraestructure.persistence.model.AperturaCajaModel;
+import com.SeyaCloudGestion.GestionSistema.feacture.aperturaCaja.infraestructure.persistence.model.Estado;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -46,7 +47,7 @@ public class AperturaCajaListadoRepository implements IAperturaCajaListado {
                 item.setIdUsuario(rs.getLong("idUsuario"));
                 item.setFechaApertura((rs.getTimestamp("fechaApertura") != null ? rs.getTimestamp("fechaApertura").toLocalDateTime() : null));
                 item.setMontoInical(rs.getDouble("montoInical"));
-                item.setEstado(rs.getObject("estado"));
+                    item.setEstado(Estado.valueOf(rs.getString("estado")));
                     registros.add(item);
                 }
             }

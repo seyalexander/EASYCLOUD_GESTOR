@@ -33,8 +33,13 @@ public class ArticulosEdicionRepository implements IArticulosEdicion {
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
+            setParameter(pstmt, 1, request.getIdArticulos());
+            setParameter(pstmt, 2, request.getDescripcion());
+            setParameter(pstmt, 3, request.getPrecioVenta());
+            setParameter(pstmt, 4, request.getEstado());
+
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(5, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

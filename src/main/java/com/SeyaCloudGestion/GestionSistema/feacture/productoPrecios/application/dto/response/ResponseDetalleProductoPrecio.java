@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.response;
+package com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.response;
 
 import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.infraestructure.persistence.model.ProductoPrecioModel;

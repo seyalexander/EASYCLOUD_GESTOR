@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.movimientosStock.application.dto.response;
 
-public class ResponseEditarEstadoMovimientoStock {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseEditarEstadoMovimientoStock extends ResponseGeneral {
 
 }

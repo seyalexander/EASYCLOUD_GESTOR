@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.application.useCase;
+package com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.application.useCase;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.application.dto.request.RequestListaDireccionesClientes;
 import com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.application.dto.response.ResponseListaDireccionesClientes;

@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.parametros.domain.interfaces;
+package com.SeyaCloudGestion.GestionSistema.feacture.parametros.domain.interfaces;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.dto.request.RequestListaParametros;
 import com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.dto.response.ResponseListaParametros;

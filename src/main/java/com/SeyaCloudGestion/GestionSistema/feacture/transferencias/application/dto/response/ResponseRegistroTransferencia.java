@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.transferencias.application.dto.response;
 
-public class ResponseRegistroTransferencia {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseRegistroTransferencia extends ResponseGeneral {
 
 }

@@ -1,5 +1,8 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.transferencias.infraestructure.persistence.model;
 
+import lombok.Data;
+
+@Data
 public class TransferenciaModel {
     private long idTransferencia;
     private long idAlmacenOrigen;

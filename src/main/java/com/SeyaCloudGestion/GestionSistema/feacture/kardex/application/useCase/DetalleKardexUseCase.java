@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.useCase;
+package com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.useCase;
 
 public class DetalleKardexUseCase {
 

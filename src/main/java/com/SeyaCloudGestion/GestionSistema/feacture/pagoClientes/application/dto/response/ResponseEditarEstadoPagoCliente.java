@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.pagoClientes.application.dto.response;
 
-public class ResponseEditarEstadoPagoCliente {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseEditarEstadoPagoCliente extends ResponseGeneral {
 
 }

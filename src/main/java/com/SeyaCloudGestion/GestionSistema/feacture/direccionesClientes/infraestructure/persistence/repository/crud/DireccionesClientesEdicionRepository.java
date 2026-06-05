@@ -28,7 +28,7 @@ public class DireccionesClientesEdicionRepository implements IDireccionesCliente
     @Override
     public ResponseEditarAllDireccionesClientes EditarAllDireccionesClientes(RequestEditarAllDireccionesClientes request) {
         ResponseEditarAllDireccionesClientes rpt = new ResponseEditarAllDireccionesClientes();
-        String SQL = "{ call CLIENTES.sp_EditarDireccionCliente(?) }";
+        String SQL = "{ call CLIENTES.sp_EditarDireccionCliente(?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {

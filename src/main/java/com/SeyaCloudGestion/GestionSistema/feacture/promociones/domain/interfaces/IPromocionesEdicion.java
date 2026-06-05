@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.promociones.domain.interfaces;
+package com.SeyaCloudGestion.GestionSistema.feacture.promociones.domain.interfaces;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.promociones.application.dto.request.RequestEditarAllPromociones;
 import com.SeyaCloudGestion.GestionSistema.feacture.promociones.application.dto.request.RequestEditarEstadoPromociones;

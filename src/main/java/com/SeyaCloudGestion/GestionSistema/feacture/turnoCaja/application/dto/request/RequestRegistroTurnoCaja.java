@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request;
+package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request;
 
 import com.SeyaCloudGestion.GestionSistema.common.anotations.fechaPosterior.FechaFinPosterior;
 import com.fasterxml.jackson.annotation.JsonFormat;

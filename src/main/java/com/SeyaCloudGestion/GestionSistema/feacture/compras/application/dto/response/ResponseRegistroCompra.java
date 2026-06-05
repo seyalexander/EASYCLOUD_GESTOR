@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.compras.application.dto.response;
 
-public class ResponseRegistroCompra {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseRegistroCompra extends ResponseGeneral {
 
 }

@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.response;
 
-public class ResponseEditarAllPago {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseEditarAllPago extends ResponseGeneral {
 
 }

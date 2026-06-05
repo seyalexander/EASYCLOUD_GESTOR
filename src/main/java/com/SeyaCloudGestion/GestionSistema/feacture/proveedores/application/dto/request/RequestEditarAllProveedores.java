@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.request;
+package com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.request;
 
 public class RequestEditarAllProveedores {
 

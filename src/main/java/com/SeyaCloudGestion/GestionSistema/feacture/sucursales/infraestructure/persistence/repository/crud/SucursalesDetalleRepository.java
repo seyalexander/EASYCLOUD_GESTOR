@@ -28,7 +28,7 @@ public class SucursalesDetalleRepository implements ISucursalesDetalle {
     @Override
     public ResponseDetalleSucursales DetalleSucursales(RequestDetalleSucursales request) {
         ResponseDetalleSucursales response = new ResponseDetalleSucursales();
-        String SQL = "{ call CONFIGURACION.sp_ObtenerSucursalesPorId(?) }";
+        String SQL = "{ call INVENTARIO.sp_ObtenerSucursalesPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -73,7 +73,7 @@ public class SucursalesDetalleRepository implements ISucursalesDetalle {
         } catch (SQLException e) {
             response.setExito(false);
             response.setMessage(e.getMessage());
-            log.error("Error en CONFIGURACION.sp_ObtenerSucursalesPorId", e);
+            log.error("Error en INVENTARIO.sp_ObtenerSucursalesPorId", e);
         }
         return response;
     }

@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.dashboard.domain.interfaces;
+package com.SeyaCloudGestion.GestionSistema.feacture.dashboard.domain.interfaces;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.dashboard.application.dto.request.RequestEditarAllDashboard;
 import com.SeyaCloudGestion.GestionSistema.feacture.dashboard.application.dto.request.RequestEditarEstadoDashboard;

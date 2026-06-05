@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.contactosClientes.domain.interfaces;
+package com.SeyaCloudGestion.GestionSistema.feacture.contactosClientes.domain.interfaces;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.contactosClientes.application.dto.request.RequestEditarAllContactoCliente;
 import com.SeyaCloudGestion.GestionSistema.feacture.contactosClientes.application.dto.request.RequestEditarEstadoContactoCliente;

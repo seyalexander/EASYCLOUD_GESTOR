@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.application.dto.request;
+package com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.application.dto.request;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.infraestructure.persistence.model.Movimiento;
 import jakarta.validation.constraints.*;

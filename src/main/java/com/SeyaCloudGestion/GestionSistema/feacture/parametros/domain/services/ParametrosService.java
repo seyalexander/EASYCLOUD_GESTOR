@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.parametros.domain.services;
+package com.SeyaCloudGestion.GestionSistema.feacture.parametros.domain.services;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.dto.request.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.parametros.application.dto.response.*;

@@ -66,7 +66,7 @@ public class ClienteEdicionRepository implements IClienteEdicion {
     @Override
     public ResponseEditarEstadoCliente EditarEstadoCliente(RequestEditarEstadoCliente request, int estado) {
         ResponseEditarEstadoCliente rpt = new ResponseEditarEstadoCliente();
-        String SQL = "{ call VENTAS.sp_EditarCliente_Estado(?,?) }";
+        String SQL = "{ call CLIENTES.sp_EditarCliente_Estado(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {

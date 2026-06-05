@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.login.application.useCase;
+package com.SeyaCloudGestion.GestionSistema.feacture.login.application.useCase;
 
 public class RegistroLoginUseCase {
 

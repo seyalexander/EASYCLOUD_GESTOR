@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.domain.interfaces;
+package com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.domain.interfaces;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.application.dto.request.RequestEditarAllMovimientoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.application.dto.request.RequestEditarEstadoMovimientoCaja;

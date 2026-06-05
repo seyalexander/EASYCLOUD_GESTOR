@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.tipoClientes.application.dto.request;
+package com.SeyaCloudGestion.GestionSistema.feacture.tipoClientes.application.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;

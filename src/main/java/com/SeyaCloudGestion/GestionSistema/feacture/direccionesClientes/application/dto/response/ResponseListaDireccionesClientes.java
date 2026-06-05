@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.application.dto.response;
+package com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.application.dto.response;
 
 import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
 import com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.infraestructure.persistence.model.DireccionesClientesModel;

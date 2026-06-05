@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.tipoClientes.application.useCase;
+package com.SeyaCloudGestion.GestionSistema.feacture.tipoClientes.application.useCase;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoClientes.application.dto.request.RequestEditarEstadoTipoClientes;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoClientes.application.dto.response.ResponseEditarEstadoTipoClientes;

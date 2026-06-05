@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.domain.services;
+package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.domain.services;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.*;

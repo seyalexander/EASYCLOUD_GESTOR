@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.domain.interfaces;
+package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.domain.interfaces;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestEditarAllTurnoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestEditarEstadoTurnoCaja;

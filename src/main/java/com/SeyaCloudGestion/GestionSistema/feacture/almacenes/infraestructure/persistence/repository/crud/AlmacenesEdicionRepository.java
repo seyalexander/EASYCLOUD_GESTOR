@@ -50,7 +50,7 @@ public class AlmacenesEdicionRepository implements IAlmacenesEdicion {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_EditarAlmacenes", e);
+            log.error("Error en INVENTARIO.sp_EditarAlmacenes", e);
         }
         return rpt;
     }
@@ -58,7 +58,7 @@ public class AlmacenesEdicionRepository implements IAlmacenesEdicion {
     @Override
     public ResponseEditarEstadoAlmacenes EditarEstadoAlmacenes(RequestEditarEstadoAlmacenes request, int estado) {
         ResponseEditarEstadoAlmacenes rpt = new ResponseEditarEstadoAlmacenes();
-        String SQL = "{ call ALMACEN.sp_EditarAlmacenes_Estado(?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_EditarAlmacenes_Estado(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -79,7 +79,7 @@ public class AlmacenesEdicionRepository implements IAlmacenesEdicion {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_EditarAlmacenes_Estado", e);
+            log.error("Error en INVENTARIO.sp_EditarAlmacenes_Estado", e);
         }
         return rpt;
     }

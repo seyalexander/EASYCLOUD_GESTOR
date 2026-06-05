@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.dashboard.application.useCase;
+package com.SeyaCloudGestion.GestionSistema.feacture.dashboard.application.useCase;
 
 public class EdicionDashboardEstadoUseCase {
 

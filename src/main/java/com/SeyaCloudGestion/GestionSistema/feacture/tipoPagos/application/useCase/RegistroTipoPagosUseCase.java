@@ -1,4 +1,4 @@
-﻿package com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.useCase;
+package com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.useCase;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.request.RequestRegistroTipoPagos;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.response.ResponseRegistroTipoPagos;

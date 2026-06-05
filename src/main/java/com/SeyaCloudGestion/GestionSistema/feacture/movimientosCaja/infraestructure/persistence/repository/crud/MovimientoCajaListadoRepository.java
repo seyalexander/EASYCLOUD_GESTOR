@@ -3,6 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.infraestruc
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.application.dto.request.RequestListaMovimientoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.application.dto.response.ResponseListaMovimientoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.domain.interfaces.IMovimientoCajaListado;
+import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.infraestructure.persistence.model.Movimiento;
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.infraestructure.persistence.model.MovimientoCajaModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class MovimientoCajaListadoRepository implements IMovimientoCajaListado {
                     MovimientoCajaModel item = new MovimientoCajaModel();
                 item.setIdMovimientoCaja(rs.getLong("idMovimientoCaja"));
                 item.setIdAperturaCaja(rs.getLong("idAperturaCaja"));
-                item.setMovimiento(rs.getObject("Movimiento"));
+                item.setMovimiento(Movimiento.valueOf(rs.getString("movimiento")));
                 item.setConcepto(rs.getString("concepto"));
                 item.setMonto(rs.getDouble("monto"));
                 item.setFecha((rs.getTimestamp("fecha") != null ? rs.getTimestamp("fecha").toLocalDateTime() : null));
