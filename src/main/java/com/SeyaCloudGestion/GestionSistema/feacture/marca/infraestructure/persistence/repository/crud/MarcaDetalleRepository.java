@@ -31,7 +31,7 @@ public class MarcaDetalleRepository implements IMarcaDetalle {
         ResponseDetalleMarca response = new ResponseDetalleMarca();
         MarcaModel marca = null;
 
-        String SQL = "{ call PRODUCTOS.sp_ObtenerFamiliaPorId(?) }";
+        String SQL = "{ call PRODUCTOS.sp_ObtenerMarcaPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {

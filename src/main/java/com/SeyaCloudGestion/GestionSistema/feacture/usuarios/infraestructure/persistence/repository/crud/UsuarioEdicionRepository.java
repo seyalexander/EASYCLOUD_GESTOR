@@ -1,6 +1,5 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.usuarios.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.empleados.application.dto.response.ResponseEditarAllEmpleado;
 import com.SeyaCloudGestion.GestionSistema.feacture.usuarios.application.dto.request.RequestEditarAllUsuario;
 import com.SeyaCloudGestion.GestionSistema.feacture.usuarios.application.dto.request.RequestEditarEstadoUsuario;
 import com.SeyaCloudGestion.GestionSistema.feacture.usuarios.application.dto.response.ResponseEditarAllUsuario;

@@ -116,7 +116,7 @@ public class EmpresasController {
             notificacion.setMensaje("Empresa anulada");
             notificacion.setIdEmpresa(idEmpresa);
 
-            notificacionEmpresaService.enviarNotificacionEmpresa_Anular(notificacion);
+            notificacionEmpresaService.enviarNotificacionEmpresa_Activar(notificacion);
             return ResponseEntity.ok(response);
         }
 

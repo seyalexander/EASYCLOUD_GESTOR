@@ -1,0 +1,11 @@
+package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestEditarAllCuentasPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestEditarEstadoCuentasPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseEditarAllCuentasPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseEditarEstadoCuentasPorCobrar;
+
+public interface ICuentasPorCobrarEdicion {
+    ResponseEditarAllCuentasPorCobrar EditarAllCuentasPorCobrar(RequestEditarAllCuentasPorCobrar request);
+    ResponseEditarEstadoCuentasPorCobrar EditarEstadoCuentasPorCobrar(RequestEditarEstadoCuentasPorCobrar request, String estado);
+}

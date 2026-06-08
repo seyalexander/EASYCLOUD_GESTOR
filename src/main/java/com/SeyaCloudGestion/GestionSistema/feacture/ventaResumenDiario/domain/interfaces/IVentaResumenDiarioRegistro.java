@@ -1,0 +1,8 @@
+package com.SeyaCloudGestion.GestionSistema.feacture.ventaResumenDiario.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.ventaResumenDiario.application.dto.request.RequestRegistroVentaResumenDiario;
+import com.SeyaCloudGestion.GestionSistema.feacture.ventaResumenDiario.application.dto.response.ResponseRegistroVentaResumenDiario;
+
+public interface IVentaResumenDiarioRegistro {
+    ResponseRegistroVentaResumenDiario RegistroVentaResumenDiario(RequestRegistroVentaResumenDiario request);
+}

@@ -1,0 +1,11 @@
+package com.SeyaCloudGestion.GestionSistema.feacture.stockHistorico.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.stockHistorico.application.dto.request.RequestEditarAllStockHistorico;
+import com.SeyaCloudGestion.GestionSistema.feacture.stockHistorico.application.dto.request.RequestEditarEstadoStockHistorico;
+import com.SeyaCloudGestion.GestionSistema.feacture.stockHistorico.application.dto.response.ResponseEditarAllStockHistorico;
+import com.SeyaCloudGestion.GestionSistema.feacture.stockHistorico.application.dto.response.ResponseEditarEstadoStockHistorico;
+
+public interface IStockHistoricoEdicion {
+    ResponseEditarAllStockHistorico EditarAllStockHistorico(RequestEditarAllStockHistorico request);
+    ResponseEditarEstadoStockHistorico EditarEstadoStockHistorico(RequestEditarEstadoStockHistorico request, int estado);
+}

@@ -1,0 +1,11 @@
+package com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.application.dto.request.RequestEditarAllDireccionesClientes;
+import com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.application.dto.request.RequestEditarEstadoDireccionesClientes;
+import com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.application.dto.response.ResponseEditarAllDireccionesClientes;
+import com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.application.dto.response.ResponseEditarEstadoDireccionesClientes;
+
+public interface IDireccionesClientesEdicion {
+    ResponseEditarAllDireccionesClientes EditarAllDireccionesClientes(RequestEditarAllDireccionesClientes request);
+    ResponseEditarEstadoDireccionesClientes EditarEstadoDireccionesClientes(RequestEditarEstadoDireccionesClientes request, int estado);
+}

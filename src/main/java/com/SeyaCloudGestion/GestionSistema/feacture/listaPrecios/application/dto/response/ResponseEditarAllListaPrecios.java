@@ -1,4 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.dto.response;
 
-public class ResponseEditarAllListaPrecios {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseEditarAllListaPrecios extends ResponseGeneral {
 }

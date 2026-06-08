@@ -1,4 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.response;
 
-public class ResponseEditarEstadoInventario {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseEditarEstadoInventario extends ResponseGeneral {
 }

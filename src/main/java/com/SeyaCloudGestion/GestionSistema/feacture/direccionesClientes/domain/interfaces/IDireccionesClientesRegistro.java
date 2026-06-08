@@ -1,0 +1,8 @@
+package com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.application.dto.request.RequestRegistroDireccionesClientes;
+import com.SeyaCloudGestion.GestionSistema.feacture.direccionesClientes.application.dto.response.ResponseRegistroDireccionesClientes;
+
+public interface IDireccionesClientesRegistro {
+    ResponseRegistroDireccionesClientes RegistroDireccionesClientes(RequestRegistroDireccionesClientes request);
+}

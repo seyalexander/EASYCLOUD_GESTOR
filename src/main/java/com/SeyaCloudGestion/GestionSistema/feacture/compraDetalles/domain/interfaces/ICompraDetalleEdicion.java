@@ -1,0 +1,11 @@
+package com.SeyaCloudGestion.GestionSistema.feacture.compraDetalles.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.compraDetalles.application.dto.request.RequestEditarAllCompraDetalle;
+import com.SeyaCloudGestion.GestionSistema.feacture.compraDetalles.application.dto.request.RequestEditarEstadoCompraDetalle;
+import com.SeyaCloudGestion.GestionSistema.feacture.compraDetalles.application.dto.response.ResponseEditarAllCompraDetalle;
+import com.SeyaCloudGestion.GestionSistema.feacture.compraDetalles.application.dto.response.ResponseEditarEstadoCompraDetalle;
+
+public interface ICompraDetalleEdicion {
+    ResponseEditarAllCompraDetalle EditarAllCompraDetalle(RequestEditarAllCompraDetalle request);
+    ResponseEditarEstadoCompraDetalle EditarEstadoCompraDetalle(RequestEditarEstadoCompraDetalle request, int estado);
+}

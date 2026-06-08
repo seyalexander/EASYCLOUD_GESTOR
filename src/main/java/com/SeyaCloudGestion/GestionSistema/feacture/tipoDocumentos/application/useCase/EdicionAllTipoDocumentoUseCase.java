@@ -23,7 +23,7 @@ public class EdicionAllTipoDocumentoUseCase {
                 throw new IllegalArgumentException(mensajeError);
             }
 
-            if (request.getIdTipoDocumentos() == 0) {
+            if (request.getIdTipoDocumento() == 0) {
                 String mensajeError = "No se está enviando correctamente el código del tipo de documento";
                 throw new IllegalArgumentException(mensajeError);
             }

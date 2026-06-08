@@ -5,6 +5,8 @@ import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.resp
 import com.SeyaCloudGestion.GestionSistema.feacture.empresa.domain.services.EmpresaService;
 import org.springframework.stereotype.Component;
 
+import java.sql.SQLException;
+
 @Component
 public class RegistroEmpresaUseCase {
     private final EmpresaService empresaService;

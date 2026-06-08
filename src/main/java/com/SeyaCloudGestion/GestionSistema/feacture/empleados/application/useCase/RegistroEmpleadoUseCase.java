@@ -3,16 +3,12 @@ package com.SeyaCloudGestion.GestionSistema.feacture.empleados.application.useCa
 import com.SeyaCloudGestion.GestionSistema.feacture.empleados.application.dto.request.RequestRegistroEmpleado;
 import com.SeyaCloudGestion.GestionSistema.feacture.empleados.application.dto.response.ResponseRegistroEmpleado;
 import com.SeyaCloudGestion.GestionSistema.feacture.empleados.domain.services.EmpleadoService;
-import com.SeyaCloudGestion.GestionSistema.feacture.empleados.domain.validations.EmpleadoValidator;
 import com.SeyaCloudGestion.GestionSistema.feacture.empleados.domain.validations.ValidacionRequest_RegistrarEmpleados;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.request.RequestDetalleTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.response.ResponseDetalleTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.domain.services.TipoDocumentoService;
-import com.SeyaCloudGestion.GestionSistema.utils.SecurityUtils;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 
 @Component
 public class RegistroEmpleadoUseCase {

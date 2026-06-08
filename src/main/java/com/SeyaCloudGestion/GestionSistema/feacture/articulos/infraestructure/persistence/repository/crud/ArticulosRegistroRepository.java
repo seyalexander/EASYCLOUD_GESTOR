@@ -27,16 +27,23 @@ public class ArticulosRegistroRepository implements IArticulosRegistro {
     public ResponseRegistroArticulo registrarArticulo(RequestRegistroArticulo request) {
         ResponseRegistroArticulo rpt = new ResponseRegistroArticulo();
 
-        String SQL = "{ call PRODUCTOS.sp_RegistroArticulos(?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroArticulos(?,?,?,?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             Long userId = 1L;
-
-            pstmt.setString(1, request.getDescripcion());
-            pstmt.setString(2, request.getImagenUrl());
-            pstmt.setLong(3, userId);
+            pstmt.setString(1, request.getImagenUrl());
+            pstmt.setString(2, request.getDescripcion());
+            pstmt.setString(3, request.getCodigoArticulo());
+            pstmt.setString(4, request.getCodigoBarras());
+            pstmt.setDouble(5, request.getPrecioVenta());
+            pstmt.setLong(5, request.getIdSubFamilia());
+            pstmt.setLong(5, request.getIdUnidadMedida());
+            pstmt.setDouble(6, request.getCostoCompra());
+            pstmt.setDouble(7, request.getStockMinimo());
+            pstmt.setLong(10, request.getIdMarca());
+            pstmt.setLong(11, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 

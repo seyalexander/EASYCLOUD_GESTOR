@@ -1,19 +1,11 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.rol.infraestructure.controller;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.request.RequestEditarAllFamilia;
-import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.response.ResponseEditarAllFamilia;
-import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.response.ResponseEditarEstadoFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.rol.application.dto.request.RequestEditarAllRol;
 import com.SeyaCloudGestion.GestionSistema.feacture.rol.application.dto.request.RequestListaRol;
 import com.SeyaCloudGestion.GestionSistema.feacture.rol.application.dto.request.RequestRegistroRol;
 import com.SeyaCloudGestion.GestionSistema.feacture.rol.application.dto.response.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.rol.application.useCase.*;
-import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestRegistrarSubFamilia;
-import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.response.ResponseDetalleSubFamilia;
-import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.response.ResponseRegistroSubFamilia;
-import com.SeyaCloudGestion.GestionSistema.websockets.application.dto.NotificacionFamiliaDTO;
 import com.SeyaCloudGestion.GestionSistema.websockets.application.dto.NotificacionRolDTO;
-import com.SeyaCloudGestion.GestionSistema.websockets.application.dto.NotificacionSubFamiliaDTO;
 import com.SeyaCloudGestion.GestionSistema.websockets.domain.services.NotificacionRolService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

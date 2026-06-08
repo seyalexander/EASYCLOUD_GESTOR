@@ -1,13 +1,10 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.infraestructure.controller;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.response.ResponseDetalleFamilia;
-import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.response.ResponseEditarEstadoFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestEditarAllSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestListaSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestRegistrarSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.response.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.useCase.*;
-import com.SeyaCloudGestion.GestionSistema.websockets.application.dto.NotificacionFamiliaDTO;
 import com.SeyaCloudGestion.GestionSistema.websockets.application.dto.NotificacionSubFamiliaDTO;
 import com.SeyaCloudGestion.GestionSistema.websockets.domain.services.NotificacionSubFamiliaService;
 import io.swagger.v3.oas.annotations.Operation;

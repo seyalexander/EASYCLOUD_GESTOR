@@ -1,0 +1,8 @@
+package com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.dto.request.RequestDetalleProductoImpuesto;
+import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.dto.response.ResponseDetalleProductoImpuesto;
+
+public interface IProductoImpuestoDetalle {
+    ResponseDetalleProductoImpuesto DetalleProductoImpuesto(RequestDetalleProductoImpuesto request);
+}

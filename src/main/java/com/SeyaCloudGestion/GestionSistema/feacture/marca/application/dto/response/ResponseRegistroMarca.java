@@ -1,4 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.marca.application.dto.response;
 
-public class ResponseRegistroMarca {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseRegistroMarca extends ResponseGeneral {
 }

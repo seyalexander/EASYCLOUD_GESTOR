@@ -15,8 +15,10 @@ public class DetalleMarcaUseCase {
         this.marcaService = marcaService;
     }
 
-    public ResponseDetalleMarca detalleMarcas(RequestDetalleMarca request) {
+    public ResponseDetalleMarca detalleMarcas(long idMarca) {
         try {
+            RequestDetalleMarca request = new RequestDetalleMarca();
+            request.setIdMarca(idMarca);
             ResponseDetalleMarca response = marcaService.DetalleMarca(request);
             if(response.isExito()){
 

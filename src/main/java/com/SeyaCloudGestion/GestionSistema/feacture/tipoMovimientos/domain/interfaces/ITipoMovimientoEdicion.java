@@ -1,0 +1,11 @@
+package com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.request.RequestEditarAllTipoMovimiento;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.request.RequestEditarEstadoTipoMovimiento;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.response.ResponseEditarAllTipoMovimiento;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.response.ResponseEditarEstadoTipoMovimiento;
+
+public interface ITipoMovimientoEdicion {
+    ResponseEditarAllTipoMovimiento EditarAllTipoMovimiento(RequestEditarAllTipoMovimiento request);
+    ResponseEditarEstadoTipoMovimiento EditarEstadoTipoMovimiento(RequestEditarEstadoTipoMovimiento request, int estado);
+}

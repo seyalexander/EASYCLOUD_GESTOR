@@ -1,0 +1,11 @@
+package com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.application.dto.request.RequestEditarAllMovimientoCaja;
+import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.application.dto.request.RequestEditarEstadoMovimientoCaja;
+import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.application.dto.response.ResponseEditarAllMovimientoCaja;
+import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.application.dto.response.ResponseEditarEstadoMovimientoCaja;
+
+public interface IMovimientoCajaEdicion {
+    ResponseEditarAllMovimientoCaja EditarAllMovimientoCaja(RequestEditarAllMovimientoCaja request);
+    ResponseEditarEstadoMovimientoCaja EditarEstadoMovimientoCaja(RequestEditarEstadoMovimientoCaja request, int estado);
+}

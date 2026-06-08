@@ -36,7 +36,7 @@ public class TipoDocumentoEdicionRepository implements ITipoDocumentoEdicion {
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            pstmt.setLong(1, request.getIdTipoDocumentos());
+            pstmt.setLong(1, request.getIdTipoDocumento());
             pstmt.setString(2, request.getDescripcion());
             pstmt.setInt(3, request.getEstado());
             pstmt.setString(4, request.getCodigoSunat());
@@ -72,7 +72,7 @@ public class TipoDocumentoEdicionRepository implements ITipoDocumentoEdicion {
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            pstmt.setLong(1, request.getIdTipoDocumentos());
+            pstmt.setLong(1, request.getIdTipoDocumento());
             pstmt.setInt(2, estado);
             pstmt.setLong(3, userAutenticado);
 

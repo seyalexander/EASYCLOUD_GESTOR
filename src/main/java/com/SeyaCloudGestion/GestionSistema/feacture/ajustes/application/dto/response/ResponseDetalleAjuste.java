@@ -1,4 +1,11 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.ajustes.application.dto.response;
 
-public class ResponseDetalleAjuste {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+import com.SeyaCloudGestion.GestionSistema.feacture.ajustes.infraestructure.persistence.model.AjustesModel;
+import lombok.Data;
+
+@Data
+public class ResponseDetalleAjuste extends ResponseGeneral {
+
+    private AjustesModel ajustes;
 }

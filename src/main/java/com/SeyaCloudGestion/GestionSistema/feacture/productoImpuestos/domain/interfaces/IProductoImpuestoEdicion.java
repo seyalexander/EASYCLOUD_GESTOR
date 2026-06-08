@@ -1,0 +1,11 @@
+package com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.dto.request.RequestEditarAllProductoImpuesto;
+import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.dto.request.RequestEditarEstadoProductoImpuesto;
+import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.dto.response.ResponseEditarAllProductoImpuesto;
+import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.dto.response.ResponseEditarEstadoProductoImpuesto;
+
+public interface IProductoImpuestoEdicion {
+    ResponseEditarAllProductoImpuesto EditarAllProductoImpuesto(RequestEditarAllProductoImpuesto request);
+    ResponseEditarEstadoProductoImpuesto EditarEstadoProductoImpuesto(RequestEditarEstadoProductoImpuesto request, int estado);
+}

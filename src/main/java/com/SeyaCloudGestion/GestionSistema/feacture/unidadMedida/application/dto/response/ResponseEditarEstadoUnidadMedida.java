@@ -1,4 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.unidadMedida.application.dto.response;
 
-public class ResponseEditarEstadoUnidadMedida {
+import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
+
+public class ResponseEditarEstadoUnidadMedida extends ResponseGeneral {
 }

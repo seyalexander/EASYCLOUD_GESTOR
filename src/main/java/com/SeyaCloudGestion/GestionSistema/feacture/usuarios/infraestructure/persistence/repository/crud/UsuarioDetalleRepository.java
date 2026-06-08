@@ -1,7 +1,5 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.usuarios.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.empleados.application.dto.response.ResponseDetalleEmpleado;
-import com.SeyaCloudGestion.GestionSistema.feacture.empleados.infraestructure.persistence.model.EmpleadoModel;
 import com.SeyaCloudGestion.GestionSistema.feacture.usuarios.application.dto.request.RequestDetalleUsuario;
 import com.SeyaCloudGestion.GestionSistema.feacture.usuarios.application.dto.response.ResponseDetalleUsuario;
 import com.SeyaCloudGestion.GestionSistema.feacture.usuarios.domain.interfaces.IUsuarioDetalle;
