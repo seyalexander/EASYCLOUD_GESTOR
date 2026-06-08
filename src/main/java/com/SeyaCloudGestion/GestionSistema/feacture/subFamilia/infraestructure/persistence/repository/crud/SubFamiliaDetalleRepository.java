@@ -31,12 +31,15 @@ public class SubFamiliaDetalleRepository implements ISubFamiliaDetalle {
         ResponseDetalleSubFamilia response = new ResponseDetalleSubFamilia();
         subFamiliaModel familia = null;
 
-        String SQL = "{ call PRODUCTOS.sp_ObtenerSubFamiliaPorId(?) }";
+        String SQL = "{ call PRODUCTOS.sp_ObtenerSubFamiliaPorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
+            Long empresaId = 1L;
+
             pstmt.setLong(1, request.getIdSubFamilia());
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
 
@@ -46,7 +49,9 @@ public class SubFamiliaDetalleRepository implements ISubFamiliaDetalle {
                     familia.setFamiliaDescripcion(rs.getString("familiaDescripcion"));
                     familia.setIdSubFamilia(rs.getLong("idSubFamilia"));
                     familia.setSubFamiliaDescripcion(rs.getString("subFamiliaDescripcion"));
+                    familia.setImagenUrl(rs.getString("imagenUrl"));
                     familia.setEstado(rs.getInt("estado"));
+
                     familia.setFechaCreacion(rs.getString("fechaCreacion"));
                     familia.setFechaEdicion(rs.getString("fechaEdicion"));
                     familia.setFechaAnulacion(rs.getString("fechaAnulacion"));

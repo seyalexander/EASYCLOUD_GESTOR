@@ -25,7 +25,4 @@ public class RequestEditarAllSubFamilia {
     @Min(value = 0, message = "El estado no puede ser negativo")
     @Max(value = 1, message = "El estado solo puede ser 0 o 1")
     private int estado;
-
-    @Min(value = 1, message = "El id del usuario es obligatorio")
-    private long idUsuarioEdicion;
 }

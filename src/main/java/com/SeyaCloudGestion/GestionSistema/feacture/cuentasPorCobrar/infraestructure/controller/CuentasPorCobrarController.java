@@ -44,8 +44,11 @@ public class CuentasPorCobrarController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
-    @Operation(summary = "Listar cuentas por cobrar", description = "Obtiene la lista de cuentas por cobrar según los filtros enviados")
+    @GetMapping("/cliente")
+    @Operation(
+            summary = "Listar cuentas por cobrar por cliente",
+            description = "Obtiene la lista de cuentas por cobrar filtradas por cliente")
+
     public ResponseEntity<ResponseListaCuentasPorCobrar> ListaCuentasPorCobrarIDCliente(
             @Validated @ModelAttribute RequestListaCuentasPorCobrarIDCliente request
     ) {

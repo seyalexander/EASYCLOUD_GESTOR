@@ -28,7 +28,7 @@ public class DetalleFamiliaUseCase {
         }catch (IllegalArgumentException | SecurityException e){
             ResponseDetalleFamilia response = new ResponseDetalleFamilia();
             response.setExito(false);
-            response.setMessage(e.getMessage());
+            response.setMessage(e.getMessage() );
             return response;
         }
         catch (Exception e){

@@ -1,9 +1,13 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.marca.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.marca.application.dto.request.RequestDetalleMarca;
 import com.SeyaCloudGestion.GestionSistema.feacture.marca.application.dto.request.RequestEditarEstadoMarca;
+import com.SeyaCloudGestion.GestionSistema.feacture.marca.application.dto.response.ResponseDetalleMarca;
 import com.SeyaCloudGestion.GestionSistema.feacture.marca.application.dto.response.ResponseEditarEstadoMarca;
 import com.SeyaCloudGestion.GestionSistema.feacture.marca.domain.services.MarcaService;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 public class EdicionMarcaEstadoUseCase {
@@ -15,6 +19,19 @@ public class EdicionMarcaEstadoUseCase {
 
     public ResponseEditarEstadoMarca AnularMarca(Long idMarca) {
         try {
+            RequestDetalleMarca requestDetalle = new RequestDetalleMarca();
+            requestDetalle.setIdMarca(idMarca);
+
+            ResponseDetalleMarca detalleBD= marcaService.DetalleMarca(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getMarca() == null) {
+                throw new IllegalArgumentException("La marca no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getMarca().getEstado(), 0)) {
+                throw new IllegalArgumentException("La familia ya se encuentra anulada.");
+            }
+
             RequestEditarEstadoMarca request = new RequestEditarEstadoMarca();
             request.setIdMarca(idMarca);
             ResponseEditarEstadoMarca response = marcaService.EditarEstadoMarca(request,0);
@@ -40,6 +57,19 @@ public class EdicionMarcaEstadoUseCase {
 
     public ResponseEditarEstadoMarca ActivarMarca(Long idMarca) {
         try {
+            RequestDetalleMarca requestDetalle = new RequestDetalleMarca();
+            requestDetalle.setIdMarca(idMarca);
+
+            ResponseDetalleMarca detalleBD= marcaService.DetalleMarca(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getMarca() == null) {
+                throw new IllegalArgumentException("La marca no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getMarca().getEstado(), 1)) {
+                throw new IllegalArgumentException("La familia ya se encuentra activada.");
+            }
+
             RequestEditarEstadoMarca request = new RequestEditarEstadoMarca();
             request.setIdMarca(idMarca);
             ResponseEditarEstadoMarca response = marcaService.EditarEstadoMarca(request,1);

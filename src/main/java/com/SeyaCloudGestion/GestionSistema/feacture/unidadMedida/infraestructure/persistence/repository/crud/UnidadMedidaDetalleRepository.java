@@ -28,12 +28,15 @@ public class UnidadMedidaDetalleRepository implements IUnidadMedidaDetalle {
     @Override
     public ResponseDetalleUnidadMedida DetalleUnidadMedida(RequestDetalleUnidadMedida request) {
         ResponseDetalleUnidadMedida response = new ResponseDetalleUnidadMedida();
-        String SQL = "{ call PRODUCTOS.sp_ObtenerUnidadMedidaPorId(?) }";
+
+        String SQL = "{ call PRODUCTOS.sp_ObtenerUnidadMedidaPorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdUnidadMedida());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -42,21 +45,20 @@ public class UnidadMedidaDetalleRepository implements IUnidadMedidaDetalle {
                     item.setDescripcion(rs.getString("descripcion"));
                     item.setSiglas(rs.getString("siglas"));
                     item.setEstado(rs.getInt("estado"));
+
                     item.setFechaCreacion((rs.getTimestamp("fechaCreacion") != null ? rs.getTimestamp("fechaCreacion").toLocalDateTime() : null));
                     item.setFechaEdicion((rs.getTimestamp("fechaEdicion") != null ? rs.getTimestamp("fechaEdicion").toLocalDateTime() : null));
                     item.setFechaAnulacion((rs.getTimestamp("fechaAnulacion") != null ? rs.getTimestamp("fechaAnulacion").toLocalDateTime() : null));
                     item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
                     item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
                     item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
-                    item.setUsuarioCreacion(rs.getString("usuarioCreacion"));
-                    item.setUsuarioEdicion(rs.getString("usuarioEdicion"));
-                    item.setUsuarioAnulacion(rs.getString("usuarioAnulacion"));
+
                     response.setExito(true);
                     response.setMessage("UnidadMedida obtenido correctamente.");
                     response.setUnidadMedida(item);
                 } else {
                     response.setExito(false);
-                    response.setMessage("No se encontró UnidadMedida.");
+                    response.setMessage("No se encontró UnidadMedida .");
                 }
             }
         } catch (SQLException e) {

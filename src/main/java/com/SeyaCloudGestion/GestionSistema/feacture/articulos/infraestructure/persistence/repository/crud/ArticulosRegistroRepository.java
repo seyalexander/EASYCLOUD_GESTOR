@@ -38,10 +38,10 @@ public class ArticulosRegistroRepository implements IArticulosRegistro {
             pstmt.setString(3, request.getCodigoArticulo());
             pstmt.setString(4, request.getCodigoBarras());
             pstmt.setDouble(5, request.getPrecioVenta());
-            pstmt.setLong(5, request.getIdSubFamilia());
-            pstmt.setLong(5, request.getIdUnidadMedida());
-            pstmt.setDouble(6, request.getCostoCompra());
-            pstmt.setDouble(7, request.getStockMinimo());
+            pstmt.setLong(6, request.getIdSubFamilia());
+            pstmt.setLong(7, request.getIdUnidadMedida());
+            pstmt.setDouble(8, request.getCostoCompra());
+            pstmt.setDouble(9, request.getStockMinimo());
             pstmt.setLong(10, request.getIdMarca());
             pstmt.setLong(11, userId);
 

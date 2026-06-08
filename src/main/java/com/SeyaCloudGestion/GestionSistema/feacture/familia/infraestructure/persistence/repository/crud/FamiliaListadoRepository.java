@@ -29,12 +29,14 @@ public class FamiliaListadoRepository implements IFamiliaListado {
         ResponseListaFamilia rpt = new ResponseListaFamilia();
         List<FamiliaModel> familias = new ArrayList<>();
 
-        String SQL = "{ call PRODUCTOS.sp_ListarFamilia (?) }";
+        String SQL = "{ call PRODUCTOS.sp_ListarFamilia (?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setInt(1, request.getEstado());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             ResultSet rs = pstmt.executeQuery();
 

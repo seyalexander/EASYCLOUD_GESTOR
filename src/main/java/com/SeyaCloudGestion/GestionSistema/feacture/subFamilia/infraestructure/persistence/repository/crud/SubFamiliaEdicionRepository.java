@@ -27,7 +27,7 @@ public class SubFamiliaEdicionRepository implements ISubFamiliaEdicion {
     public ResponseEditarAllSubFamilia EdicionAllSubFamilia(RequestEditarAllSubFamilia request) {
         ResponseEditarAllSubFamilia rpt = new ResponseEditarAllSubFamilia();
 
-        String SQL = "{ call PRODUCTOS.sp_EditarSubFamilia(?,?,?,?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarSubFamilia(?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -39,6 +39,7 @@ public class SubFamiliaEdicionRepository implements ISubFamiliaEdicion {
 //            Long userId =  authentication.getPrincipal();
 
             Long userId = 1L;
+            Long empresaId = 1L;
 
             pstmt.setLong(1, request.getIdSubFamilia());
             pstmt.setString(2, request.getSubFamiliaDescripcion());
@@ -46,6 +47,7 @@ public class SubFamiliaEdicionRepository implements ISubFamiliaEdicion {
             pstmt.setLong(4, request.getIdFamilia());
             pstmt.setInt(5, request.getEstado());
             pstmt.setLong(6, userId);
+            pstmt.setLong(7, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -69,7 +71,7 @@ public class SubFamiliaEdicionRepository implements ISubFamiliaEdicion {
     public ResponseEditarEstadoSubFamilia EditarEstadoSubFamilia(RequestEditarEstadoSubFamilia request, int estado) {
         ResponseEditarEstadoSubFamilia rpt = new ResponseEditarEstadoSubFamilia();
 
-        String SQL = "{ call PRODUCTOS.sp_EditarSubFamilia_Estado(?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarSubFamilia_Estado(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -81,10 +83,12 @@ public class SubFamiliaEdicionRepository implements ISubFamiliaEdicion {
 //            Long userId =  authentication.getPrincipal();
 
             Long userId = 1L;
+            Long empresaId = 1L;
 
             pstmt.setLong(1, request.getIdSubFamilia());
             pstmt.setInt(2, estado);
             pstmt.setLong(3, userId);
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 

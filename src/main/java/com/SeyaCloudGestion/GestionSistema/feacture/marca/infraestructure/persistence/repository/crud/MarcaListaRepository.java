@@ -30,12 +30,14 @@ public class MarcaListaRepository implements IMarcaListado {
         ResponseListaMarca rpt = new ResponseListaMarca();
         List<MarcaModel> marcas = new ArrayList<>();
 
-        String SQL = "{ call PRODUCTOS.sp_ListarMarca (?) }";
+        String SQL = "{ call PRODUCTOS.sp_ListarMarca (?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setInt(1, request.getEstado());
+            Long empresaId = 1L;
+            pstmt.setLong(2,empresaId);
 
             ResultSet rs = pstmt.executeQuery();
 

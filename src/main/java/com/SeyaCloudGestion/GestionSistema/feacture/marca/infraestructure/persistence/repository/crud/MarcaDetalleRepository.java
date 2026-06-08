@@ -31,12 +31,14 @@ public class MarcaDetalleRepository implements IMarcaDetalle {
         ResponseDetalleMarca response = new ResponseDetalleMarca();
         MarcaModel marca = null;
 
-        String SQL = "{ call PRODUCTOS.sp_ObtenerMarcaPorId(?) }";
+        String SQL = "{ call PRODUCTOS.sp_ObtenerMarcaPorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setLong(1, request.getIdMarca());
+            Long empresaId = 1L;
+            pstmt.setLong(2,empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
 

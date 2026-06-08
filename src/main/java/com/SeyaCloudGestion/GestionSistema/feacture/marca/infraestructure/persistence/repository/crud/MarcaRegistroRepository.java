@@ -26,15 +26,16 @@ public class MarcaRegistroRepository implements IMarcaRegistro {
     @Override
     public ResponseRegistroMarca RegistroMarca(RequestRegistroMarca request) {
         ResponseRegistroMarca rpt = new ResponseRegistroMarca();
-        String SQL = "{ call PRODUCTOS.sp_RegistroMarca(?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroMarca(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
             setParameter(pstmt, 1, request.getDescripcion());
             setParameter(pstmt, 2, request.getImagenUrl());
             Long userId = 1L;
+            Long empresaId = 1L;
             pstmt.setLong(3, userId);
-
+            pstmt.setLong(4, empresaId);
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {

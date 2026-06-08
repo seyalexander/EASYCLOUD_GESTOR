@@ -25,7 +25,7 @@ public class SubFamiliaRegistroRepository implements ISubFamiliaRegistro {
     public ResponseRegistroSubFamilia RegistroSubFamilia(RequestRegistrarSubFamilia request) {
         ResponseRegistroSubFamilia rpt = new ResponseRegistroSubFamilia();
 
-        String SQL = "{ call PRODUCTOS.sp_RegistroSubFamilia(?,?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroSubFamilia(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -37,25 +37,35 @@ public class SubFamiliaRegistroRepository implements ISubFamiliaRegistro {
 //            Long userId =  authentication.getPrincipal();
 
             Long userId = 1L;
-
+            Long empresaId = 1L;
             pstmt.setString(1, request.getSubFamiliaDescripcion());
             pstmt.setString(2, request.getImagenUrl());
             pstmt.setLong(3, request.getIdFamilia());
             pstmt.setLong(4, userId);
+            pstmt.setLong(5, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
                 rpt.setExito(true);
-                rpt.setMessage("Familia insertado correctamente.");
+                rpt.setMessage("Sub Familia insertado correctamente.");
             } else {
                 rpt.setExito(false);
-                rpt.setMessage("No se insertó la familia.");
+                rpt.setMessage("No se insertó la sub familia.");
             }
 
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+
+            String mensaje = e.getMessage();
+
+            if (mensaje != null && mensaje.contains("UQ_SubFamilia_Familia")) {
+                rpt.setMessage("Ya existe una sub familia con esa descripción.");
+            }
+
+            else {
+                rpt.setMessage("Error al registrar la sub familia.");
+            }
         }
 
         return rpt;

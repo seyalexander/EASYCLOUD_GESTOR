@@ -32,42 +32,45 @@ public class UnidadMedidaListaRepository implements IUnidadMedidaListado {
         ResponseListaUnidadMedida rpt = new ResponseListaUnidadMedida();
         List<UnidadMedidaModel> unidadesMedidas = new ArrayList<>();
 
-        String SQL = "{ call PRODUCTOS.sp_ListarUnidadMedida (?) }";
+        String SQL = "{ call PRODUCTOS.sp_ListarUnidadMedida (?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setInt(1, request.getEstado());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                UnidadMedidaModel tipoDocumento = new UnidadMedidaModel();
+                UnidadMedidaModel item = new UnidadMedidaModel();
 
-                tipoDocumento.setIdUnidadMedida(rs.getLong("idUnidadMedida"));
-                tipoDocumento.setDescripcion(rs.getString("descripcion"));
-                tipoDocumento.setEstado(rs.getInt("estado"));
-                tipoDocumento.setFechaCreacion(
+                item.setIdUnidadMedida(rs.getLong("idUnidadMedida"));
+                item.setDescripcion(rs.getString("descripcion"));
+                item.setSiglas(rs.getString("siglas"));
+                item.setEstado(rs.getInt("estado"));
+                item.setFechaCreacion(
                         rs.getTimestamp("fechaCreacion") != null
                                 ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
                                 : null
                 );
 
-                tipoDocumento.setFechaEdicion(
+                item.setFechaEdicion(
                         rs.getTimestamp("fechaEdicion") != null
                                 ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
                                 : null
                 );
 
-                tipoDocumento.setFechaAnulacion(
+                item.setFechaAnulacion(
                         rs.getTimestamp("fechaAnulacion") != null
                                 ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
                                 : null
                 );
-                tipoDocumento.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
-                tipoDocumento.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
-                tipoDocumento.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
-                unidadesMedidas.add(tipoDocumento);
+                item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+                unidadesMedidas.add(item);
             }
             rpt.setExito(true);
             rpt.setUnidadesMedida(unidadesMedidas);

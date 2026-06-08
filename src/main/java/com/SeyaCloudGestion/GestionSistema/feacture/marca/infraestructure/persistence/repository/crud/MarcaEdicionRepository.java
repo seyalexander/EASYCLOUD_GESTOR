@@ -28,7 +28,7 @@ public class MarcaEdicionRepository implements IMarcaEdicion {
     @Override
     public ResponseEditarAllMarca EditarAllMarca(RequestEditarAllMarca request) {
         ResponseEditarAllMarca rpt = new ResponseEditarAllMarca();
-        String SQL = "{ call PRODUCTOS.sp_EditarMarca(?,?,?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarMarca(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -38,6 +38,8 @@ public class MarcaEdicionRepository implements IMarcaEdicion {
             setParameter(pstmt, 4, request.getEstado());
             Long userId = 1L;
             pstmt.setLong(5, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(6,empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -58,7 +60,7 @@ public class MarcaEdicionRepository implements IMarcaEdicion {
     @Override
     public ResponseEditarEstadoMarca EditarEstadoMarca(RequestEditarEstadoMarca request, int estado) {
         ResponseEditarEstadoMarca rpt = new ResponseEditarEstadoMarca();
-        String SQL = "{ call PRODUCTOS.sp_EditarMarca_Estado(?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarMarca_Estado(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -67,6 +69,8 @@ public class MarcaEdicionRepository implements IMarcaEdicion {
             pstmt.setInt(2, estado);
             Long userId = 1L;
             pstmt.setLong(3, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(4,empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

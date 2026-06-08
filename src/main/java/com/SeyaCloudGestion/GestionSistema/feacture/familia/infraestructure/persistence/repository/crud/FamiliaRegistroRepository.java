@@ -27,16 +27,18 @@ public class FamiliaRegistroRepository implements IFamiliaRegistro {
     public ResponseRegistroFamilia RegistroFamilia(RequestRegistroFamilia request) {
         ResponseRegistroFamilia rpt = new ResponseRegistroFamilia();
 
-        String SQL = "{ call PRODUCTOS.sp_RegistroFamilia(?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroFamilia(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             Long userId = 1L;
+            Long empresaId = 1L;
 
             pstmt.setString(1, request.getDescripcion());
             pstmt.setString(2, request.getImagenUrl());
             pstmt.setLong(3, userId);
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -50,11 +52,18 @@ public class FamiliaRegistroRepository implements IFamiliaRegistro {
 
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+
+            String mensaje = e.getMessage();
+
+            if (mensaje != null && mensaje.contains("UQ_Familia_Empresa")) {
+                rpt.setMessage("Ya existe una familia con esa descripción.");
+            }
+            else {
+                rpt.setMessage("Error al registrar la familia.");
+            }
         }
 
         return rpt;
     }
-
 
 }
