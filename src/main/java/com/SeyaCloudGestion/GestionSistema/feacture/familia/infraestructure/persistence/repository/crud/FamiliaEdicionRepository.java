@@ -27,7 +27,7 @@ public class FamiliaEdicionRepository implements IFamiliaEdicion {
     public ResponseEditarAllFamilia EditarAllFamilia(RequestEditarAllFamilia request) {
         ResponseEditarAllFamilia rpt = new ResponseEditarAllFamilia();
 
-        String SQL = "{ call PRODUCTOS.sp_EditarFamilia(?,?,?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarFamilia(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -39,12 +39,14 @@ public class FamiliaEdicionRepository implements IFamiliaEdicion {
 //            Long userId =  authentication.getPrincipal();
 
             Long userId = 1L;
+            Long empresaId = 1L;
 
             pstmt.setLong(1, request.getIdFamilia());
             pstmt.setString(2, request.getDescripcion());
             pstmt.setString(3, request.getImagenUrl());
             pstmt.setInt(4, request.getEstado());
             pstmt.setLong(5, userId);
+            pstmt.setLong(6, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -68,7 +70,7 @@ public class FamiliaEdicionRepository implements IFamiliaEdicion {
     public ResponseEditarEstadoFamilia EditarEstadoFamilia(RequestEditarEstadoFamilia request, int estado) {
         ResponseEditarEstadoFamilia rpt = new ResponseEditarEstadoFamilia();
 
-        String SQL = "{ call PRODUCTOS.sp_EditarFamilia_Estado(?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarFamilia_Estado(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -80,10 +82,12 @@ public class FamiliaEdicionRepository implements IFamiliaEdicion {
 //            Long userId =  authentication.getPrincipal();
 
             Long userId = 1L;
+            Long empresaId = 1L;
 
             pstmt.setLong(1, request.getIdFamilia());
             pstmt.setInt(2, estado);
             pstmt.setLong(3, userId);
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 

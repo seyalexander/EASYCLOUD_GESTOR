@@ -30,12 +30,14 @@ public class FamiliaDetalleRepository implements IFamiliaDetalle {
         ResponseDetalleFamilia response = new ResponseDetalleFamilia();
         FamiliaModel familia = null;
 
-        String SQL = "{ call PRODUCTOS.sp_ObtenerFamiliaPorId(?) }";
+        String SQL = "{ call PRODUCTOS.sp_ObtenerFamiliaPorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setLong(1, request.getIdFamilia());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
 
@@ -43,6 +45,7 @@ public class FamiliaDetalleRepository implements IFamiliaDetalle {
                     familia = new FamiliaModel();
                     familia.setIdFamilia(rs.getLong("idFamilia"));
                     familia.setDescripcion(rs.getString("descripcion"));
+                    familia.setImagenUrl(rs.getString("imagenUrl"));
                     familia.setEstado(rs.getInt("estado"));
                     familia.setFechaCreacion(
                             rs.getTimestamp("fechaCreacion") != null

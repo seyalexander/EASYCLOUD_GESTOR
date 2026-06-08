@@ -30,13 +30,16 @@ public class SubFamiliaListadoRepository implements ISubFamiliaLista {
         ResponseListaSubFamilia rpt = new ResponseListaSubFamilia();
         List<subFamiliaModel> subFamilias = new ArrayList<>();
 
-        String SQL = "{ call PRODUCTOS.sp_ListarSubFamilia (?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_ListarSubFamilia (?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
+            Long empresaId = 1L;
+
             pstmt.setInt(1, request.getEstado());
             pstmt.setLong(2, request.getIdFamilia());
+            pstmt.setLong(3, empresaId);
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -47,6 +50,7 @@ public class SubFamiliaListadoRepository implements ISubFamiliaLista {
                 familia.setFamiliaDescripcion(rs.getString("familiaDescripcion"));
                 familia.setIdSubFamilia(rs.getLong("idSubFamilia"));
                 familia.setSubFamiliaDescripcion(rs.getString("subFamiliaDescripcion"));
+                familia.setImagenUrl(rs.getString("imagenUrl"));
                 familia.setEstado(rs.getInt("estado"));
                 familia.setFechaCreacion(rs.getString("fechaCreacion"));
                 familia.setFechaEdicion(rs.getString("fechaEdicion"));

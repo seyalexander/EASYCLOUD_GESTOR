@@ -6,7 +6,9 @@ import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.domain.interfaces.
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.infraestructure.persistence.repository.crud.*;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TipoPagosService  implements ITipoPagosListado, ITipoPagosRegistro, ITipoPagosEdicion, ITipoPagosDetalle  {
     private final TipoPagosListadoRepository tipoPagosListadoRepository;
     private final TipoPagosRegistroRepository tipoPagosRegistroRepository;

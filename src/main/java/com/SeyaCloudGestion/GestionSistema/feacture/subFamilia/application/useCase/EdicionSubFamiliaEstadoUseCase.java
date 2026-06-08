@@ -1,9 +1,13 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestDetalleSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestEditarEstadoSubFamilia;
+import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.response.ResponseDetalleSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.response.ResponseEditarEstadoSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.domain.services.SubFamiliaService;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 public class EdicionSubFamiliaEstadoUseCase {
@@ -18,8 +22,22 @@ public class EdicionSubFamiliaEstadoUseCase {
 
     public ResponseEditarEstadoSubFamilia AnularSubFamilia(long idSubFamilia) {
         try {
+            RequestDetalleSubFamilia requestDetalle = new RequestDetalleSubFamilia();
+            requestDetalle.setIdSubFamilia(idSubFamilia);
+
+            ResponseDetalleSubFamilia detalleBD= subFamiliaService.DetalleSubFamilia(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getSubFamilia() == null) {
+                throw new IllegalArgumentException("La subfamilia no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getSubFamilia().getEstado(), 0)) {
+                throw new IllegalArgumentException("La sub familia ya se encuentra anulada.");
+            }
+
             RequestEditarEstadoSubFamilia request = new RequestEditarEstadoSubFamilia();
             request.setIdSubFamilia(idSubFamilia);
+
             ResponseEditarEstadoSubFamilia response = subFamiliaService.EditarEstadoSubFamilia(request, 0);
             if(response.isExito()){}
 
@@ -43,6 +61,19 @@ public class EdicionSubFamiliaEstadoUseCase {
 
     public ResponseEditarEstadoSubFamilia ActivarSubFamilia(long idSubFamilia) {
         try {
+            RequestDetalleSubFamilia requestDetalle = new RequestDetalleSubFamilia();
+            requestDetalle.setIdSubFamilia(idSubFamilia);
+
+            ResponseDetalleSubFamilia detalleBD= subFamiliaService.DetalleSubFamilia(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getSubFamilia() == null) {
+                throw new IllegalArgumentException("La subfamilia no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getSubFamilia().getEstado(), 1)) {
+                throw new IllegalArgumentException("La sub familia ya se encuentra activada.");
+            }
+
             RequestEditarEstadoSubFamilia request = new RequestEditarEstadoSubFamilia();
             request.setIdSubFamilia(idSubFamilia);
             ResponseEditarEstadoSubFamilia response = subFamiliaService.EditarEstadoSubFamilia(request, 1);

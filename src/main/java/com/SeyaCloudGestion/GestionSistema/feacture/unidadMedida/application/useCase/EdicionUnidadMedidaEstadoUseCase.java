@@ -1,9 +1,13 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.unidadMedida.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.unidadMedida.application.dto.request.RequestDetalleUnidadMedida;
 import com.SeyaCloudGestion.GestionSistema.feacture.unidadMedida.application.dto.request.RequestEditarEstadoUnidadMedida;
+import com.SeyaCloudGestion.GestionSistema.feacture.unidadMedida.application.dto.response.ResponseDetalleUnidadMedida;
 import com.SeyaCloudGestion.GestionSistema.feacture.unidadMedida.application.dto.response.ResponseEditarEstadoUnidadMedida;
 import com.SeyaCloudGestion.GestionSistema.feacture.unidadMedida.domain.services.UnidadMedidaService;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 public class EdicionUnidadMedidaEstadoUseCase {
@@ -15,6 +19,19 @@ public class EdicionUnidadMedidaEstadoUseCase {
 
     public ResponseEditarEstadoUnidadMedida AnularUnidadMedida(Long idUnidadMedida) {
         try {
+            RequestDetalleUnidadMedida requestDetalle = new RequestDetalleUnidadMedida();
+            requestDetalle.setIdUnidadMedida(idUnidadMedida);
+
+            ResponseDetalleUnidadMedida detalleBD= unidadMedidaService.DetalleUnidadMedida(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getUnidadMedida() == null) {
+                throw new IllegalArgumentException("La unidad de medida no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getUnidadMedida().getEstado(), 0)) {
+                throw new IllegalArgumentException("La unidad medida ya se encuentra anulada.");
+            }
+
             RequestEditarEstadoUnidadMedida request = new RequestEditarEstadoUnidadMedida();
             request.setIdUnidadMedida(idUnidadMedida);
             ResponseEditarEstadoUnidadMedida response = unidadMedidaService.EditarEstadoUnidadMedida(request,0);;
@@ -39,8 +56,22 @@ public class EdicionUnidadMedidaEstadoUseCase {
 
     public ResponseEditarEstadoUnidadMedida ActivarUnidadMedida(Long idUnidadMedida) {
         try {
+            RequestDetalleUnidadMedida requestDetalle = new RequestDetalleUnidadMedida();
+            requestDetalle.setIdUnidadMedida(idUnidadMedida);
+
+            ResponseDetalleUnidadMedida detalleBD= unidadMedidaService.DetalleUnidadMedida(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getUnidadMedida() == null) {
+                throw new IllegalArgumentException("La unidad de medida no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getUnidadMedida().getEstado(), 1)) {
+                throw new IllegalArgumentException("La unidad medida ya se encuentra activada.");
+            }
+
             RequestEditarEstadoUnidadMedida request = new RequestEditarEstadoUnidadMedida();
             request.setIdUnidadMedida(idUnidadMedida);
+
             ResponseEditarEstadoUnidadMedida response = unidadMedidaService.EditarEstadoUnidadMedida(request,1);;
             if(response.isExito()){}
             return response;

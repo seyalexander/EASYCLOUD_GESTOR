@@ -28,16 +28,19 @@ public class UnidadMedidaEdicionRepository implements IUnidadMedidaEdicion {
     @Override
     public ResponseEditarAllUnidadMedida EditarAllUnidadMedida(RequestEditarAllUnidadMedida request) {
         ResponseEditarAllUnidadMedida rpt = new ResponseEditarAllUnidadMedida();
-        String SQL = "{ call PRODUCTOS.sp_EditarUnidadMedida(?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarUnidadMedida(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdUnidadMedida());
             setParameter(pstmt, 2, request.getDescripcion());
-            setParameter(pstmt, 3, request.getEstado());
+            setParameter(pstmt, 3, request.getSiglas());
+            setParameter(pstmt, 4, request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(4, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(5, userId);
+            pstmt.setLong(6, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -58,7 +61,7 @@ public class UnidadMedidaEdicionRepository implements IUnidadMedidaEdicion {
     @Override
     public ResponseEditarEstadoUnidadMedida EditarEstadoUnidadMedida(RequestEditarEstadoUnidadMedida request, int estado) {
         ResponseEditarEstadoUnidadMedida rpt = new ResponseEditarEstadoUnidadMedida();
-        String SQL = "{ call PRODUCTOS.sp_EditarUnidadMedida_Estado(?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarUnidadMedida_Estado(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -66,7 +69,9 @@ public class UnidadMedidaEdicionRepository implements IUnidadMedidaEdicion {
             setParameter(pstmt, 1, request.getIdUnidadMedida());
             pstmt.setInt(2, estado);
             Long userId = 1L;
+            Long empresaId = 1L;
             pstmt.setLong(3, userId);
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

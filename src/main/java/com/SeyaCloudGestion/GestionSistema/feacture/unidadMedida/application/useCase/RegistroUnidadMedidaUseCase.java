@@ -15,6 +15,7 @@ public class RegistroUnidadMedidaUseCase {
 
     public ResponseRegistroUnidadMedida RegistroUnidadMedida(RequestRegistroUnidadMedida request) {
         try {
+
             ResponseRegistroUnidadMedida response = unidadMedidaService.RegistroUnidadMedida(request);
             if(response.isExito()){}
             return response;

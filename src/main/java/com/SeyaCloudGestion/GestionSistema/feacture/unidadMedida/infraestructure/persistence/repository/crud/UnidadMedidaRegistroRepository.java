@@ -26,13 +26,16 @@ public class UnidadMedidaRegistroRepository implements IUnidadMedidaRegistro {
     @Override
     public ResponseRegistroUnidadMedida RegistroUnidadMedida(RequestRegistroUnidadMedida request) {
         ResponseRegistroUnidadMedida rpt = new ResponseRegistroUnidadMedida();
-        String SQL = "{ call PRODUCTOS.sp_RegistroUnidadMedida(?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroUnidadMedida(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
             setParameter(pstmt, 1, request.getDescripcion());
+            setParameter(pstmt, 2, request.getSiglas());
             Long userId = 1L;
-            pstmt.setLong(2, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(3, userId);
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -44,8 +47,11 @@ public class UnidadMedidaRegistroRepository implements IUnidadMedidaRegistro {
                 rpt.setMessage("No se insertó UnidadMedida.");
             }
         } catch (SQLException e) {
-            rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe una unidad de medida con esa descripción.");
+            } else {
+                rpt.setMessage("Error al registrar la unidad de medida.");
+            }
             log.error("Error en PRODUCTOS.sp_RegistroUnidadMedida", e);
         }
         return rpt;
