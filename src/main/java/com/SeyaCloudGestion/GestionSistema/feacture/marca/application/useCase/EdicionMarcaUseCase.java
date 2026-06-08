@@ -20,6 +20,7 @@ public class EdicionMarcaUseCase {
 
     public ResponseEditarAllMarca EdicionAllMarca(RequestEditarAllMarca request) {
         try {
+            //assadsasa
             RequestDetalleMarca requestDetalle = new RequestDetalleMarca();
             requestDetalle.setIdMarca(request.getIdMarca());
 
