@@ -17,12 +17,6 @@ public class RequestEditarAllProductoPrecio {
     @Min(value = 1, message = "El id debe ser mayor a 0")
     private long idProductoPrecio;
 
-    @Min(value = 1, message = "El id debe ser mayor a 0")
-    private long idArticulo;
-
-    @Min(value = 1, message = "El id debe ser mayor a 0")
-    private long idListaPrecio;
-
     @Positive(message = "El precio debe ser mayor a 0")
     private double precio;
 

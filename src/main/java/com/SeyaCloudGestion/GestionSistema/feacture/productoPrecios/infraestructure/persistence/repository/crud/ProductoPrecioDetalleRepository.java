@@ -28,12 +28,14 @@ public class ProductoPrecioDetalleRepository implements IProductoPrecioDetalle {
     @Override
     public ResponseDetalleProductoPrecio DetalleProductoPrecio(RequestDetalleProductoPrecio request) {
         ResponseDetalleProductoPrecio response = new ResponseDetalleProductoPrecio();
-        String SQL = "{ call PRODUCTOS.sp_ObtenerProductoPrecioPorId(?) }";
+        String SQL = "{ call PRODUCTOS.sp_ObtenerProductoPrecioPorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setLong(1,request.getIdProductoPrecio());
+            Long empresaId=1L;
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -42,6 +44,17 @@ public class ProductoPrecioDetalleRepository implements IProductoPrecioDetalle {
                     item.setIdArticulo(rs.getLong("idArticulo"));
                     item.setIdListaPrecio(rs.getLong("idListaPrecio"));
                     item.setPrecio(rs.getDouble("precio"));
+                    item.setFechaInicio(
+                            rs.getTimestamp("fechaInicio") != null
+                                    ? rs.getTimestamp("fechaInicio").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaFin(
+                            rs.getTimestamp("fechaFin") != null
+                                    ? rs.getTimestamp("fechaFin").toLocalDateTime()
+                                    : null
+                    );
                     item.setFechaCreacion(
                             rs.getTimestamp("fechaCreacion") != null
                                     ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
@@ -62,6 +75,7 @@ public class ProductoPrecioDetalleRepository implements IProductoPrecioDetalle {
                     item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
                     item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
                     item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     response.setExito(true);
                     response.setMessage("ProductoPrecio obtenido correctamente.");
                     response.setProductoPrecio(item);

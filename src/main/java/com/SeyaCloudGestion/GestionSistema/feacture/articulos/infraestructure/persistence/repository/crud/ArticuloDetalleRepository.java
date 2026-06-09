@@ -28,12 +28,14 @@ public class ArticuloDetalleRepository implements IArticulosDetalle {
     @Override
     public ResponseDetalleArticulo DetalleArticulos(RequestDetalleArticulo request) {
         ResponseDetalleArticulo response = new ResponseDetalleArticulo();
-        String SQL = "{ call PRODUCTOS.sp_ObtenerArticulosPorId(?) }";
+        String SQL = "{ call PRODUCTOS.sp_ObtenerArticulosPorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdArticulo());
+            Long empresaId= 1L;
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -42,10 +44,9 @@ public class ArticuloDetalleRepository implements IArticulosDetalle {
                     item.setImagenUrl(rs.getString("imagenUrl"));
                     item.setDescripcion(rs.getString("descripcion"));
                     item.setCodigoArticulo(rs.getString("codigoArticulo"));
-                    item.setCodigoBarras(rs.getString("codigoBarras"));
                     item.setPrecioVenta(rs.getFloat("precioVenta"));
                     item.setEstado(rs.getInt("estado"));
-                    item.setIsFamilia(rs.getLong("isFamilia"));
+                    item.setIdFamilia(rs.getLong("idFamilia"));
                     item.setDescripcionFamilia(rs.getString("descripcionFamilia"));
                     item.setIdSubFamilia(rs.getLong("idSubFamilia"));
                     item.setDescripcionSubFamilia(rs.getString("descripcionSubFamilia"));
@@ -54,6 +55,7 @@ public class ArticuloDetalleRepository implements IArticulosDetalle {
                     item.setCostoCompra(rs.getFloat("costoCompra"));
                     item.setStockMinimo(rs.getFloat("stockMinimo"));
                     item.setIdMarca(rs.getLong("idMarca"));
+                    item.setDescripcionMarca(rs.getString("descripcionMarca"));
                     item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
                     item.setFechaCreacion((rs.getTimestamp("fechaCreacion") != null ? rs.getTimestamp("fechaCreacion").toLocalDateTime() : null));
                     item.setFechaEdicion((rs.getTimestamp("fechaEdicion") != null ? rs.getTimestamp("fechaEdicion").toLocalDateTime() : null));
@@ -61,9 +63,6 @@ public class ArticuloDetalleRepository implements IArticulosDetalle {
                     item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
                     item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
                     item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
-                    item.setUsuarioCreacion(rs.getString("usuarioCreacion"));
-                    item.setUsuarioEdicion(rs.getString("usuarioEdicion"));
-                    item.setUsuarioAnulacion(rs.getString("usuarioAnulacion"));
 
                     response.setExito(true);
                     response.setMessage("Articulos obtenido correctamente.");

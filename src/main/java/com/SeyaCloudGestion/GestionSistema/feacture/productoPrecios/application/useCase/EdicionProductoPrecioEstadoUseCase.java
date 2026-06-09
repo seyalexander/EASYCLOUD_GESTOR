@@ -1,9 +1,16 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
+import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.request.RequestDetalleArticulo;
+import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseDetalleArticulo;
+import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.request.RequestDetalleProductoPrecio;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.request.RequestEditarEstadoProductoPrecio;
+import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.response.ResponseDetalleProductoPrecio;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.response.ResponseEditarEstadoProductoPrecio;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.domain.services.ProductoPrecioService;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 public class EdicionProductoPrecioEstadoUseCase {
@@ -14,6 +21,19 @@ public class EdicionProductoPrecioEstadoUseCase {
     }
     public ResponseEditarEstadoProductoPrecio AnularProductoPrecio(long idProductoPrecio) {
         try {
+            RequestDetalleProductoPrecio requestDetalle = new RequestDetalleProductoPrecio();
+            requestDetalle.setIdProductoPrecio(idProductoPrecio);
+
+            ResponseDetalleProductoPrecio detalleBD= productoPrecioService.DetalleProductoPrecio(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getProductoPrecio() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getProductoPrecio().getEstado(), 0)) {
+                throw new IllegalArgumentException("Elarticulo ya se encuentra anulado.");
+            }
+
             RequestEditarEstadoProductoPrecio request = new RequestEditarEstadoProductoPrecio();
             request.setIdProductoPrecio(idProductoPrecio);
 
@@ -41,6 +61,19 @@ public class EdicionProductoPrecioEstadoUseCase {
 
     public ResponseEditarEstadoProductoPrecio ActivarProductoPrecio(long idProductoPrecio) {
         try {
+            RequestDetalleProductoPrecio requestDetalle = new RequestDetalleProductoPrecio();
+            requestDetalle.setIdProductoPrecio(idProductoPrecio);
+
+            ResponseDetalleProductoPrecio detalleBD= productoPrecioService.DetalleProductoPrecio(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getProductoPrecio() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getProductoPrecio().getEstado(), 1)) {
+                throw new IllegalArgumentException("Elarticulo ya se encuentra activado.");
+            }
+
             RequestEditarEstadoProductoPrecio request = new RequestEditarEstadoProductoPrecio();
             request.setIdProductoPrecio(idProductoPrecio);
 

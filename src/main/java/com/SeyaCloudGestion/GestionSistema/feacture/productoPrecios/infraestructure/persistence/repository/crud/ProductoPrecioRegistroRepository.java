@@ -29,7 +29,7 @@ public class ProductoPrecioRegistroRepository implements IProductoPrecioRegistro
     @Override
     public ResponseRegistroProductoPrecio RegistroProductoPrecio(RequestRegistroProductoPrecio request) {
         ResponseRegistroProductoPrecio rpt = new ResponseRegistroProductoPrecio();
-        String SQL = "{ call PRODUCTOS.sp_RegistroProductoPrecio(?,?,?,?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroProductoPrecio(?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -40,6 +40,8 @@ public class ProductoPrecioRegistroRepository implements IProductoPrecioRegistro
             setLocalDateTimeOrNull(pstmt, 5, request.getFechaFin());
             Long userId = 1L;
             pstmt.setLong(6, userId);
+            Long empresaId=1L;
+            pstmt.setLong(7, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -52,7 +54,11 @@ public class ProductoPrecioRegistroRepository implements IProductoPrecioRegistro
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe este precio en este producto con esa descripción.");
+            } else {
+                rpt.setMessage("Error al registrar el precio.");
+            }
             log.error("Error en PRODUCTOS.sp_RegistroProductoPrecio", e);
         }
         return rpt;

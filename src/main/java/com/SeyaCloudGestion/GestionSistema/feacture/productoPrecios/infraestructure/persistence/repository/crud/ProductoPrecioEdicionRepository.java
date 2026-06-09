@@ -31,19 +31,19 @@ public class ProductoPrecioEdicionRepository implements IProductoPrecioEdicion {
     @Override
     public ResponseEditarAllProductoPrecio EditarAllProductoPrecio(RequestEditarAllProductoPrecio request) {
         ResponseEditarAllProductoPrecio rpt = new ResponseEditarAllProductoPrecio();
-        String SQL = "{ call PRODUCTOS.sp_EditarProductoPrecio(?,?,?,?,?,?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarProductoPrecio(?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
             pstmt.setLong(1,request.getIdProductoPrecio());
-            pstmt.setLong(2,request.getIdArticulo());
-            pstmt.setLong(3,request.getIdListaPrecio());
-            pstmt.setDouble(4,request.getPrecio());
-            setLocalDateTime(pstmt, 5, request.getFechaInicio());
-            setLocalDateTimeOrNull(pstmt, 6, request.getFechaFin());
-            pstmt.setInt(7,request.getEstado());
+            pstmt.setDouble(2,request.getPrecio());
+            setLocalDateTime(pstmt, 3, request.getFechaInicio());
+            setLocalDateTimeOrNull(pstmt, 4, request.getFechaFin());
+            pstmt.setInt(5,request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(8, userId);
+            pstmt.setLong(6, userId);
+            Long empresaId=1L;
+            pstmt.setLong(7, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -64,7 +64,7 @@ public class ProductoPrecioEdicionRepository implements IProductoPrecioEdicion {
     @Override
     public ResponseEditarEstadoProductoPrecio EditarEstadoProductoPrecio(RequestEditarEstadoProductoPrecio request, int estado) {
         ResponseEditarEstadoProductoPrecio rpt = new ResponseEditarEstadoProductoPrecio();
-        String SQL = "{ call PRODUCTOS.sp_EditarProductoPrecio_Estado(?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarProductoPrecio_Estado(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -72,6 +72,8 @@ public class ProductoPrecioEdicionRepository implements IProductoPrecioEdicion {
             pstmt.setInt(2, estado);
             Long userId = 1L;
             pstmt.setLong(3, userId);
+            Long empresaId=1L;
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

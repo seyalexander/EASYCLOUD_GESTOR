@@ -36,12 +36,14 @@ public class ArticuloListadoRepository implements IArticulosListado {
         ResponseListaArticulo rpt = new ResponseListaArticulo();
         List<ArticulosModel> articulos = new ArrayList<>();
 
-        String SQL = "{ call PRODUCTOS.sp_ListarArticulos (?) }";
+        String SQL = "{ call PRODUCTOS.sp_ListarArticulos (?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setInt(1, request.getEstado());
+            Long empresaId= 1L;
+            pstmt.setLong(2, empresaId);
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -52,10 +54,9 @@ public class ArticuloListadoRepository implements IArticulosListado {
                 item.setImagenUrl(rs.getString("imagenUrl"));
                 item.setDescripcion(rs.getString("descripcion"));
                 item.setCodigoArticulo(rs.getString("codigoArticulo"));
-                item.setCodigoBarras(rs.getString("codigoBarras"));
                 item.setPrecioVenta(rs.getFloat("precioVenta"));
                 item.setEstado(rs.getInt("estado"));
-                item.setIsFamilia(rs.getLong("isFamilia"));
+                item.setIdFamilia(rs.getLong("idFamilia"));
                 item.setDescripcionFamilia(rs.getString("descripcionFamilia"));
                 item.setIdSubFamilia(rs.getLong("idSubFamilia"));
                 item.setDescripcionSubFamilia(rs.getString("descripcionSubFamilia"));
@@ -64,6 +65,7 @@ public class ArticuloListadoRepository implements IArticulosListado {
                 item.setCostoCompra(rs.getFloat("costoCompra"));
                 item.setStockMinimo(rs.getFloat("stockMinimo"));
                 item.setIdMarca(rs.getLong("idMarca"));
+                item.setDescripcionMarca(rs.getString("descripcionMarca"));
                 item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
                 item.setFechaCreacion((rs.getTimestamp("fechaCreacion") != null ? rs.getTimestamp("fechaCreacion").toLocalDateTime() : null));
                 item.setFechaEdicion((rs.getTimestamp("fechaEdicion") != null ? rs.getTimestamp("fechaEdicion").toLocalDateTime() : null));
@@ -71,9 +73,6 @@ public class ArticuloListadoRepository implements IArticulosListado {
                 item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
                 item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
                 item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
-                item.setUsuarioCreacion(rs.getString("usuarioCreacion"));
-                item.setUsuarioEdicion(rs.getString("usuarioEdicion"));
-                item.setUsuarioAnulacion(rs.getString("usuarioAnulacion"));
 
                 articulos.add(item);
             }

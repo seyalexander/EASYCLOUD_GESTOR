@@ -72,6 +72,7 @@ public class ProductoPrecioController {
     public ResponseEntity<ResponseEditarAllProductoPrecio> editarAllProductoPrecio(
             @Validated @RequestBody RequestEditarAllProductoPrecio request
     ) {
+        System.out.println(request);
         ResponseEditarAllProductoPrecio response = edicionAllProductoPrecioUseCase.EditarAllProductoPrecio(request);
 
         if (response.isExito()) {
@@ -79,8 +80,6 @@ public class ProductoPrecioController {
             notificacion.setTipo(String.valueOf(TipoNotificacion.EDICION));
             notificacion.setMensaje("Precio de producto editado");
             notificacion.setIdProductoPrecio(request.getIdProductoPrecio());
-            notificacion.setIdArticulo(request.getIdArticulo());
-            notificacion.setIdListaPrecio(request.getIdListaPrecio());
 
             notificacionProductoPrecioService.enviarNotificacionProductoPrecio_Edicion(notificacion);
 

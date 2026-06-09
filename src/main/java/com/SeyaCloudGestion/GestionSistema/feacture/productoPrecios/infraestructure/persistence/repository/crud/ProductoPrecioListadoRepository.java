@@ -31,12 +31,15 @@ public class ProductoPrecioListadoRepository implements IProductoPrecioListado {
     public ResponseListaProductoPrecio ListaProductoPrecio(RequestListaProductoPrecio request) {
         ResponseListaProductoPrecio rpt = new ResponseListaProductoPrecio();
         List<ProductoPrecioModel> registros = new ArrayList<>();
-        String SQL = "{ call PRODUCTOS.sp_ListarProductoPrecio(?) }";
+        String SQL = "{ call PRODUCTOS.sp_ListarProductoPrecio(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setInt(1,request.getEstado());
+            Long empresaId=1L;
+            pstmt.setLong(2, empresaId);
+
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     ProductoPrecioModel item = new ProductoPrecioModel();
@@ -44,6 +47,17 @@ public class ProductoPrecioListadoRepository implements IProductoPrecioListado {
                 item.setIdArticulo(rs.getLong("idArticulo"));
                 item.setIdListaPrecio(rs.getLong("idListaPrecio"));
                 item.setPrecio(rs.getDouble("precio"));
+                    item.setFechaInicio(
+                            rs.getTimestamp("fechaInicio") != null
+                                    ? rs.getTimestamp("fechaInicio").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaFin(
+                            rs.getTimestamp("fechaFin") != null
+                                    ? rs.getTimestamp("fechaFin").toLocalDateTime()
+                                    : null
+                    );
                     item.setFechaCreacion(
                             rs.getTimestamp("fechaCreacion") != null
                                     ? rs.getTimestamp("fechaCreacion").toLocalDateTime()

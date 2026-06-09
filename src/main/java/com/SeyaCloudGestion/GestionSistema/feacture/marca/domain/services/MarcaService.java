@@ -41,8 +41,8 @@ public class MarcaService implements IMarcaListado, IMarcaDetalle, IMarcaRegistr
 
     @Override
     @Cacheable(value = "marca_detalle", key = "#request.idMarca")
-    public ResponseDetalleMarca DetalleMarca(RequestDetalleMarca marca) {
-        return marcaDetalleRepository.DetalleMarca(marca);
+    public ResponseDetalleMarca DetalleMarca(RequestDetalleMarca request) {
+        return marcaDetalleRepository.DetalleMarca(request);
     }
 
 

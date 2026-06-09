@@ -28,7 +28,7 @@ public class ArticulosEdicionRepository implements IArticulosEdicion {
     @Override
     public ResponseEditarAllArticulo EditarAllArticulos(RequestEditarAllArticulo request) {
         ResponseEditarAllArticulo rpt = new ResponseEditarAllArticulo();
-        String SQL = "{ call PRODUCTOS.sp_EditarArticulos(?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarArticulos(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -39,7 +39,10 @@ public class ArticulosEdicionRepository implements IArticulosEdicion {
             setParameter(pstmt, 4, request.getEstado());
 
             Long userId = 1L;
+
             pstmt.setLong(5, userId);
+            Long empresaId= 1L;
+            pstmt.setLong(6, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -60,7 +63,7 @@ public class ArticulosEdicionRepository implements IArticulosEdicion {
     @Override
     public ResponseEditarEstadoArticulo EditarEstadoArticulos(RequestEditarEstadoArticulo request, int estado) {
         ResponseEditarEstadoArticulo rpt = new ResponseEditarEstadoArticulo();
-        String SQL = "{ call PRODUCTOS.sp_EditarArticulos_Estado(?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarArticulos_Estado(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -69,6 +72,8 @@ public class ArticulosEdicionRepository implements IArticulosEdicion {
             pstmt.setInt(2, estado);
             Long userId = 1L;
             pstmt.setLong(3, userId);
+            Long empresaId= 1L;
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
