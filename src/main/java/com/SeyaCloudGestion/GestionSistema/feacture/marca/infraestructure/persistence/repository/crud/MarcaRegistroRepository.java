@@ -47,7 +47,11 @@ public class MarcaRegistroRepository implements IMarcaRegistro {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe una marca con esa descripción.");
+            } else {
+                rpt.setMessage("Error al registrar la unidad de medida.");
+            }
             log.error("Error en PRODUCTOS.sp_RegistroMarca", e);
         }
         return rpt;

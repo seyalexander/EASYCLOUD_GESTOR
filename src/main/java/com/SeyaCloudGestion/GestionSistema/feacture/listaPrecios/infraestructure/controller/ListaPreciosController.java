@@ -91,7 +91,7 @@ public class ListaPreciosController {
             NotificacionListaPrecioDTO notificacion = new NotificacionListaPrecioDTO();
             notificacion.setTipo(String.valueOf(TipoNotificacion.ANULACION));
             notificacion.setMensaje("Lista de precios anulada");
-            notificacion.setIdListaPrecio(idListaPrecio);
+            notificacion.setIdListaPrecios(idListaPrecio);
             notificacionListaPrecioService.enviarNotificacionListaPrecio_Anular(notificacion);
             return ResponseEntity.ok(response);
         }
@@ -108,7 +108,7 @@ public class ListaPreciosController {
             NotificacionListaPrecioDTO notificacion = new NotificacionListaPrecioDTO();
             notificacion.setTipo(String.valueOf(TipoNotificacion.ACTIVACION));
             notificacion.setMensaje("Lista de precios activada");
-            notificacion.setIdListaPrecio(idListaPrecio);
+            notificacion.setIdListaPrecios(idListaPrecio);
             notificacionListaPrecioService.enviarNotificacionListaPrecio_Activar(notificacion);
             return ResponseEntity.ok(response);
         }

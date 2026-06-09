@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 public class ListaPreciosModel implements Serializable {
 
-    private long idListaPrecio;
+    private long idListaPrecios;
     private String descripcion;
     private int estado;
 

@@ -38,7 +38,7 @@ public class ListaPreciosService implements IListaPreciosListado, IListaPreciosD
     }
 
     @Override
-    @Cacheable(value = "listaPrecios_detalle", key = "#request.idListaPrecio")
+    @Cacheable(value = "listaPrecios_detalle", key = "#request.idListaPrecios")
     public ResponseDetalleListaPrecios DetalleListaPrecios(RequestDetalleListaPrecios request) {
         return listaPreciosDetalleRepository.DetalleListaPrecios(request);
     }

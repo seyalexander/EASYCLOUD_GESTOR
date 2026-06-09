@@ -1,9 +1,13 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.dto.request.RequestDetalleListaPrecios;
 import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.dto.request.RequestEditarEstadoListaPrecios;
+import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.dto.response.ResponseDetalleListaPrecios;
 import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.dto.response.ResponseEditarEstadoListaPrecios;
 import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.domain.services.ListaPreciosService;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 public class EdicionListaPreciosEstadoUseCase {
@@ -14,6 +18,19 @@ public class EdicionListaPreciosEstadoUseCase {
     }
     public ResponseEditarEstadoListaPrecios AnularListaPrecios(long idListaPrecio) {
         try {
+            RequestDetalleListaPrecios requestDetalle = new RequestDetalleListaPrecios();
+            requestDetalle.setIdListaPrecios(idListaPrecio);
+
+            ResponseDetalleListaPrecios detalleBD= listaPreciosService.DetalleListaPrecios(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getListaPrecios() == null) {
+                throw new IllegalArgumentException("La lista precios no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getListaPrecios().getEstado(), 0)) {
+                throw new IllegalArgumentException("La lista ya se encuentra anulada.");
+            }
+
             RequestEditarEstadoListaPrecios request = new RequestEditarEstadoListaPrecios();
             request.setIdListaPrecios(idListaPrecio);
 
@@ -41,6 +58,19 @@ public class EdicionListaPreciosEstadoUseCase {
 
     public ResponseEditarEstadoListaPrecios ActivarListaPrecios(long idListaPrecio) {
         try {
+            RequestDetalleListaPrecios requestDetalle = new RequestDetalleListaPrecios();
+            requestDetalle.setIdListaPrecios(idListaPrecio);
+
+            ResponseDetalleListaPrecios detalleBD= listaPreciosService.DetalleListaPrecios(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getListaPrecios() == null) {
+                throw new IllegalArgumentException("La lista precios no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getListaPrecios().getEstado(), 1)) {
+                throw new IllegalArgumentException("La lista ya se encuentra activada.");
+            }
+
             RequestEditarEstadoListaPrecios request = new RequestEditarEstadoListaPrecios();
             request.setIdListaPrecios(idListaPrecio);
 

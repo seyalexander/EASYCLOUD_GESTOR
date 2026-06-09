@@ -28,17 +28,19 @@ public class ListaPreciosDetalleRepository implements IListaPreciosDetalle {
     @Override
     public ResponseDetalleListaPrecios DetalleListaPrecios(RequestDetalleListaPrecios request) {
         ResponseDetalleListaPrecios response = new ResponseDetalleListaPrecios();
-        String SQL = "{ call PRODUCTOS.sp_ObtenerListaPrecioPorId(?) }";
+        String SQL = "{ call PRODUCTOS.sp_ObtenerListaPrecioPorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdListaPrecios());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     ListaPreciosModel item = new ListaPreciosModel();
-                    item.setIdListaPrecio(rs.getLong("idListaPrecio"));
+                    item.setIdListaPrecios(rs.getLong("idListaPrecio"));
                     item.setDescripcion(rs.getString("descripcion"));
                     item.setEstado(rs.getInt("estado"));
                     item.setFechaCreacion(

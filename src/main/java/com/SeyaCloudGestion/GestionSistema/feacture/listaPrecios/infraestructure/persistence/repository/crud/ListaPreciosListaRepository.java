@@ -31,19 +31,21 @@ public class ListaPreciosListaRepository implements IListaPreciosListado {
         ResponseListaListaPrecios rpt = new ResponseListaListaPrecios();
         List<ListaPreciosModel> listaPrecios = new ArrayList<>();
 
-        String SQL = "{ call PRODUCTOS.sp_ListarListaPrecio (?) }";
+        String SQL = "{ call PRODUCTOS.sp_ListarListaPrecio (?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setInt(1, request.getEstado());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 ListaPreciosModel listaPrecio = new ListaPreciosModel();
 
-                listaPrecio.setIdListaPrecio(rs.getLong("idListaPrecio"));
+                listaPrecio.setIdListaPrecios(rs.getLong("idListaPrecio"));
                 listaPrecio.setDescripcion(rs.getString("descripcion"));
                 listaPrecio.setEstado(rs.getInt("estado"));
                 listaPrecio.setFechaCreacion(
