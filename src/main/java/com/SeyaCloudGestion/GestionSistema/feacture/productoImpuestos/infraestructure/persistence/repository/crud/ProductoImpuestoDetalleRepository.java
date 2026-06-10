@@ -28,12 +28,14 @@ public class ProductoImpuestoDetalleRepository implements IProductoImpuestoDetal
     @Override
     public ResponseDetalleProductoImpuesto DetalleProductoImpuesto(RequestDetalleProductoImpuesto request) {
         ResponseDetalleProductoImpuesto response = new ResponseDetalleProductoImpuesto();
-        String SQL = "{ call PRODUCTOS.sp_ObtenerProductoImpuestoPorId() }";
+        String SQL = "{ call PRODUCTOS.sp_ObtenerProductoImpuestoPorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetro id definido en el request.
+            pstmt.setLong(1, request.getIdProductoImpuesto());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {

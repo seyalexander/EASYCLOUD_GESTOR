@@ -11,15 +11,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class ProductoImpuestoService  implements IProductoImpuestoRegistro, IProductoImpuestoListado, IProductoImpuestoEdicion {
+public class ProductoImpuestoService  implements IProductoImpuestoRegistro, IProductoImpuestoListado, IProductoImpuestoEdicion,IProductoImpuestoDetalle {
     private final ProductoImpuestoEdicionRepository productoImpuestoEdicionRepository;
     private final ProductoImpuestoListadoRepository productoImpuestoListadoRepository;
     private final ProductoImpuestoRegistroRepository productoImpuestoRegistroRepository;
+    private final ProductoImpuestoDetalleRepository productoImpuestoDetalleRepository;
 
-    public ProductoImpuestoService(ProductoImpuestoEdicionRepository productoImpuestoEdicionRepository, ProductoImpuestoListadoRepository productoImpuestoListadoRepository, ProductoImpuestoRegistroRepository productoImpuestoRegistroRepository) {
+    public ProductoImpuestoService(ProductoImpuestoEdicionRepository productoImpuestoEdicionRepository, ProductoImpuestoListadoRepository productoImpuestoListadoRepository, ProductoImpuestoRegistroRepository productoImpuestoRegistroRepository, ProductoImpuestoDetalleRepository productoImpuestoDetalleRepository) {
         this.productoImpuestoEdicionRepository = productoImpuestoEdicionRepository;
         this.productoImpuestoListadoRepository = productoImpuestoListadoRepository;
         this.productoImpuestoRegistroRepository = productoImpuestoRegistroRepository;
+        this.productoImpuestoDetalleRepository = productoImpuestoDetalleRepository;
     }
 
     @Override
@@ -44,5 +46,10 @@ public class ProductoImpuestoService  implements IProductoImpuestoRegistro, IPro
     @CacheEvict(value = {"productoImpuestos_lista"}, allEntries = true)
     public ResponseEditarEstadoProductoImpuesto EditarEstadoProductoImpuesto(RequestEditarEstadoProductoImpuesto request, int estado) {
         return productoImpuestoEdicionRepository.EditarEstadoProductoImpuesto(request, estado);
+    }
+
+    @Override
+    public ResponseDetalleProductoImpuesto DetalleProductoImpuesto(RequestDetalleProductoImpuesto request) {
+        return productoImpuestoDetalleRepository.DetalleProductoImpuesto(request);
     }
 }

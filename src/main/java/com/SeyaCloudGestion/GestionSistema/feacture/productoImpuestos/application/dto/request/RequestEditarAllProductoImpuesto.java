@@ -8,9 +8,6 @@ public class RequestEditarAllProductoImpuesto {
     @Min(value = 1, message = "El id del impuesto debe ser mayor a 0")
     private long idProductoImpuesto;
 
-    @Min(value = 1, message = "El id del artículo debe ser mayor a 0")
-    private long idArticulo;
-
     @DecimalMin(value = "0.00", message = "El porcentaje no puede ser negativo")
     @DecimalMax(value = "100.00", message = "El porcentaje no debe superar el 100")
     private double porcentaje;

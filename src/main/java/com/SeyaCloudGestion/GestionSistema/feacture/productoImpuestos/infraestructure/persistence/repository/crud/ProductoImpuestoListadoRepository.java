@@ -31,12 +31,15 @@ public class ProductoImpuestoListadoRepository implements IProductoImpuestoLista
     public ResponseListaProductoImpuesto ListaProductoImpuesto(RequestListaProductoImpuesto request) {
         ResponseListaProductoImpuesto rpt = new ResponseListaProductoImpuesto();
         List<ProductoImpuestoModel> registros = new ArrayList<>();
-        String SQL = "{ call PRODUCTOS.sp_ListarProductoImpuesto(?) }";
+        String SQL = "{ call PRODUCTOS.sp_ListarProductoImpuesto(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
         pstmt.setInt(1,request.getEstado());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
+
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     ProductoImpuestoModel item = new ProductoImpuestoModel();
