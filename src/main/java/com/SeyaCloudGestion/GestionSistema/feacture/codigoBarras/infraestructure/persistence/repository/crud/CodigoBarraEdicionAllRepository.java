@@ -24,19 +24,25 @@ public class CodigoBarraEdicionAllRepository implements ICodigoBarraEdicion {
     private DataSource con;
 
     @Override
-    public ResponseEditarAllCodigoBarra EditarAllCodigoBarra(RequestEditarAllCodigoBarra request) {
+    public ResponseEditarAllCodigoBarra EditarAllCodigoBarra(RequestEditarAllCodigoBarra request,long codigoBarra) {
         ResponseEditarAllCodigoBarra rpt = new ResponseEditarAllCodigoBarra();
-        String SQL = "{ call PRODUCTOS.sp_EditarCodigoBarra(?,?,?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarCodigoBarra(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
             pstmt.setLong(1,request.getIdCodigoBarra());
-            pstmt.setLong(2,request.getIdArticulo());
+            pstmt.setLong(2,codigoBarra);
             pstmt.setString(3,request.getCodigo());
             pstmt.setInt(4,request.getPrincipal());
             Long userId = 1L;
             pstmt.setLong(5, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(6, empresaId);
+            pstmt.execute();
 
+            rpt.setExito(true);
+            rpt.setMessage("CodigoBarra editado correctamente.");
+            /*
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 rpt.setExito(true);
@@ -45,6 +51,8 @@ public class CodigoBarraEdicionAllRepository implements ICodigoBarraEdicion {
                 rpt.setExito(false);
                 rpt.setMessage("No se actualizó CodigoBarra.");
             }
+             */
+
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());

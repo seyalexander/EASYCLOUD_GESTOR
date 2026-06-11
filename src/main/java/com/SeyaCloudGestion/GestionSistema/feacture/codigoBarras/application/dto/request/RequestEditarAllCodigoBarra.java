@@ -11,9 +11,6 @@ public class RequestEditarAllCodigoBarra {
     @Min(value = 1, message = "El id del codigo debe ser mayor a 0")
     private long idCodigoBarra;
 
-    @Min(value = 1, message = "El id del artículo debe ser mayor a 0")
-    private long idArticulo;
-
     @NotBlank(message = "El código es obligatorio")
     @Size(max = 100, message = "El código no debe superar los 100 caracteres")
     private String codigo;

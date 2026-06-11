@@ -79,7 +79,6 @@ public class CodigoBarraController {
             notificacion.setTipo(String.valueOf(TipoNotificacion.EDICION));
             notificacion.setMensaje("Código de barra editado");
             notificacion.setIdCodigoBarra(request.getIdCodigoBarra());
-            notificacion.setIdArticulo(request.getIdArticulo());
             notificacion.setCodigo(request.getCodigo());
 
             notificacionCodigoBarraService.enviarNotificacionCodigoBarra_Edicion(notificacion);

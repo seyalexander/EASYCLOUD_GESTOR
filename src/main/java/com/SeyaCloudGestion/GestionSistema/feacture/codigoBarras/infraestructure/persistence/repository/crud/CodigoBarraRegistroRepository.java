@@ -26,7 +26,7 @@ public class CodigoBarraRegistroRepository implements ICodigoBarraRegistro {
     @Override
     public ResponseRegistroCodigoBarra RegistroCodigoBarra(RequestRegistroCodigoBarra request) {
         ResponseRegistroCodigoBarra rpt = new ResponseRegistroCodigoBarra();
-        String SQL = "{ call PRODUCTOS.sp_RegistroCodigoBarra(?,?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroCodigoBarra(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
 
@@ -37,19 +37,32 @@ public class CodigoBarraRegistroRepository implements ICodigoBarraRegistro {
             setParameter(pstmt, 3, request.getPrincipal());
             Long userId = 1L;
             pstmt.setLong(4, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(5, empresaId);
 
+            pstmt.execute();
+
+            rpt.setExito(true);
+            rpt.setMessage("CodigoBarra insertado correctamente.");
+            /*
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
                 rpt.setExito(true);
                 rpt.setMessage("CodigoBarra insertado correctamente.");
-            } else {
+            }
+            else {
                 rpt.setExito(false);
                 rpt.setMessage("No se insertó CodigoBarra.");
             }
+             */
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe este codigo en este Articulo");
+            } else {
+                rpt.setMessage("Error al registrar el codigo.");
+            }
             log.error("Error en PRODUCTOS.sp_RegistroCodigoBarra", e);
         }
         return rpt;
