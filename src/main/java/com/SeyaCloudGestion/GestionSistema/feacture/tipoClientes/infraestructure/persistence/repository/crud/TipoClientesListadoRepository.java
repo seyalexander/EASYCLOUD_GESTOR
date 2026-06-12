@@ -31,14 +31,16 @@ public class TipoClientesListadoRepository implements ITipoClientesListado {
     public ResponseListaTipoClientes ListaTipoClientes(RequestListaTipoClientes request) {
         ResponseListaTipoClientes rpt = new ResponseListaTipoClientes();
         List<TipoClientesModel> registros = new ArrayList<>();
-        String SQL = "{ call CLIENTES.sp_ListarTipoCliente(?) }";
+        String SQL = "{ call CLIENTES.sp_ListarTipoCliente(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setInt(1, request.getEstado());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     TipoClientesModel item = new TipoClientesModel();
                 item.setIdTipoCliente(rs.getLong("idTipoCliente"));
@@ -46,7 +48,6 @@ public class TipoClientesListadoRepository implements ITipoClientesListado {
                 item.setEstado(rs.getInt("estado"));
                     registros.add(item);
                 }
-            }
 
             rpt.setExito(true);
             rpt.setTipoClientes(registros);

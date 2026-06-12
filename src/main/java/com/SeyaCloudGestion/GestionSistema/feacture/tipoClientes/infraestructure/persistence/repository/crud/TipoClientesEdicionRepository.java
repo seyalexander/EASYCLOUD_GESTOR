@@ -28,7 +28,7 @@ public class TipoClientesEdicionRepository implements ITipoClientesEdicion {
     @Override
     public ResponseEditarAllTipoClientes EditarAllTipoClientes(RequestEditarAllTipoClientes request) {
         ResponseEditarAllTipoClientes rpt = new ResponseEditarAllTipoClientes();
-        String SQL = "{ call CLIENTES.sp_EditarTipoCliente(?,?,?) }";
+        String SQL = "{ call CLIENTES.sp_EditarTipoCliente(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -39,6 +39,8 @@ public class TipoClientesEdicionRepository implements ITipoClientesEdicion {
             pstmt.setLong(1, request.getIdTipoCliente());
             pstmt.setString(2, request.getDescripcion());
             pstmt.setInt(3, request.getEstado());
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -59,13 +61,15 @@ public class TipoClientesEdicionRepository implements ITipoClientesEdicion {
     @Override
     public ResponseEditarEstadoTipoClientes EditarEstadoTipoClientes(RequestEditarEstadoTipoClientes request, int estado) {
         ResponseEditarEstadoTipoClientes rpt = new ResponseEditarEstadoTipoClientes();
-        String SQL = "{ call CLIENTES.sp_EditarTipoCliente_Estado(?,?) }";
+        String SQL = "{ call CLIENTES.sp_EditarTipoCliente_Estado(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setLong(1, request.getIdTipoClientes());
             pstmt.setInt(2, estado);
+            Long empresaId = 1L;
+            pstmt.setLong(3, empresaId);
             /*
            Long userId = 1L;
             pstmt.setLong(3, userId);

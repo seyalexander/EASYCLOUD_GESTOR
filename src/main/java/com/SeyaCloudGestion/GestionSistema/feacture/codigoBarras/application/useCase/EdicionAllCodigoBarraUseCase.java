@@ -32,7 +32,7 @@ public class EdicionAllCodigoBarraUseCase {
             if (!verificarCambiosCodigoBarra.verificarCambios(detalleBD.getCodigoBarra(),request)) {
                 throw new ResourceNotFoundException("No se detectaron cambios para actualizar.");
             }
-            
+
             //obtenemos el id del articulo
             long idArticulo = detalleBD.getCodigoBarra().getIdArticulo();
 
