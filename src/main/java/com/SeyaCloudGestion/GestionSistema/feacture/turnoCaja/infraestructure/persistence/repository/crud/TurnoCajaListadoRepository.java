@@ -3,6 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.p
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestListaTurnoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.ResponseListaTurnoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.domain.interfaces.ITurnoCajaListado;
+import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.persistence.model.EstadoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.persistence.model.TurnoCajaModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,15 @@ public class TurnoCajaListadoRepository implements ITurnoCajaListado {
     public ResponseListaTurnoCaja ListaTurnoCaja(RequestListaTurnoCaja request) {
         ResponseListaTurnoCaja rpt = new ResponseListaTurnoCaja();
         List<TurnoCajaModel> registros = new ArrayList<>();
-        String SQL = "{ call VENTAS.sp_ListarTurnoCaja(?) }";
+        String SQL = "{ call VENTAS.sp_ListarTurnoCaja(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getEstado());
+            setParameter(pstmt, 1, request.getEstado().name());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
+
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     TurnoCajaModel item = new TurnoCajaModel();
@@ -46,8 +50,11 @@ public class TurnoCajaListadoRepository implements ITurnoCajaListado {
                 item.setFechaApertura((rs.getTimestamp("fechaApertura") != null ? rs.getTimestamp("fechaApertura").toLocalDateTime() : null));
                 item.setFechaCierre((rs.getTimestamp("fechaCierre") != null ? rs.getTimestamp("fechaCierre").toLocalDateTime() : null));
                 item.setMontoInicial(rs.getDouble("montoInicial"));
-                item.setMontoFinal(rs.getDouble("montoFinal"));
-                item.setEstado(rs.getString("estado"));
+                item.setMontoReal(rs.getDouble("montoReal"));
+                item.setEstado(EstadoCaja.valueOf(rs.getString("estado")));
+                item.setMontoSistema(rs.getDouble("montoSistema"));
+                item.setDiferencia(rs.getDouble("diferencia"));
+                    /*
                     item.setFechaCreacion(
                             rs.getTimestamp("fechaCreacion") != null
                                     ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
@@ -60,14 +67,10 @@ public class TurnoCajaListadoRepository implements ITurnoCajaListado {
                                     : null
                     );
 
-                    item.setFechaAnulacion(
-                            rs.getTimestamp("fechaAnulacion") != null
-                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
-                                    : null
-                    );
                     item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
                     item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
-                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
+                     */
                     registros.add(item);
                 }
 

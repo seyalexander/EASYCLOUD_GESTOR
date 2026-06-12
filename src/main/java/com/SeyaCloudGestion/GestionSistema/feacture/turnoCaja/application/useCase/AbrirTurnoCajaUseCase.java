@@ -1,20 +1,22 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestRegistroTurnoCaja;
-import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.ResponseRegistroTurnoCaja;
+import com.SeyaCloudGestion.GestionSistema.feacture.sucursales.application.dto.request.RequestDetalleSucursales;
+import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestAbrirTurnoCaja;
+import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.ResponseAbrirTurnoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.domain.services.TurnoCajaService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RegistroTurnoCajaUseCase {
+public class AbrirTurnoCajaUseCase {
     private final TurnoCajaService turnoCajaService;
 
-    public RegistroTurnoCajaUseCase(TurnoCajaService turnoCajaService) {
+    public AbrirTurnoCajaUseCase(TurnoCajaService turnoCajaService) {
         this.turnoCajaService = turnoCajaService;
     }
-    public ResponseRegistroTurnoCaja RegistroTurnoCaja(RequestRegistroTurnoCaja request) {
+    public ResponseAbrirTurnoCaja RegistroTurnoCaja(RequestAbrirTurnoCaja request) {
         try {
-            ResponseRegistroTurnoCaja response = turnoCajaService.RegistroTurnoCaja(request);
+
+            ResponseAbrirTurnoCaja response = turnoCajaService.AbrirTurnoCaja(request);
 
             if (response.isExito()) {
             }
@@ -22,7 +24,7 @@ public class RegistroTurnoCajaUseCase {
             return response;
 
         } catch (IllegalArgumentException | SecurityException e) {
-            ResponseRegistroTurnoCaja response = new ResponseRegistroTurnoCaja();
+            ResponseAbrirTurnoCaja response = new ResponseAbrirTurnoCaja();
             response.setExito(false);
             response.setMessage(e.getMessage());
             return response;
@@ -31,7 +33,7 @@ public class RegistroTurnoCajaUseCase {
             String mensajeError = "Error inesperado al registrar el turno de caja: " + e.getMessage();
             System.err.println("[ERROR] " + mensajeError);
 
-            ResponseRegistroTurnoCaja response = new ResponseRegistroTurnoCaja();
+            ResponseAbrirTurnoCaja response = new ResponseAbrirTurnoCaja();
             response.setExito(false);
             response.setMessage(mensajeError);
             return response;

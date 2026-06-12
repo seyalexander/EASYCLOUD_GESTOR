@@ -15,6 +15,8 @@ public class ListaTurnoCajaUseCase {
 
     public ResponseListaTurnoCaja ListaTurnoCaja(RequestListaTurnoCaja request) {
         try {
+            System.out.println("ESTADO: " + request.getEstado());
+            System.out.println("NAME: " + request.getEstado().name());
             ResponseListaTurnoCaja response = turnoCajaService.ListaTurnoCaja(request);
 
             if (response.isExito()) {

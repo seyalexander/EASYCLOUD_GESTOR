@@ -1,8 +1,8 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestRegistroTurnoCaja;
-import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.ResponseRegistroTurnoCaja;
-import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.domain.interfaces.ITurnoCajaRegistro;
+import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestAbrirTurnoCaja;
+import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.ResponseAbrirTurnoCaja;
+import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.domain.interfaces.ITurnoCajaAbrir;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,27 +17,26 @@ import java.sql.SQLException;
 @Slf4j
 @Repository
 @Transactional("sqlServerTransactionManager")
-public class TurnoCajaRegistroRepository implements ITurnoCajaRegistro {
+public class TurnoCajaAbrirRepository implements ITurnoCajaAbrir {
 
     @Autowired
     @Qualifier("SQLSERVER")
     private DataSource con;
 
     @Override
-    public ResponseRegistroTurnoCaja RegistroTurnoCaja(RequestRegistroTurnoCaja request) {
-        ResponseRegistroTurnoCaja rpt = new ResponseRegistroTurnoCaja();
-        String SQL = "{ call VENTAS.sp_RegistroTurnoCaja(?,?,?,?,?) }";
+    public ResponseAbrirTurnoCaja AbrirTurnoCaja(RequestAbrirTurnoCaja request) {
+        ResponseAbrirTurnoCaja rpt = new ResponseAbrirTurnoCaja();
+        String SQL = "{ call VENTAS.sp_AbrirTurnoCaja(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
-            setParameter(pstmt, 1, request.getIdUsuario());
-            setParameter(pstmt, 2, request.getIdSucursal());
-            setParameter(pstmt, 3, request.getFechaApertura());
-            setParameter(pstmt, 4, request.getMontoInicial());
             Long userId = 1L;
-            pstmt.setLong(5, userId);
-
+            pstmt.setLong(1, userId);
+            Long sucursalId = 1L;
+            setParameter(pstmt, 2, sucursalId);
+            setParameter(pstmt, 3, request.getMontoInicial());
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
@@ -50,7 +49,7 @@ public class TurnoCajaRegistroRepository implements ITurnoCajaRegistro {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en VENTAS.sp_RegistroTurnoCaja", e);
+            log.error("Error en VENTAS.sp_AbrirTurnoCaja", e);
         }
         return rpt;
     }

@@ -2,6 +2,6 @@ package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.r
 
 import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
 
-public class ResponseEditarEstadoTurnoCaja extends ResponseGeneral {
+public class ResponseCerrarTurnoCaja extends ResponseGeneral {
 
 }
