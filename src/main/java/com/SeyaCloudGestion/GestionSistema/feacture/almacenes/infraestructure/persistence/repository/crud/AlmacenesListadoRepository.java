@@ -31,12 +31,14 @@ public class AlmacenesListadoRepository implements IAlmacenesListado {
     public ResponseListaAlmacenes ListaAlmacenes(RequestListaAlmacenes request) {
         ResponseListaAlmacenes rpt = new ResponseListaAlmacenes();
         List<AlmacenesModel> registros = new ArrayList<>();
-        String SQL = "{ call INVENTARIO.sp_ListarAlmacenes(?) }";
+        String SQL = "{ call INVENTARIO.sp_ListarAlmacenes(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getEstado());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {

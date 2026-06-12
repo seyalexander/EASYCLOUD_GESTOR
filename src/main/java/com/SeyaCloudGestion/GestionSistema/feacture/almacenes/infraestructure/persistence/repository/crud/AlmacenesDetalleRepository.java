@@ -28,12 +28,14 @@ public class AlmacenesDetalleRepository implements IAlmacenesDetalle {
     @Override
     public ResponseDetalleAlmacenes DetalleAlmacenes(RequestDetalleAlmacenes request) {
         ResponseDetalleAlmacenes response = new ResponseDetalleAlmacenes();
-        String SQL = "{ call INVENTARIO.sp_ObtenerAlmacenesPorId(?) }";
+        String SQL = "{ call INVENTARIO.sp_ObtenerAlmacenesPorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdAlmacenes());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {

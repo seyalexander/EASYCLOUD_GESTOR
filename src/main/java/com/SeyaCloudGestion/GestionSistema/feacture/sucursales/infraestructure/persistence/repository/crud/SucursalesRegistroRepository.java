@@ -26,7 +26,7 @@ public class SucursalesRegistroRepository implements ISucursalesRegistro {
     @Override
     public ResponseRegistroSucursales RegistroSucursales(RequestRegistroSucursales request) {
         ResponseRegistroSucursales rpt = new ResponseRegistroSucursales();
-        String SQL = "{ call INVENTARIO.sp_RegistroSucursales(?,?) }";
+        String SQL = "{ call INVENTARIO.sp_RegistroSucursales(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -34,6 +34,8 @@ public class SucursalesRegistroRepository implements ISucursalesRegistro {
             setParameter(pstmt, 1, request.getDescripcion());
             Long userId = 1L;
             pstmt.setLong(2, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(3, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -46,7 +48,11 @@ public class SucursalesRegistroRepository implements ISucursalesRegistro {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe una sucursal con esa descripción.");
+            } else {
+                rpt.setMessage("Error al registrar la sucursal.");
+            }
             log.error("Error en INVENTARIO.sp_RegistroSucursales", e);
         }
         return rpt;

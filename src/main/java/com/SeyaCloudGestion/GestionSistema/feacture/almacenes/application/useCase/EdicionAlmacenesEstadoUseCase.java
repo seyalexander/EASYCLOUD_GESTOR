@@ -1,9 +1,14 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.request.RequestDetalleAlmacenes;
 import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.request.RequestEditarEstadoAlmacenes;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseDetalleAlmacenes;
 import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseEditarEstadoAlmacenes;
 import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.domain.services.AlmacenesService;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 public class EdicionAlmacenesEstadoUseCase {
@@ -14,6 +19,19 @@ public class EdicionAlmacenesEstadoUseCase {
     }
     public ResponseEditarEstadoAlmacenes AnularAlmacenes(long idAlmacenes) {
         try {
+            RequestDetalleAlmacenes requestDetalle = new RequestDetalleAlmacenes();
+            requestDetalle.setIdAlmacenes(idAlmacenes);
+
+            ResponseDetalleAlmacenes detalleBD= almacenesService.DetalleAlmacenes(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getAlmacenes() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getAlmacenes().getEstado(), 0)) {
+                throw new IllegalArgumentException("El almacen ya se encuentra anulado.");
+            }
+
             RequestEditarEstadoAlmacenes request = new RequestEditarEstadoAlmacenes();
             request.setIdAlmacenes(idAlmacenes);
 
@@ -43,6 +61,19 @@ public class EdicionAlmacenesEstadoUseCase {
 
     public ResponseEditarEstadoAlmacenes ActivarAlmacenes(long idAlmacenes) {
         try {
+            RequestDetalleAlmacenes requestDetalle = new RequestDetalleAlmacenes();
+            requestDetalle.setIdAlmacenes(idAlmacenes);
+
+            ResponseDetalleAlmacenes detalleBD= almacenesService.DetalleAlmacenes(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getAlmacenes() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getAlmacenes().getEstado(), 1)) {
+                throw new IllegalArgumentException("El almacen ya se encuentra activado.");
+            }
+
             RequestEditarEstadoAlmacenes request = new RequestEditarEstadoAlmacenes();
             request.setIdAlmacenes(idAlmacenes);
 

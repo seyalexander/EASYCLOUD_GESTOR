@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class RequestDetalleEmpresa {
     @Min(value = 1, message = "El id debe ser mayor a 0")
-    private Long idEmpresa;
+    private long idEmpresa;
 }

@@ -34,10 +34,11 @@ public class AlmacenesEdicionRepository implements IAlmacenesEdicion {
              CallableStatement pstmt = conn.prepareCall(SQL)) {
             setParameter(pstmt, 1, request.getIdAlmacenes());
             setParameter(pstmt, 2, request.getDescripcion());
-            setParameter(pstmt, 3, request.getIdSucursales());
-            pstmt.setInt(4, request.getEstado());
+            pstmt.setInt(3, request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(5, userId);
+            pstmt.setLong(4, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(5, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -58,7 +59,7 @@ public class AlmacenesEdicionRepository implements IAlmacenesEdicion {
     @Override
     public ResponseEditarEstadoAlmacenes EditarEstadoAlmacenes(RequestEditarEstadoAlmacenes request, int estado) {
         ResponseEditarEstadoAlmacenes rpt = new ResponseEditarEstadoAlmacenes();
-        String SQL = "{ call INVENTARIO.sp_EditarAlmacenes_Estado(?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_EditarAlmacenes_Estado(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -67,6 +68,8 @@ public class AlmacenesEdicionRepository implements IAlmacenesEdicion {
             pstmt.setInt(2, estado);
             Long userId = 1L;
             pstmt.setLong(3, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

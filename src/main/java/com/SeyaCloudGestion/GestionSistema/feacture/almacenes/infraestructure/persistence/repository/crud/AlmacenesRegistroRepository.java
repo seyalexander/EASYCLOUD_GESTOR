@@ -26,7 +26,7 @@ public class AlmacenesRegistroRepository implements IAlmacenesRegistro {
     @Override
     public ResponseRegistroAlmacenes RegistroAlmacenes(RequestRegistroAlmacenes request) {
         ResponseRegistroAlmacenes rpt = new ResponseRegistroAlmacenes();
-        String SQL = "{ call INVENTARIO.sp_RegistroAlmacenes(?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_RegistroAlmacenes(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -35,6 +35,8 @@ public class AlmacenesRegistroRepository implements IAlmacenesRegistro {
             setParameter(pstmt, 2, request.getIdSucursales());
             Long userId = 1L;
             pstmt.setLong(3, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -47,7 +49,11 @@ public class AlmacenesRegistroRepository implements IAlmacenesRegistro {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un almacen con esa descripción en esta sucursal.");
+            } else {
+                rpt.setMessage("Error al registrar el almacen.");
+            }
             log.error("Error en ALMACEN.sp_RegistroAlmacenes", e);
         }
         return rpt;
