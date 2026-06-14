@@ -1,7 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.tipoClientes.application.useCase;
 
 import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
-import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestDetalleSeries;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoClientes.application.dto.request.RequestDetalleTipoClientes;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoClientes.application.dto.request.RequestEditarAllTipoClientes;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoClientes.application.dto.response.ResponseDetalleTipoClientes;

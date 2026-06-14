@@ -4,6 +4,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.moneda.application.dto.reque
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.request.RequestListaTipoDocumentos;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.response.ResponseListaTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.domain.interfaces.ITipoDocumentoListado;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.infraestructure.persistence.model.TipoCaracter;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.infraestructure.persistence.model.TipoDocumentoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,7 +31,7 @@ public class TipoDocumentoListadoRepository implements ITipoDocumentoListado {
         ResponseListaTipoDocumento rpt = new ResponseListaTipoDocumento();
         List<TipoDocumentoModel> tipoDocumentos = new ArrayList<>();
 
-        String SQL = "{ call CONFIGURACION.sp_ListarTipoDocumentos (?) }";
+        String SQL = "{ call CONFIGURACION.sp_ListarTipoDocumentoIdentidad (?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -42,7 +43,7 @@ public class TipoDocumentoListadoRepository implements ITipoDocumentoListado {
             while (rs.next()) {
                 TipoDocumentoModel tipoDocumento = new TipoDocumentoModel();
 
-                tipoDocumento.setIdTipoDocumentos(rs.getLong("idTipoDocumentos"));
+                tipoDocumento.setIdTipoDocumentos(rs.getLong("idTipoDocumentoIdentidad"));
                 tipoDocumento.setDescripcion(rs.getString("descripcion"));
                 tipoDocumento.setEstado(rs.getInt("estado"));
                 tipoDocumento.setFechaCreacion(
@@ -68,9 +69,9 @@ public class TipoDocumentoListadoRepository implements ITipoDocumentoListado {
                 tipoDocumento.setLongitudMin(rs.getInt("longitudMin"));
                 tipoDocumento.setLongitudMax(rs.getInt("longitudMax"));
                 tipoDocumento.setCodigoSunat(rs.getString("codigoSunat"));
-                tipoDocumento.setTipoCaracter(rs.getInt("tipoCaracter"));
-                tipoDocumento.setDescripcionTipoCaracter(rs.getString("descripcionTipoCaracter"));
-
+                tipoDocumento.setTipoCaracter(
+                        TipoCaracter.fromCodigo(rs.getInt("tipoCaracter"))
+                );
                 tipoDocumentos.add(tipoDocumento);
             }
             rpt.setExito(true);

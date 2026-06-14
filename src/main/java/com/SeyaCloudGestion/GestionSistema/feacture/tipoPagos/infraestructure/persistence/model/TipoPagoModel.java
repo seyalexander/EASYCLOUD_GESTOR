@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class TipoPagosModel extends AuditableModel implements Serializable  {
+public class TipoPagoModel extends AuditableModel implements Serializable  {
     private long idTipoPago;
     private String descripcion;
     private String imagenUrl;

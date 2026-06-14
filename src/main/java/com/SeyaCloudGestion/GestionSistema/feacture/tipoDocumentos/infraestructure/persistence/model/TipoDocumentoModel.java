@@ -14,8 +14,8 @@ public class TipoDocumentoModel implements Serializable {
     private int longitudMin;
     private int longitudMax;
     private String codigoSunat;
-    private int tipoCaracter;
-    private String descripcionTipoCaracter;
+    private TipoCaracter tipoCaracter;
+    //private String descripcionTipoCaracter;
 
     // Auditoría
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")

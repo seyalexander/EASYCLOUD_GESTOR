@@ -55,7 +55,11 @@ public class CodigoBarraEdicionAllRepository implements ICodigoBarraEdicion {
 
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe este codigo en este Articulo");
+            } else {
+                rpt.setMessage("Error al actualizar el codigo.");
+            }
             log.error("Error en PRODUCTOS.sp_EditarCodigoBarra", e);
         }
         return rpt;

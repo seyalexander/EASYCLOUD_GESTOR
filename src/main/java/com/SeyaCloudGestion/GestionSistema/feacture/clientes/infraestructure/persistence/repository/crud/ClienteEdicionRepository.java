@@ -28,7 +28,7 @@ public class ClienteEdicionRepository implements IClienteEdicion {
     @Override
     public ResponseEditarAllCliente EditarAllCliente(RequestEditarAllCliente request) {
         ResponseEditarAllCliente rpt = new ResponseEditarAllCliente();
-        String SQL = "{ call CLIENTES.sp_EditarCliente(?,?,?,?,?,?,?,?,?,?,?) }";
+        String SQL = "{ call CLIENTES.sp_EditarCliente(?,?,?,?,?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -46,6 +46,8 @@ public class ClienteEdicionRepository implements IClienteEdicion {
 
             Long userId = 1L;
             pstmt.setLong(11, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(12, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -66,7 +68,7 @@ public class ClienteEdicionRepository implements IClienteEdicion {
     @Override
     public ResponseEditarEstadoCliente EditarEstadoCliente(RequestEditarEstadoCliente request, int estado) {
         ResponseEditarEstadoCliente rpt = new ResponseEditarEstadoCliente();
-        String SQL = "{ call CLIENTES.sp_EditarCliente_Estado(?,?,?) }";
+        String SQL = "{ call CLIENTES.sp_EditarCliente_Estado(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -74,6 +76,8 @@ public class ClienteEdicionRepository implements IClienteEdicion {
             pstmt.setInt(2, estado);
             Long userId = 1L;
             pstmt.setLong(3, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -85,7 +89,11 @@ public class ClienteEdicionRepository implements IClienteEdicion {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un cliente con ese numero de documento.");
+            } else {
+                rpt.setMessage("Error al actualizar el cliente.");
+            }
             log.error("Error en CLIENTES.sp_EditarCliente_Estado", e);
         }
         return rpt;

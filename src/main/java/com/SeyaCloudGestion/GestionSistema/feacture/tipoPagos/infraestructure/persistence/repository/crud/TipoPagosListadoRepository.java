@@ -3,7 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.infraestructure.p
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.request.RequestListaTipoPagos;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.response.ResponseListaTipoPagos;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.domain.interfaces.ITipoPagosListado;
-import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.infraestructure.persistence.model.TipoPagosModel;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.infraestructure.persistence.model.TipoPagoModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,7 +30,7 @@ public class TipoPagosListadoRepository implements ITipoPagosListado {
     @Override
     public ResponseListaTipoPagos ListaTipoPagos(RequestListaTipoPagos request) {
         ResponseListaTipoPagos rpt = new ResponseListaTipoPagos();
-        List<TipoPagosModel> registros = new ArrayList<>();
+        List<TipoPagoModel> registros = new ArrayList<>();
         String SQL = "{ call VENTAS.sp_ListarTipoPago(?) }";
 
         try (Connection conn = con.getConnection();
@@ -39,7 +39,7 @@ public class TipoPagosListadoRepository implements ITipoPagosListado {
             setParameter(pstmt, 1, request.getEstado());
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
-                    TipoPagosModel item = new TipoPagosModel();
+                    TipoPagoModel item = new TipoPagoModel();
                 item.setIdTipoPago(rs.getLong("idTipoPago"));
                 item.setDescripcion(rs.getString("descripcion"));
                 item.setImagenUrl(rs.getString("imagenUrl"));

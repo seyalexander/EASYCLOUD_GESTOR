@@ -51,7 +51,11 @@ public class ProductoImpuestoEdicionRepository implements IProductoImpuestoEdici
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un impuesto en este articulo.");
+            } else {
+                rpt.setMessage("Error al actualizar impuesto del articulo.");
+            }
             log.error("Error en PRODUCTOS.sp_EditarProductoImpuesto", e);
         }
         return rpt;

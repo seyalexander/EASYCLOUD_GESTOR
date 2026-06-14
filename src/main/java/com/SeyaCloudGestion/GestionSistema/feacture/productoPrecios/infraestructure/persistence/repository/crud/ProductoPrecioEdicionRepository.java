@@ -55,7 +55,11 @@ public class ProductoPrecioEdicionRepository implements IProductoPrecioEdicion {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe este precio en este producto con esa descripción.");
+            } else {
+                rpt.setMessage("Error al actualizar el precio.");
+            }
             log.error("Error en PRODUCTOS.sp_EditarProductoPrecio", e);
         }
         return rpt;

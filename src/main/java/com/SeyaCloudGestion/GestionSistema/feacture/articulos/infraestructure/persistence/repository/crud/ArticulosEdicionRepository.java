@@ -54,7 +54,11 @@ public class ArticulosEdicionRepository implements IArticulosEdicion {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un articulo con ese codigo.");
+            } else {
+                rpt.setMessage("Error al actualizar el articulo.");
+            }
             log.error("Error en PRODUCTOS.sp_EditarArticulos", e);
         }
         return rpt;

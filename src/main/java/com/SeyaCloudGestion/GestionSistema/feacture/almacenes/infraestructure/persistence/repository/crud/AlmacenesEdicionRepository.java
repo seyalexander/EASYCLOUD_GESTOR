@@ -50,7 +50,11 @@ public class AlmacenesEdicionRepository implements IAlmacenesEdicion {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un almacen con esa descripción en esta sucursal.");
+            } else {
+                rpt.setMessage("Error al actualizar el almacen.");
+            }
             log.error("Error en INVENTARIO.sp_EditarAlmacenes", e);
         }
         return rpt;

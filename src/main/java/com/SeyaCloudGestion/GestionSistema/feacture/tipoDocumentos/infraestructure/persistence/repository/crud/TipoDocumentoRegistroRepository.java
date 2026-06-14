@@ -26,7 +26,7 @@ public class TipoDocumentoRegistroRepository implements ITipoDocumentoRegistro {
     public ResponseRegistroTipoDocumento RegistroTipoDocumento(RequestRegistroTipoDocumento request, long userAutenticado) {
         ResponseRegistroTipoDocumento rpt = new ResponseRegistroTipoDocumento();
 
-        String SQL = "{ call CONFIGURACION.sp_RegistroTipoDocumentos(?,?,?,?,?,?) }";
+        String SQL = "{ call CONFIGURACION.sp_RegistroTipoDocumentoIdentidad(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -34,7 +34,7 @@ public class TipoDocumentoRegistroRepository implements ITipoDocumentoRegistro {
             pstmt.setString(1, request.getDescripcion());
             pstmt.setInt(2, request.getLongitudMin());
             pstmt.setInt(3, request.getLongitudMax());
-            pstmt.setInt(4, request.getTipoCaracter());
+            pstmt.setInt(4, request.getTipoCaracter().getCodigo());
             pstmt.setString(5, request.getCodigoSunat());
             pstmt.setLong(6, userAutenticado);
 
@@ -50,9 +50,12 @@ public class TipoDocumentoRegistroRepository implements ITipoDocumentoRegistro {
 
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un tipo documento con esa descripcion.");
+            } else {
+                rpt.setMessage("Error al registrar el tipo documento.");
+            }
         }
-
         return rpt;
     }
 }

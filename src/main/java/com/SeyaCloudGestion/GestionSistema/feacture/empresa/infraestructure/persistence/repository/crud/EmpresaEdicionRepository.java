@@ -6,6 +6,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.requ
 import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.response.ResponseEditarAllEmpresa;
 import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.response.ResponseEditarEstadoEmpresa;
 import com.SeyaCloudGestion.GestionSistema.feacture.empresa.domain.interfaces.IEmpresaEdicion;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,7 @@ import javax.sql.DataSource;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
-
+@Slf4j
 @Repository
 @Transactional("sqlServerTransactionManager")
 public class EmpresaEdicionRepository implements IEmpresaEdicion {
@@ -49,7 +50,12 @@ public class EmpresaEdicionRepository implements IEmpresaEdicion {
 
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("El RUC ya esta registrado");
+            } else {
+                rpt.setMessage("Error al actualizar la empresa.");
+            }
+            log.error("Error en PRODUCTOS.sp_EditarCodigoBarra", e);
         }
 
         return rpt;

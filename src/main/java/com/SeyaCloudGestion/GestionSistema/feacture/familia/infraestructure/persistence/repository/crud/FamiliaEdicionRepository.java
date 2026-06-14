@@ -60,7 +60,14 @@ public class FamiliaEdicionRepository implements IFamiliaEdicion {
 
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            String mensaje = e.getMessage();
+
+            if (mensaje != null && mensaje.contains("UQ_Familia_Empresa")) {
+                rpt.setMessage("Ya existe una familia con esa descripción.");
+            }
+            else {
+                rpt.setMessage("Error al actualizar la familia.");
+            }
         }
 
         return rpt;

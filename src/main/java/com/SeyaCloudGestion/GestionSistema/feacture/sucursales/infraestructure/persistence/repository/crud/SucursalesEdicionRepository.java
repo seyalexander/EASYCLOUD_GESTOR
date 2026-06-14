@@ -51,7 +51,11 @@ public class SucursalesEdicionRepository implements ISucursalesEdicion {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe una sucursal con esa descripción.");
+            } else {
+                rpt.setMessage("Error al actualizar la sucursal.");
+            }
             log.error("Error en INVENTARIO.sp_EditarSucursales", e);
         }
         return rpt;

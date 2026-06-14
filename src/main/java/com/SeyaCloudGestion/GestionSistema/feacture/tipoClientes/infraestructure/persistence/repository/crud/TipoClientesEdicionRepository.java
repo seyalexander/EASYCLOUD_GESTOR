@@ -52,7 +52,11 @@ public class TipoClientesEdicionRepository implements ITipoClientesEdicion {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un tipo cliente con esa descripción.");
+            } else {
+                rpt.setMessage("Error al actualizar el tipo cliente.");
+            }
             log.error("Error en CONFIGURACION.sp_EditarTipoClientes", e);
         }
         return rpt;

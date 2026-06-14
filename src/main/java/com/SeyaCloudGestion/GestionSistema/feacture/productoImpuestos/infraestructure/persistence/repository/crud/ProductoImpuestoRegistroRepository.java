@@ -52,7 +52,7 @@ public class ProductoImpuestoRegistroRepository implements IProductoImpuestoRegi
             if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
                 rpt.setMessage("Ya existe un impuesto en este articulo.");
             } else {
-                rpt.setMessage("Error el impuesto del articulo.");
+                rpt.setMessage("Error al registrar el impuesto del articulo.");
             }
             log.error("Error en PRODUCTOS.sp_RegistroProductoImpuesto", e);
         }

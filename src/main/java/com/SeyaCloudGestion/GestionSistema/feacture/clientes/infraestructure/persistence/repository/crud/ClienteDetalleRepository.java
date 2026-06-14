@@ -28,12 +28,14 @@ public class ClienteDetalleRepository implements IClienteDetalle {
     @Override
     public ResponseDetalleCliente DetalleCliente(RequestDetalleCliente request) {
         ResponseDetalleCliente response = new ResponseDetalleCliente();
-        String SQL = "{ call CLIENTES.sp_ObtenerClientePorId(?) }";
+        String SQL = "{ call CLIENTES.sp_ObtenerClientePorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setLong(1, request.getIdCliente());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {

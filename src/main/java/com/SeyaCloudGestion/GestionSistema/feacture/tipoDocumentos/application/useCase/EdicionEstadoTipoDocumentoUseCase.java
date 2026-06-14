@@ -1,12 +1,17 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.request.RequestDetalleTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.request.RequestEditarAllTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.request.RequestEditarEstadoTipoDocumento;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.response.ResponseDetalleTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.response.ResponseEditarAllTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.response.ResponseEditarEstadoTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.domain.services.TipoDocumentoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 
 @Component
@@ -21,6 +26,18 @@ public class EdicionEstadoTipoDocumentoUseCase {
 
     public ResponseEditarEstadoTipoDocumento AnularTipoDocumento(long idTipoDocumentos) {
         try {
+            RequestDetalleTipoDocumento requestDetalle = new RequestDetalleTipoDocumento();
+            requestDetalle.setIdTipoDocumentos(idTipoDocumentos);
+
+            ResponseDetalleTipoDocumento detalleBD= tipoDocumentoService.DetalleTipoDocumento(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getTipoDocumento() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getTipoDocumento().getEstado(), 0)) {
+                throw new IllegalArgumentException("El tipo documento ya se encuentra anulado.");
+            }
 
             RequestEditarEstadoTipoDocumento request  = new RequestEditarEstadoTipoDocumento();
             request.setIdTipoDocumento(idTipoDocumentos);
@@ -64,6 +81,18 @@ public class EdicionEstadoTipoDocumentoUseCase {
 
     public ResponseEditarEstadoTipoDocumento ActivarTipoDocumento(long idTipoDocumentos) {
         try {
+            RequestDetalleTipoDocumento requestDetalle = new RequestDetalleTipoDocumento();
+            requestDetalle.setIdTipoDocumentos(idTipoDocumentos);
+
+            ResponseDetalleTipoDocumento detalleBD= tipoDocumentoService.DetalleTipoDocumento(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getTipoDocumento() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getTipoDocumento().getEstado(), 1)) {
+                throw new IllegalArgumentException("El tipo documento ya se encuentra activado.");
+            }
 
             RequestEditarEstadoTipoDocumento request  = new RequestEditarEstadoTipoDocumento();
             request.setIdTipoDocumento(idTipoDocumentos);

@@ -31,7 +31,7 @@ public class TipoDocumentoEdicionRepository implements ITipoDocumentoEdicion {
     public ResponseEditarAllTipoDocumento EditarTipoDocumento(RequestEditarAllTipoDocumento request, long userAutenticado) {
         ResponseEditarAllTipoDocumento rpt = new ResponseEditarAllTipoDocumento();
 
-        String SQL = "{ call CONFIGURACION.sp_EditarTipoDocumentos(?,?,?,?,?,?,?,?) }";
+        String SQL = "{ call CONFIGURACION.sp_EditarTipoDocumentoIdentidad(?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -40,7 +40,7 @@ public class TipoDocumentoEdicionRepository implements ITipoDocumentoEdicion {
             pstmt.setString(2, request.getDescripcion());
             pstmt.setInt(3, request.getEstado());
             pstmt.setString(4, request.getCodigoSunat());
-            pstmt.setInt(5, request.getTipoCaracter());
+            pstmt.setInt(5, request.getTipoCaracter().getCodigo());
             pstmt.setInt(6, request.getLongitudMin());
             pstmt.setInt(7, request.getLongitudMax());
             pstmt.setLong(8, userAutenticado);
@@ -57,6 +57,11 @@ public class TipoDocumentoEdicionRepository implements ITipoDocumentoEdicion {
 
         } catch (SQLException e) {
             rpt.setExito(false);
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un tipo documento con esa descripcion.");
+            } else {
+                rpt.setMessage("Error al actualizar el tipo documento.");
+            }
             rpt.setMessage(e.getMessage());
         }
 
@@ -67,7 +72,7 @@ public class TipoDocumentoEdicionRepository implements ITipoDocumentoEdicion {
     public ResponseEditarEstadoTipoDocumento EditarEstadoTipoDocumento(RequestEditarEstadoTipoDocumento request, int estado, long userAutenticado) {
         ResponseEditarEstadoTipoDocumento rpt = new ResponseEditarEstadoTipoDocumento();
 
-        String SQL = "{ call CONFIGURACION.sp_EditarTipoDocumentos_Estado(?,?,?) }";
+        String SQL = "{ call CONFIGURACION.sp_EditarTipoDocumentoIdentidad_Estado(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
