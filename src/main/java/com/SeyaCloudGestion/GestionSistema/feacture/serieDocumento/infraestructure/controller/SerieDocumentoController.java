@@ -48,6 +48,7 @@ public class SerieDocumentoController {
             summary = "Registrar serie de documento",
             description = "Permite registrar una nueva serie de documento"
     )
+
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Serie de documento registrada correctamente"),
             @ApiResponse(responseCode = "400", description = "Error en los datos enviados"),

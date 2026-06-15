@@ -1,6 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.websockets.domain.services;
 
-import com.SeyaCloudGestion.GestionSistema.websockets.application.dto.NotificacionCierreCajaDTO;
+import com.SeyaCloudGestion.GestionSistema.websockets.application.dto.NotificacionSerieCajaDTO;
 import com.SeyaCloudGestion.GestionSistema.websockets.domain.interfaces.INotificacionCierreCaja;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -17,7 +17,7 @@ public class NotificacionCierreCajaService implements INotificacionCierreCaja {
     }
 
     @Override
-    public void enviarNotificacionCierreCaja_Registro(NotificacionCierreCajaDTO notificacion) {
+    public void enviarNotificacionCierreCaja_Registro(NotificacionSerieCajaDTO notificacion) {
         try {
             messagingTemplate.convertAndSend("/topic/cierreCaja/cierreCaja-registro", notificacion);
         } catch (Exception e) {
@@ -26,7 +26,7 @@ public class NotificacionCierreCajaService implements INotificacionCierreCaja {
     }
 
     @Override
-    public void enviarNotificacionCierreCaja_Edicion(NotificacionCierreCajaDTO notificacion) {
+    public void enviarNotificacionCierreCaja_Edicion(NotificacionSerieCajaDTO notificacion) {
         try {
             messagingTemplate.convertAndSend("/topic/cierreCaja/cierreCaja-edicion", notificacion);
         } catch (Exception e) {
@@ -35,7 +35,7 @@ public class NotificacionCierreCajaService implements INotificacionCierreCaja {
     }
 
     @Override
-    public void enviarNotificacionCierreCaja_Anular(NotificacionCierreCajaDTO notificacion) {
+    public void enviarNotificacionCierreCaja_Anular(NotificacionSerieCajaDTO notificacion) {
         try {
             messagingTemplate.convertAndSend("/topic/cierreCaja/cierreCaja-anular", notificacion);
         } catch (Exception e) {
@@ -44,7 +44,7 @@ public class NotificacionCierreCajaService implements INotificacionCierreCaja {
     }
 
     @Override
-    public void enviarNotificacionCierreCaja_Activar(NotificacionCierreCajaDTO notificacion) {
+    public void enviarNotificacionCierreCaja_Activar(NotificacionSerieCajaDTO notificacion) {
         try {
             messagingTemplate.convertAndSend("/topic/cierreCaja/cierreCaja-activar", notificacion);
         } catch (Exception e) {
