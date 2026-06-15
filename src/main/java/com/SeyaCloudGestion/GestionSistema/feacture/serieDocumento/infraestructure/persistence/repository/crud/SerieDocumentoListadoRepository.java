@@ -31,24 +31,27 @@ public class SerieDocumentoListadoRepository implements ISerieDocumentoListado {
     public ResponseListaSerieDocumento listaSerieDocumento(RequestListaSeries request) {
         ResponseListaSerieDocumento rpt = new ResponseListaSerieDocumento();
         List<SerieDocumentoModel> registros = new ArrayList<>();
-        String SQL = "{ call dbo.sp_ListarSerieDocumento(?) }";
+        String SQL = "{ call CONFIGURACION.sp_ListarSerieDocumento(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getEstado());
+            Long sucursalId = 1L;
+            Long empresaId = 1L;
+            pstmt.setLong(2, sucursalId);
+            pstmt.setLong(3, empresaId);
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     SerieDocumentoModel item = new SerieDocumentoModel();
                 item.setIdSerieDocumento(rs.getLong("idSerieDocumento"));
-                item.setIdTipoDocumento(rs.getLong("idTipoDocumento"));
+                item.setIdTipoDocumento(rs.getLong("idTipoComprobante"));
                 item.setSerie(rs.getString("serie"));
                 item.setCorrelativoActual(rs.getLong("correlativoActual"));
                 item.setEsElectronico(rs.getInt("esElectronico"));
                 item.setEstado(rs.getInt("estado"));
                     registros.add(item);
-                }
             }
 
             rpt.setExito(true);
@@ -57,7 +60,7 @@ public class SerieDocumentoListadoRepository implements ISerieDocumentoListado {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en dbo.sp_ListarSerieDocumento", e);
+            log.error("Error en CONFIGURACION.sp_ListarSerieDocumento", e);
         }
         return rpt;
     }

@@ -60,7 +60,13 @@ public class ClienteRegistroRepository implements IClienteRegistro {
             } else {
                 rpt.setMessage("Error al registrar el cliente.");
             }
-            log.error("Error en CLIENTES.sp_RegistroCliente", e);
+            log.error(
+                    "ErrorCode: {}, SQLState: {}, Message: {}",
+                    e.getErrorCode(),
+                    e.getSQLState(),
+                    e.getMessage(),
+                    e
+            );
         }
         return rpt;
     }

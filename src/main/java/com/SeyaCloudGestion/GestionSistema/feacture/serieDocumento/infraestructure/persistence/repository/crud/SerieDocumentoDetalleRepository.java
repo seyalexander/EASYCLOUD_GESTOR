@@ -28,19 +28,22 @@ public class SerieDocumentoDetalleRepository implements ISerieDocumentoDetalle {
     @Override
     public ResponseDetalleSerieDocumento DetalleSerieDocumento(RequestDetalleSeries request) {
         ResponseDetalleSerieDocumento response = new ResponseDetalleSerieDocumento();
-        String SQL = "{ call dbo.sp_ObtenerSerieDocumentoPorId(?) }";
+        String SQL = "{ call CONFIGURACION.sp_ObtenerSerieDocumentoPorId(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdSeries());
+            Long sucursalId = 1L;
+            Long empresaId = 1L;
+            pstmt.setLong(2, sucursalId);
+            pstmt.setLong(3, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     SerieDocumentoModel item = new SerieDocumentoModel();
                     item.setIdSerieDocumento(rs.getLong("idSerieDocumento"));
-                    item.setIdTipoDocumento(rs.getLong("idTipoDocumento"));
-                    item.setIdEmpresa(rs.getLong("idEmpresa"));
+                    item.setIdTipoDocumento(rs.getLong("idTipoComprobante"));
                     item.setSerie(rs.getString("serie"));
                     item.setCorrelativoActual(rs.getLong("correlativoActual"));
                     item.setEsElectronico(rs.getInt("esElectronico"));
@@ -57,7 +60,7 @@ public class SerieDocumentoDetalleRepository implements ISerieDocumentoDetalle {
         } catch (SQLException e) {
             response.setExito(false);
             response.setMessage(e.getMessage());
-            log.error("Error en dbo.sp_ObtenerSerieDocumentoPorId", e);
+            log.error("Error en CONFIGURACION.sp_ObtenerSerieDocumentoPorId", e);
         }
         return response;
     }

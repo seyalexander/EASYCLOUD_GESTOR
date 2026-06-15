@@ -24,19 +24,24 @@ public class SerieDocumentoRegistroRepository implements ISerieDocumentoRegistro
     private DataSource con;
 
     @Override
-    public ResponseRegistroSerieDocumento RegistroSerieDocumento(RequestRegistroSeries request) {
+    public ResponseRegistroSerieDocumento RegistroSerieDocumento(RequestRegistroSeries request,long correlativo) {
         ResponseRegistroSerieDocumento rpt = new ResponseRegistroSerieDocumento();
-        String SQL = "{ call dbo.sp_RegistroSerieDocumento(?) }";
+        String SQL = "{ call CONFIGURACION.sp_RegistroSerieDocumento(?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            //Long userId = 1L;
-            //pstmt.setLong(1, userId);
-            pstmt.setLong(1, request.getIdTipoDocumento());
+            Long userId = 1L;
+            Long sucursalId = 1L;
+            Long empresaId = 1L;
+
+            pstmt.setLong(1, request.getIdTipoComprobante());
             pstmt.setString(2, request.getSerie());
-            pstmt.setLong(3, request.getCorrelativoActual());
+            pstmt.setLong(3, correlativo);
             pstmt.setInt(4, request.getEsElectronico());
+            pstmt.setLong(5, sucursalId);
+            pstmt.setLong(6, empresaId);
+            pstmt.setLong(7, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -49,8 +54,12 @@ public class SerieDocumentoRegistroRepository implements ISerieDocumentoRegistro
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
-            log.error("Error en dbo.sp_RegistroSerieDocumento", e);
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe una serie con esa descripción.");
+            } else {
+                rpt.setMessage("Error al registrar la serie.");
+            }
+            log.error("Error en CONFIGURACION.sp_RegistroSerieDocumento", e);
         }
         return rpt;
     }

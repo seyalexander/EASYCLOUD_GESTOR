@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.d
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.response.ResponseRegistroSerieDocumento;
 
 public interface ISerieDocumentoRegistro {
-    ResponseRegistroSerieDocumento RegistroSerieDocumento(RequestRegistroSeries request);
+    ResponseRegistroSerieDocumento RegistroSerieDocumento(RequestRegistroSeries request, long correlativo);
 }

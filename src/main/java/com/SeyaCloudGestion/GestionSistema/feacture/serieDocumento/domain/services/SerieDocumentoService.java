@@ -50,7 +50,7 @@ public class SerieDocumentoService  implements ISerieDocumentoDetalle, ISerieDoc
 
     @Override
     @CacheEvict(value = {"serieDocumentos", "serieDocumentos_detalle"}, allEntries = true)
-    public ResponseRegistroSerieDocumento RegistroSerieDocumento(RequestRegistroSeries request) {
-        return serieDocumentoRegistroRepository.RegistroSerieDocumento(request);
+    public ResponseRegistroSerieDocumento RegistroSerieDocumento(RequestRegistroSeries request, long correlativo) {
+        return serieDocumentoRegistroRepository.RegistroSerieDocumento(request,correlativo);
     }
 }
