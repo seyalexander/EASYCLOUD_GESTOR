@@ -1,9 +1,9 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.almacenes.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.request.RequestListaAlmacenes;
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseListaAlmacenes;
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.domain.interfaces.IAlmacenesListado;
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.infraestructure.persistence.model.AlmacenesModel;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.request.RequestDetalleAlmacen;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseDetalleAlmacen;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.domain.interfaces.IAlmacenDetalle;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.infraestructure.persistence.model.AlmacenModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,38 +15,37 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Repository
 @Transactional("sqlServerTransactionManager")
-public class AlmacenesListadoRepository implements IAlmacenesListado {
+public class AlmacenDetalleRepository implements IAlmacenDetalle {
 
     @Autowired
     @Qualifier("SQLSERVER")
     private DataSource con;
 
     @Override
-    public ResponseListaAlmacenes ListaAlmacenes(RequestListaAlmacenes request) {
-        ResponseListaAlmacenes rpt = new ResponseListaAlmacenes();
-        List<AlmacenesModel> registros = new ArrayList<>();
-        String SQL = "{ call INVENTARIO.sp_ListarAlmacenes(?,?) }";
+    public ResponseDetalleAlmacen DetalleAlmacen(RequestDetalleAlmacen request) {
+        ResponseDetalleAlmacen response = new ResponseDetalleAlmacen();
+        String SQL = "{ call INVENTARIO.sp_ObtenerAlmacenesPorId(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getEstado());
+            setParameter(pstmt, 1, request.getIdAlmacen());
             Long empresaId = 1L;
             pstmt.setLong(2, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(3, sucursalId);
 
-            ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    AlmacenesModel item = new AlmacenesModel();
-                item.setIdAlmacenes(rs.getLong("idAlmacenes"));
-                item.setDescripcion(rs.getString("descripcion"));
-                item.setEstado(rs.getInt("estado"));
-                item.setIdSucursales(rs.getLong("idSucursales"));
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    AlmacenModel item = new AlmacenModel();
+                    item.setIdAlmacen(rs.getLong("idAlmacen"));
+                    item.setDescripcion(rs.getString("descripcion"));
+                    item.setEstado(rs.getInt("estado"));
+                    item.setIdSucursal(rs.getLong("idSucursal"));
                     item.setFechaCreacion(
                             rs.getTimestamp("fechaCreacion") != null
                                     ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
@@ -67,18 +66,21 @@ public class AlmacenesListadoRepository implements IAlmacenesListado {
                     item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
                     item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
                     item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
-                    registros.add(item);
-                }
 
-            rpt.setExito(true);
-            rpt.setAlmacenes(registros);
-            rpt.setMessage("Consulta realizada correctamente.");
+                    response.setExito(true);
+                    response.setMessage("Almacenes obtenido correctamente.");
+                    response.setAlmacen(item);
+                } else {
+                    response.setExito(false);
+                    response.setMessage("No se encontró Almacenes.");
+                }
+            }
         } catch (SQLException e) {
-            rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_ListarAlmacenes", e);
+            response.setExito(false);
+            response.setMessage(e.getMessage());
+            log.error("Error en ALMACEN.sp_ObtenerAlmacenesPorId", e);
         }
-        return rpt;
+        return response;
     }
 
     private void setParameter(CallableStatement pstmt, int index, Object value) throws SQLException {

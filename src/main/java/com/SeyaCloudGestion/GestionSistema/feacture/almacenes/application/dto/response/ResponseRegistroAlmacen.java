@@ -2,6 +2,6 @@ package com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.r
 
 import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
 
-public class ResponseEditarEstadoAlmacenes extends ResponseGeneral {
+public class ResponseRegistroAlmacen extends ResponseGeneral {
 
 }

@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Max;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
-public class RequestListaAlmacenes {
+public class RequestListaAlmacen {
     @Schema(
             description = "Estado de los almacenes",
             example = "1",

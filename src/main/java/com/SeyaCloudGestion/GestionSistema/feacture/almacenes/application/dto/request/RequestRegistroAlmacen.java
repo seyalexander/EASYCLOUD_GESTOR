@@ -4,12 +4,12 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class RequestRegistroAlmacenes {
+public class RequestRegistroAlmacen {
 
     @NotBlank(message = "La descripción es obligatoria")
     @Size(max = 50, message = "La descripción no debe superar los 50 caracteres")
     private String descripcion;
 
     @Min(value = 1, message = "El id de sucursal debe ser mayor a 0")
-    private long idSucursales;
+    private long idSucursal;
 }

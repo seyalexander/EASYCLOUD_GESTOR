@@ -11,12 +11,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Data
 public class RequestListaSotck {
     @Schema(
-            description = "Estado de los stocks",
+            description = "Listar stock por almancen y producto",
             example = "1",
-            allowableValues = {"0: Inactivo", "1: Activo", "2: Todos"}
+            allowableValues = {"0: todos"}
     )
-    @Min(value = 0, message = "El estado mínimo permitido es 0")
-    @Max(value = 2, message = "El estado máximo permitido es 2")
-    private int estado;
+    @Min(value = 0, message = "El id mínimo permitido es 0")
+    private long idAlmacen;
+
+    @Schema(
+            description = "Listar stock por almancen y producto",
+            example = "1",
+            allowableValues = {"0: todos"}
+    )
+    @Min(value = 0, message = "El id mínimo permitido es 0")
+    private long idProducto;
 
 }

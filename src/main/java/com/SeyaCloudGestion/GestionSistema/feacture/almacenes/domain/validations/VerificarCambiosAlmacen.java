@@ -1,16 +1,16 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.almacenes.domain.validations;
 
 import com.SeyaCloudGestion.GestionSistema.common.validation.GlobalVerficarCambios;
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.request.RequestEditarAllAlmacenes;
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.infraestructure.persistence.model.AlmacenesModel;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.request.RequestEditarAllAlmacen;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.infraestructure.persistence.model.AlmacenModel;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 @Component
-public class VerificarCambiosAlmacen implements GlobalVerficarCambios<AlmacenesModel, RequestEditarAllAlmacenes> {
+public class VerificarCambiosAlmacen implements GlobalVerficarCambios<AlmacenModel, RequestEditarAllAlmacen> {
     @Override
-    public boolean verificarCambios(AlmacenesModel modelBD, RequestEditarAllAlmacenes request) {
+    public boolean verificarCambios(AlmacenModel modelBD, RequestEditarAllAlmacen request) {
         boolean cambioDescripcion =
                 !Objects.equals(
                         modelBD.getDescripcion(),

@@ -1,7 +1,8 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.stocks.infraestructure.persistence.repository.crud;
-import com.SeyaCloudGestion.GestionSistema.feacture.stocks.application.dto.request.RequestDetalleSotck;
-import com.SeyaCloudGestion.GestionSistema.feacture.stocks.application.dto.response.ResponseDetalleSotck;
-import com.SeyaCloudGestion.GestionSistema.feacture.stocks.domain.interfaces.ISotckDetalle;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.stocks.application.dto.request.RequestListaSotck;
+import com.SeyaCloudGestion.GestionSistema.feacture.stocks.application.dto.response.ResponseListaSotck;
+import com.SeyaCloudGestion.GestionSistema.feacture.stocks.domain.interfaces.ISotckListado;
 import com.SeyaCloudGestion.GestionSistema.feacture.stocks.infraestructure.persistence.model.SotckModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,37 +15,38 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Repository
 @Transactional("sqlServerTransactionManager")
-public class SotckDetalleRepository implements ISotckDetalle {
+public class StockListadoRepository implements ISotckListado {
+
     @Autowired
     @Qualifier("SQLSERVER")
     private DataSource con;
 
     @Override
-    public ResponseDetalleSotck DetalleSotck(RequestDetalleSotck request) {
+    public ResponseListaSotck listaSotck(RequestListaSotck request) {
+        ResponseListaSotck rpt = new ResponseListaSotck();
+        List<SotckModel> registros = new ArrayList<>();
 
-        ResponseDetalleSotck response = new ResponseDetalleSotck();
-
-        String SQL = "{ call INVENTARIO.sp_ObtenerStockProductoPorId(?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_ListarStockProducto(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            pstmt.setLong(1, request.getIdSotck());
-
             Long empresaId = 1L;
-            pstmt.setLong(2, empresaId);
+            pstmt.setLong(1, empresaId);
             Long sucursaleId = 1L;
-            pstmt.setLong(3, sucursaleId);
-            try (ResultSet rs = pstmt.executeQuery()) {
+            pstmt.setLong(2, sucursaleId);
+            pstmt.setLong(3, request.getIdProducto());
+            pstmt.setLong(4, request.getIdAlmacen());
 
-                if (rs.next()) {
-
+            ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
                     SotckModel item = new SotckModel();
-
                     item.setIdStockProducto(rs.getLong("idStockProducto"));
                     item.setStock(rs.getDouble("stock"));
 
@@ -57,23 +59,18 @@ public class SotckDetalleRepository implements ISotckDetalle {
                     item.setIdSucursal(rs.getLong("idSucursal"));
                     item.setDescripcionSucursal(rs.getString("descripcionSucursal"));
 
-                    response.setExito(true);
-                    response.setMessage("Stock obtenido correctamente.");
-                    response.setSotck(item);
-
-                } else {
-                    response.setExito(false);
-                    response.setMessage("No se encontró Stock.");
+                    registros.add(item);
                 }
-            }
+
+            rpt.setExito(true);
+            rpt.setSotcks(registros);
+            rpt.setMessage("Consulta de stock realizada correctamente.");
 
         } catch (SQLException e) {
-            response.setExito(false);
-            response.setMessage(e.getMessage());
-            log.error("Error en INVENTARIO.sp_ObtenerStockProductoPorId", e);
+            rpt.setExito(false);
+            rpt.setMessage(e.getMessage());
+            log.error("Error en PRODUCTOS.sp_ListarStock", e);
         }
-
-        return response;
+        return rpt;
     }
-
 }

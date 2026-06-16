@@ -4,10 +4,10 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class RequestEditarAllAlmacenes {
+public class RequestEditarAllAlmacen {
 
     @Min(value = 1, message = "El id debe ser mayor a 0")
-    private long idAlmacenes;
+    private long idAlmacen;
 
     @NotBlank(message = "La descripción es obligatoria")
     @Size(max = 50, message = "La descripción no debe superar los 50 caracteres")

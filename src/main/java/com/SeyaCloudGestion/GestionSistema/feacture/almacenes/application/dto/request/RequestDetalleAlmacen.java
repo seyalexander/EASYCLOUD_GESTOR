@@ -5,8 +5,8 @@ import lombok.Data;
 import jakarta.validation.constraints.Min;
 
 @Data
-public class RequestEditarEstadoAlmacenes {
+public class RequestDetalleAlmacen {
     @Min(value = 1, message = "El id debe ser mayor a 0")
-    private Long idAlmacenes;
+    private Long idAlmacen;
 
 }

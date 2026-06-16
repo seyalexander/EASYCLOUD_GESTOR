@@ -1,21 +1,21 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.request.RequestListaAlmacenes;
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseListaAlmacenes;
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.domain.services.AlmacenesService;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.request.RequestListaAlmacen;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseListaAlmacen;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.domain.services.AlmacenService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ListaAlmacenesUseCase {
-    private final AlmacenesService almacenesService;
+public class ListaAlmacenUseCase {
+    private final AlmacenService almacenesService;
 
-    public ListaAlmacenesUseCase(AlmacenesService almacenesService) {
+    public ListaAlmacenUseCase(AlmacenService almacenesService) {
         this.almacenesService = almacenesService;
     }
 
-    public ResponseListaAlmacenes ListaAlmacenes(RequestListaAlmacenes request) {
+    public ResponseListaAlmacen ListaAlmacenes(RequestListaAlmacen request) {
         try {
-            ResponseListaAlmacenes response = almacenesService.ListaAlmacenes(request);
+            ResponseListaAlmacen response = almacenesService.ListaAlmacen(request);
 
             if (response.isExito()) {
             }
@@ -23,7 +23,7 @@ public class ListaAlmacenesUseCase {
             return response;
 
         } catch (IllegalArgumentException | SecurityException e) {
-            ResponseListaAlmacenes response = new ResponseListaAlmacenes();
+            ResponseListaAlmacen response = new ResponseListaAlmacen();
             response.setExito(false);
             response.setMessage(e.getMessage());
             response.setAlmacenes(java.util.List.of());
@@ -33,7 +33,7 @@ public class ListaAlmacenesUseCase {
             String mensajeError = "Error inesperado al listar los almacenes: " + e.getMessage();
             System.err.println("[ERROR] " + mensajeError);
 
-            ResponseListaAlmacenes response = new ResponseListaAlmacenes();
+            ResponseListaAlmacen response = new ResponseListaAlmacen();
             response.setExito(false);
             response.setMessage(mensajeError);
             response.setAlmacenes(java.util.List.of());

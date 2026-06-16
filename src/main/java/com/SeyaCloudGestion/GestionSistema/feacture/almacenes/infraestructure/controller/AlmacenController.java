@@ -15,34 +15,34 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/v1/almacenes")
-public class AlmacenesController {
-    private final ListaAlmacenesUseCase listaAlmacenesUseCase;
-    private final RegistroAlmacenesUseCase registroAlmacenesUseCase;
-    private final EdicionAllAlmacenesUseCase edicionAllAlmacenesUseCase;
-    private final EdicionAlmacenesEstadoUseCase edicionAlmacenesEstadoUseCase;
-    private final DetalleAlmacenesUseCase detalleAlmacenesUseCase;
+public class AlmacenController {
+    private final ListaAlmacenUseCase listaAlmacenUseCase;
+    private final RegistroAlmacenUseCase registroAlmacenUseCase;
+    private final EdicionAllAlmacenUseCase edicionAllAlmacenUseCase;
+    private final EdicionAlmacenEstadoUseCase edicionAlmacenEstadoUseCase;
+    private final DetalleAlmacenUseCase detalleAlmacenUseCase;
     private final NotificacionAlmacenService notificacionAlmacenService;
 
-    public AlmacenesController(
-            ListaAlmacenesUseCase listaAlmacenesUseCase,
-            RegistroAlmacenesUseCase registroAlmacenesUseCase,
-            EdicionAllAlmacenesUseCase edicionAllAlmacenesUseCase,
-            EdicionAlmacenesEstadoUseCase edicionAlmacenesEstadoUseCase,
-            DetalleAlmacenesUseCase detalleAlmacenesUseCase,
+    public AlmacenController(
+            ListaAlmacenUseCase listaAlmacenUseCase,
+            RegistroAlmacenUseCase registroAlmacenUseCase,
+            EdicionAllAlmacenUseCase edicionAllAlmacenUseCase,
+            EdicionAlmacenEstadoUseCase edicionAlmacenEstadoUseCase,
+            DetalleAlmacenUseCase detalleAlmacenUseCase,
             NotificacionAlmacenService notificacionAlmacenService
             ) {
-        this.listaAlmacenesUseCase = listaAlmacenesUseCase;
-        this.registroAlmacenesUseCase = registroAlmacenesUseCase;
-        this.edicionAllAlmacenesUseCase = edicionAllAlmacenesUseCase;
-        this.edicionAlmacenesEstadoUseCase = edicionAlmacenesEstadoUseCase;
-        this.detalleAlmacenesUseCase = detalleAlmacenesUseCase;
+        this.listaAlmacenUseCase = listaAlmacenUseCase;
+        this.registroAlmacenUseCase = registroAlmacenUseCase;
+        this.edicionAllAlmacenUseCase = edicionAllAlmacenUseCase;
+        this.edicionAlmacenEstadoUseCase = edicionAlmacenEstadoUseCase;
+        this.detalleAlmacenUseCase = detalleAlmacenUseCase;
         this.notificacionAlmacenService = notificacionAlmacenService;
     }
 
     @GetMapping
     @Operation(summary = "Listar almacenes by estado", description = "Obtiene la lista de almacenes según su estado")
-    public ResponseEntity<ResponseListaAlmacenes> listaAlmacenes(@Validated @ModelAttribute RequestListaAlmacenes request) {
-        ResponseListaAlmacenes response = listaAlmacenesUseCase.ListaAlmacenes(request);
+    public ResponseEntity<ResponseListaAlmacen> listaAlmacenes(@Validated @ModelAttribute RequestListaAlmacen request) {
+        ResponseListaAlmacen response = listaAlmacenUseCase.ListaAlmacenes(request);
 
         return ResponseEntity.ok(response);
     }
@@ -54,8 +54,8 @@ public class AlmacenesController {
             @ApiResponse(responseCode = "400", description = "Error en los datos enviados"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public ResponseEntity<ResponseRegistroAlmacenes> registroAlmacenes(@Validated @RequestBody RequestRegistroAlmacenes request) {
-        ResponseRegistroAlmacenes response = registroAlmacenesUseCase.RegistroAlmacenes(request);
+    public ResponseEntity<ResponseRegistroAlmacen> registroAlmacenes(@Validated @RequestBody RequestRegistroAlmacen request) {
+        ResponseRegistroAlmacen response = registroAlmacenUseCase.RegistroAlmacenes(request);
 
         if (response.isExito()) {
             NotificacionAlmacenDTO notificacion = new NotificacionAlmacenDTO();
@@ -72,16 +72,16 @@ public class AlmacenesController {
 
     @PutMapping
     @Operation(summary = "Editar almacén", description = "Permite editar todos los datos de un almacén existente")
-    public ResponseEntity<ResponseEditarAllAlmacenes> edicionAllAlmacenes(
-            @Validated @RequestBody RequestEditarAllAlmacenes request
+    public ResponseEntity<ResponseEditarAllAlmacen> edicionAllAlmacenes(
+            @Validated @RequestBody RequestEditarAllAlmacen request
     ) {
-        ResponseEditarAllAlmacenes response = edicionAllAlmacenesUseCase.EdicionAllAlmacenes(request);
+        ResponseEditarAllAlmacen response = edicionAllAlmacenUseCase.EdicionAllAlmacenes(request);
 
         if (response.isExito()) {
             NotificacionAlmacenDTO notificacion = new NotificacionAlmacenDTO();
             notificacion.setTipo(String.valueOf(TipoNotificacion.EDICION));
             notificacion.setMensaje("Almacén editado");
-            notificacion.setIdAlmacenes(request.getIdAlmacenes());
+            notificacion.setIdAlmacen(request.getIdAlmacen());
 
             notificacionAlmacenService.enviarNotificacionAlmacen_Edicion(notificacion);
 
@@ -93,14 +93,14 @@ public class AlmacenesController {
 
     @DeleteMapping("/{idAlmacenes}")
     @Operation(summary = "Anular almacén", description = "Cambia el estado del almacén a inactivo")
-    public ResponseEntity<ResponseEditarEstadoAlmacenes> anularAlmacenes(@PathVariable long idAlmacenes) {
-        ResponseEditarEstadoAlmacenes response = edicionAlmacenesEstadoUseCase.AnularAlmacenes(idAlmacenes);
+    public ResponseEntity<ResponseEditarEstadoAlmacen> anularAlmacenes(@PathVariable long idAlmacenes) {
+        ResponseEditarEstadoAlmacen response = edicionAlmacenEstadoUseCase.AnularAlmacenes(idAlmacenes);
 
         if (response.isExito()) {
             NotificacionAlmacenDTO notificacion = new NotificacionAlmacenDTO();
             notificacion.setTipo(String.valueOf(TipoNotificacion.ANULACION));
             notificacion.setMensaje("Almacén anulado");
-            notificacion.setIdAlmacenes(idAlmacenes);
+            notificacion.setIdAlmacen(idAlmacenes);
 
             notificacionAlmacenService.enviarNotificacionAlmacen_Anular(notificacion);
 
@@ -112,14 +112,14 @@ public class AlmacenesController {
 
     @PatchMapping("/{idAlmacenes}/activar")
     @Operation(summary = "Activar almacén by id", description = "Activa nuevamente un almacén previamente anulado")
-    public ResponseEntity<ResponseEditarEstadoAlmacenes> activarAlmacenes(@PathVariable long idAlmacenes) {
-        ResponseEditarEstadoAlmacenes response = edicionAlmacenesEstadoUseCase.ActivarAlmacenes(idAlmacenes);
+    public ResponseEntity<ResponseEditarEstadoAlmacen> activarAlmacenes(@PathVariable long idAlmacenes) {
+        ResponseEditarEstadoAlmacen response = edicionAlmacenEstadoUseCase.ActivarAlmacenes(idAlmacenes);
 
         if (response.isExito()) {
             NotificacionAlmacenDTO notificacion = new NotificacionAlmacenDTO();
             notificacion.setTipo(String.valueOf(TipoNotificacion.ACTIVACION));
             notificacion.setMensaje("Almacén activado");
-            notificacion.setIdAlmacenes(idAlmacenes);
+            notificacion.setIdAlmacen(idAlmacenes);
 
             notificacionAlmacenService.enviarNotificacionAlmacen_Activar(notificacion);
 
@@ -131,8 +131,8 @@ public class AlmacenesController {
 
     @GetMapping("/{idAlmacenes}")
     @Operation(summary = "Detalle almacén", description = "Obtiene el detalle de un almacén")
-    public ResponseEntity<ResponseDetalleAlmacenes> detalleAlmacenes(@PathVariable long idAlmacenes) {
-        ResponseDetalleAlmacenes response = detalleAlmacenesUseCase.DetalleAlmacenes(idAlmacenes);
+    public ResponseEntity<ResponseDetalleAlmacen> detalleAlmacenes(@PathVariable long idAlmacenes) {
+        ResponseDetalleAlmacen response = detalleAlmacenUseCase.DetalleAlmacenes(idAlmacenes);
 
         if (response.isExito()) {
             return ResponseEntity.ok(response);

@@ -1,8 +1,8 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.almacenes.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.request.RequestRegistroAlmacenes;
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseRegistroAlmacenes;
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.domain.interfaces.IAlmacenesRegistro;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.request.RequestRegistroAlmacen;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseRegistroAlmacen;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.domain.interfaces.IAlmacenRegistro;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,22 +17,22 @@ import java.sql.SQLException;
 @Slf4j
 @Repository
 @Transactional("sqlServerTransactionManager")
-public class AlmacenesRegistroRepository implements IAlmacenesRegistro {
+public class AlmacenRegistroRepository implements IAlmacenRegistro {
 
     @Autowired
     @Qualifier("SQLSERVER")
     private DataSource con;
 
     @Override
-    public ResponseRegistroAlmacenes RegistroAlmacenes(RequestRegistroAlmacenes request) {
-        ResponseRegistroAlmacenes rpt = new ResponseRegistroAlmacenes();
-        String SQL = "{ call INVENTARIO.sp_RegistroAlmacenes(?,?,?,?) }";
+    public ResponseRegistroAlmacen RegistroAlmacen(RequestRegistroAlmacen request) {
+        ResponseRegistroAlmacen rpt = new ResponseRegistroAlmacen();
+        String SQL = "{ call INVENTARIO.sp_RegistroAlmacen(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getDescripcion());
-            setParameter(pstmt, 2, request.getIdSucursales());
+            setParameter(pstmt, 2, request.getIdSucursal());
             Long userId = 1L;
             pstmt.setLong(3, userId);
             Long empresaId = 1L;
