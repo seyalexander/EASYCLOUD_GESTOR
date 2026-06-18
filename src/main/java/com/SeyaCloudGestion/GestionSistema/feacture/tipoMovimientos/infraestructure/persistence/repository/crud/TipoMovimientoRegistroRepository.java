@@ -26,7 +26,7 @@ public class TipoMovimientoRegistroRepository implements ITipoMovimientoRegistro
     @Override
     public ResponseRegistroTipoMovimiento RegistroTipoMovimiento(RequestRegistroTipoMovimiento request) {
         ResponseRegistroTipoMovimiento rpt = new ResponseRegistroTipoMovimiento();
-        String SQL = "{ call INVENTARIO.sp_RegistroTipoMovimiento(?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_RegistroTipoMovimiento(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -35,6 +35,9 @@ public class TipoMovimientoRegistroRepository implements ITipoMovimientoRegistro
             setParameter(pstmt, 2, request.getEsEntrada());
             Long userId = 1L;
             pstmt.setLong(3, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
+
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -47,8 +50,12 @@ public class TipoMovimientoRegistroRepository implements ITipoMovimientoRegistro
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_RegistroTipoMovimiento", e);
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un tipo de movimiento con esa descripción.");
+            } else {
+                rpt.setMessage("Error al registrar el tipo movimiento.");
+            }
+            log.error("Error en INVENTARIO.sp_RegistroTipoMovimiento", e);
         }
         return rpt;
     }

@@ -1,19 +1,39 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.request.RequestDetalleTipoMovimiento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.request.RequestEditarAllTipoMovimiento;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.response.ResponseDetalleTipoMovimiento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.response.ResponseEditarAllTipoMovimiento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.domain.services.TipoMovimientoService;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.domain.validations.VerificarCambiosTipoMovimiento;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EdicionAllTipoMovimientoUseCase {
     private final TipoMovimientoService tipoMovimientoService;
+    private final VerificarCambiosTipoMovimiento verificarCambiosTipoMovimiento;
 
-    public EdicionAllTipoMovimientoUseCase(TipoMovimientoService tipoMovimientoService) {
+    public EdicionAllTipoMovimientoUseCase(TipoMovimientoService tipoMovimientoService, VerificarCambiosTipoMovimiento verificarCambiosTipoMovimiento) {
         this.tipoMovimientoService = tipoMovimientoService;
+        this.verificarCambiosTipoMovimiento = verificarCambiosTipoMovimiento;
     }
     public ResponseEditarAllTipoMovimiento EdicionAllTipoMovimiento(RequestEditarAllTipoMovimiento request) {
         try {
+            //get id
+            RequestDetalleTipoMovimiento requestDetalle = new RequestDetalleTipoMovimiento();
+            requestDetalle.setIdTipoMovimiento(request.getIdTipoMovimiento());
+
+            ResponseDetalleTipoMovimiento detalleBD= tipoMovimientoService.DetalleTipoMovimiento(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getTipoMovimiento() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+            //verificar edicion
+            if (!verificarCambiosTipoMovimiento.verificarCambios(detalleBD.getTipoMovimiento(), request)) {
+                throw new IllegalArgumentException("No se detectaron cambios para actualizar.");
+            }
+
             ResponseEditarAllTipoMovimiento response = tipoMovimientoService.EditarAllTipoMovimiento(request);
 
             if (response.isExito()) {

@@ -31,14 +31,19 @@ public class MovimientoStockListadoRepository implements IMovimientoStockListado
     public ResponseListaMovimientoStock listaMovimientoStock(RequestListaMovimientoStock request) {
         ResponseListaMovimientoStock rpt = new ResponseListaMovimientoStock();
         List<MovimientoStockModel> registros = new ArrayList<>();
-        String SQL = "{ call ALMACEN.sp_ListarMovimientoStock() }";
+        String SQL = "{ call INVENTARIO.sp_ListarMovimientoStock(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetros de filtro definidos en el request.
+            Long empresaId= 1L;
+            Long sucursalId= 1L;
+            setParameter(pstmt, 1, empresaId);
+            setParameter(pstmt, 2, sucursalId);
+            setParameter(pstmt, 3, request.getIdAlmacen());
+            setParameter(pstmt, 4, request.getIdArticulo());
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     MovimientoStockModel item = new MovimientoStockModel();
                 item.setIdMovimientoStock(rs.getLong("idMovimientoStock"));
@@ -51,8 +56,28 @@ public class MovimientoStockListadoRepository implements IMovimientoStockListado
                 item.setFechaMovimiento((rs.getTimestamp("fechaMovimiento") != null ? rs.getTimestamp("fechaMovimiento").toLocalDateTime() : null));
                 item.setEstado(rs.getInt("estado"));
                 item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     registros.add(item);
-                }
             }
 
             rpt.setExito(true);
