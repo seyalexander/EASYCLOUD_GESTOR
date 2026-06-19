@@ -1,22 +1,30 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.request;
 
+import com.SeyaCloudGestion.GestionSistema.common.anotations.fechaPosterior.FechaFinPosterior;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.*;
 
-import jakarta.validation.constraints.Max;
-
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
+@FechaFinPosterior(
+        fechaInicio = "fechaInicio",
+        fechaFin = "fechaFin",
+        message = "La fecha fin debe ser posterior a la fecha inicio"
+)
 public class RequestListaKardex {
-    @Schema(
-            description = "Estado del kardex",
-            example = "1",
-            allowableValues = {"0: Inactivo", "1: Activo", "2: Todos"}
-    )
-    @Min(value = 0, message = "El estado mínimo permitido es 0")
-    @Max(value = 2, message = "El estado máximo permitido es 2")
-    private int estado;
+    @Min(value = 1, message = "El id debe ser mayor a 0")
+    private long idArticulo;
 
+    @NotNull(message = "La fecha de inicio es obligatoria")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate fechaInicio;
+
+    @NotNull(message = "La fecha fin es obligatoria")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate fechaFin;
 }

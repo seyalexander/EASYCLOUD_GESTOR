@@ -28,16 +28,43 @@ public class KardexDetalleRepository implements IKardexDetalle {
     @Override
     public ResponseDetalleKardex DetalleKardex(RequestDetalleKardex request) {
         ResponseDetalleKardex response = new ResponseDetalleKardex();
-        String SQL = "{ call ALMACEN.sp_ObtenerKardexPorId(?) }";
+        String SQL = "{ call INVENTARIO.sp_ObtenerUltimoSaldoKardex(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
-            setParameter(pstmt, 1, request.getIdKardex());
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+            Long almacenId = 1L;
+            setParameter(pstmt, 1, request.getIdArticulo());
+            pstmt.setLong(2, almacenId);
+            pstmt.setLong(3, empresaId);
+            pstmt.setLong(4, sucursalId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     KardexModel item = new KardexModel();
+
+                    item.setIdKardex(rs.getLong("idKardex"));
+                    item.setIdArticulo(rs.getLong("idArticulo"));
+                    item.setIdAlmacen(rs.getLong("idAlmacen"));
+                    item.setFecha(
+                            rs.getTimestamp("fecha") != null
+                                    ? rs.getTimestamp("fecha").toLocalDateTime()
+                                    : null
+                    );
+                    item.setTipoMovimiento(rs.getString("tipoMovimiento"));
+                    item.setCantidadEntrada(rs.getDouble("cantidadEntrada"));
+                    item.setCostoEntrada(rs.getDouble("costoEntrada"));
+                    item.setCantidadSalida(rs.getDouble("cantidadSalida"));
+                    item.setCostoSalida(rs.getDouble("costoSalida"));
+                    item.setSaldoCantidad(rs.getDouble("saldoCantidad"));
+                    item.setSaldoCosto(rs.getDouble("saldoCosto"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
 
                     response.setExito(true);
                     response.setMessage("Kardex obtenido correctamente.");
@@ -50,7 +77,7 @@ public class KardexDetalleRepository implements IKardexDetalle {
         } catch (SQLException e) {
             response.setExito(false);
             response.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_ObtenerKardexPorId", e);
+            log.error("Error en INVENTARIO.sp_ObtenerUltimoSaldoKardex", e);
         }
         return response;
     }

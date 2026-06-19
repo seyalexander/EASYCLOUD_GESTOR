@@ -26,13 +26,28 @@ public class KardexRegistroRepository implements IKardexRegistro {
     @Override
     public ResponseRegistroKardex RegistroKardex(RequestRegistroKardex request) {
         ResponseRegistroKardex rpt = new ResponseRegistroKardex();
-        String SQL = "{ call ALMACEN.sp_RegistroKardex(?) }";
+        String SQL = "{ call INVENTARIO.sp_RegistrarMovimientoKardex(?,?,?,?,?,?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+            Long almacenId = 1L;
+
+            pstmt.setLong(1, empresaId);
+            pstmt.setLong(2, sucursalId);
+            pstmt.setLong(3, almacenId);
+            pstmt.setLong(4, request.getIdArticulo());
+            pstmt.setString(5, request.getTipoMovimiento());
+            setParameter(pstmt, 6, request.getCantidadEntrada() );
+            setParameter(pstmt, 7, request.getCostoEntrada() );
+            setParameter(pstmt, 8, request.getCantidadSalida() );
+            setParameter(pstmt, 9, request.getCostoSalida() );
+            pstmt.setDouble(10, request.getSaldoCantidad());
+            pstmt.setDouble(11, request.getSaldoCosto());
+            pstmt.setLong(12, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -46,7 +61,7 @@ public class KardexRegistroRepository implements IKardexRegistro {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_RegistroKardex", e);
+            log.error("Error en INVENTARIO.sp_RegistrarMovimientoKardex", e);
         }
         return rpt;
     }

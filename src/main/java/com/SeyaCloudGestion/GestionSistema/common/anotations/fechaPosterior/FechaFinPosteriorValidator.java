@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.BeanWrapperImpl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class FechaFinPosteriorValidator implements ConstraintValidator<FechaFinPosterior, Object> {
@@ -19,26 +20,51 @@ public class FechaFinPosteriorValidator implements ConstraintValidator<FechaFinP
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        Object fechaInicioValor = new BeanWrapperImpl(value).getPropertyValue(fechaInicioCampo);
-        Object fechaFinValor = new BeanWrapperImpl(value).getPropertyValue(fechaFinCampo);
+
+        if (value == null) {
+            return true;
+        }
+
+        Object fechaInicioValor = new BeanWrapperImpl(value)
+                .getPropertyValue(fechaInicioCampo);
+
+        Object fechaFinValor = new BeanWrapperImpl(value)
+                .getPropertyValue(fechaFinCampo);
+
 
         if (fechaInicioValor == null || fechaFinValor == null) {
             return true;
         }
 
-        if (!(fechaInicioValor instanceof LocalDateTime fechaInicio)) {
+
+        boolean valido = false;
+
+
+        if (fechaInicioValor instanceof LocalDateTime fechaInicio &&
+                fechaFinValor instanceof LocalDateTime fechaFin) {
+
+            valido = fechaFin.isAfter(fechaInicio);
+        }
+
+
+        else if (fechaInicioValor instanceof LocalDate fechaInicio &&
+                fechaFinValor instanceof LocalDate fechaFin) {
+
+            valido = !fechaFin.isBefore(fechaInicio);
+        }
+
+
+        else {
             return false;
         }
 
-        if (!(fechaFinValor instanceof LocalDateTime fechaFin)) {
-            return false;
-        }
-
-        boolean valido = fechaFin.isAfter(fechaInicio);
 
         if (!valido) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+
+            context.buildConstraintViolationWithTemplate(
+                            context.getDefaultConstraintMessageTemplate()
+                    )
                     .addPropertyNode(fechaFinCampo)
                     .addConstraintViolation();
         }

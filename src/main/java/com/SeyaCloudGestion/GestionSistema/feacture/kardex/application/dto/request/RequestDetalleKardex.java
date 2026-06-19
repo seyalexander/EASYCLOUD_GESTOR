@@ -7,6 +7,6 @@ import jakarta.validation.constraints.Min;
 @Data
 public class RequestDetalleKardex {
     @Min(value = 1, message = "El id debe ser mayor a 0")
-    private Long idKardex;
+    private long idArticulo;
 
 }

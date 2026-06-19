@@ -11,10 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,23 +28,63 @@ public class KardexListadoRepository implements IKardexListado {
     public ResponseListaKardex listaKardex(RequestListaKardex request) {
         ResponseListaKardex rpt = new ResponseListaKardex();
         List<KardexModel> registros = new ArrayList<>();
-        String SQL = "{ call ALMACEN.sp_ListarKardex(?) }";
+        String SQL = "{ call INVENTARIO.sp_ListarKardexPorArticulo(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getEstado());
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+            Long almacenId = 1L;
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            pstmt.setLong(1, empresaId);
+            pstmt.setLong(2, sucursalId);
+            pstmt.setLong(3, almacenId);
+            setParameter(pstmt, 4, request.getIdArticulo());
+            pstmt.setTimestamp(
+                    5,
+                    request.getFechaInicio() != null
+                            ? Timestamp.valueOf(request.getFechaInicio().atStartOfDay())
+                            : null
+            );
+
+            pstmt.setTimestamp(
+                    6,
+                    request.getFechaFin() != null
+                            ? Timestamp.valueOf(request.getFechaFin().plusDays(1).atStartOfDay())
+                            : null
+            );
+
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     KardexModel item = new KardexModel();
 
+                    item.setIdKardex(rs.getLong("idKardex"));
+                    item.setIdArticulo(rs.getLong("idArticulo"));
+                    item.setIdAlmacen(rs.getLong("idAlmacen"));
+                    item.setFecha(
+                            rs.getTimestamp("fecha") != null
+                                    ? rs.getTimestamp("fecha").toLocalDateTime()
+                                    : null
+                    );
+                    item.setTipoMovimiento(rs.getString("tipoMovimiento"));
+                    item.setCantidadEntrada(rs.getDouble("cantidadEntrada"));
+                    item.setCostoEntrada(rs.getDouble("costoEntrada"));
+                    item.setCantidadSalida(rs.getDouble("cantidadSalida"));
+                    item.setCostoSalida(rs.getDouble("costoSalida"));
+                    item.setSaldoCantidad(rs.getDouble("saldoCantidad"));
+                    item.setSaldoCosto(rs.getDouble("saldoCosto"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
                     registros.add(item);
-                }
             }
 
             rpt.setExito(true);
-            rpt.setKardexs(registros);
+            rpt.setKardex(registros);
             rpt.setMessage("Consulta realizada correctamente.");
         } catch (SQLException e) {
             rpt.setExito(false);
