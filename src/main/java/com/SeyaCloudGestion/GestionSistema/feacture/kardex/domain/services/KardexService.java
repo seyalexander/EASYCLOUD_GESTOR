@@ -39,8 +39,8 @@ public class KardexService implements IKardexListado, IKardexRegistro, IKardexDe
 
     @Override
     @CacheEvict(value = {"kardex_lista", "kardex_detalle"}, allEntries = true)
-    public ResponseRegistroKardex RegistroKardex(RequestRegistroKardex request) {
-        return kardexRegistroRepository.RegistroKardex(request);
+    public ResponseRegistroKardex RegistroKardex(RequestRegistroKardex request, double saldoCantidad, double saldoCosto) {
+        return kardexRegistroRepository.RegistroKardex(request,  saldoCantidad,  saldoCosto);
     }
 
     @Override

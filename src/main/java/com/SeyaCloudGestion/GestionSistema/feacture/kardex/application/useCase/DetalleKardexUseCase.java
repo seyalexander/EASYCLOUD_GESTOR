@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseDetalleAlmacen;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.useCase.DetalleAlmacenUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseDetalleArticulo;
 import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.useCase.DetalleArticuloUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.request.RequestDetalleKardex;
@@ -12,19 +14,26 @@ public class DetalleKardexUseCase {
 
     private final KardexService kardexService;
     private final DetalleArticuloUseCase detalleArticuloUseCase;
+    private final DetalleAlmacenUseCase detalleAlmacenUseCase;
 
-    public DetalleKardexUseCase(KardexService kardexService, DetalleArticuloUseCase detalleArticuloUseCase) {
+    public DetalleKardexUseCase(KardexService kardexService, DetalleArticuloUseCase detalleArticuloUseCase, DetalleAlmacenUseCase detalleAlmacenUseCase) {
         this.kardexService = kardexService;
         this.detalleArticuloUseCase = detalleArticuloUseCase;
+        this.detalleAlmacenUseCase = detalleAlmacenUseCase;
     }
 
-    public ResponseDetalleKardex detalleKardex(long idArticulo) {
+    public ResponseDetalleKardex detalleKardex(long idArticulo,long idAlmacen) {
         try {
             //get articulo
             ResponseDetalleArticulo detalleBDArt = detalleArticuloUseCase.DetalleArticulo(idArticulo);
 
             if (!detalleBDArt.isExito() || detalleBDArt.getArticulos() == null) {
                 throw new IllegalArgumentException("El articulo no existe.");
+            }
+            //get almacen
+            ResponseDetalleAlmacen detalleBDAlm = detalleAlmacenUseCase.DetalleAlmacenes(idAlmacen);
+            if (!detalleBDAlm.isExito() || detalleBDAlm.getAlmacen() == null) {
+                throw new IllegalArgumentException("El almacen no existe.");
             }
 
             RequestDetalleKardex request = new RequestDetalleKardex();

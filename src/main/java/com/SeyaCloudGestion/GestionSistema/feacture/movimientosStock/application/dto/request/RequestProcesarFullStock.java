@@ -1,10 +1,13 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.movimientosStock.application.dto.request;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class RequestRegistroMovimientoStock {
+public class RequestProcesarFullStock {
     @Min(value = 1, message = "El id del artículo debe ser mayor a 0")
     private long idArticulo;
 
@@ -17,10 +20,9 @@ public class RequestRegistroMovimientoStock {
     @Positive(message = "La cantidad debe ser mayor a 0")
     private double cantidad;
 
-    @PositiveOrZero(message = "El costo no puede ser negativo")
-    private double costo;
+    @PositiveOrZero(message = "El costo unitario no puede ser negativo")
+    private double costoUnitario;
 
     @Size(max = 250, message = "La observación no debe superar los 250 caracteres")
     private String observacion;
-
 }

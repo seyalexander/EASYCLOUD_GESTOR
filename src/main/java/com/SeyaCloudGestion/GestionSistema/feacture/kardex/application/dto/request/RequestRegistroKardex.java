@@ -1,5 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.request;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.kardex.infraestructure.persistence.model.TipoMovimientoKardex;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -9,9 +10,11 @@ public class RequestRegistroKardex {
     @Min(value = 1, message = "El id debe ser mayor a 0")
     private long idArticulo;
 
-    @NotBlank(message = "El tipo de movimiento no puede estar vacío")
-    @Size(max = 20, message = "El tipo de movimiento no puede superar los 20 caracteres")
-    private String tipoMovimiento;
+    @Min(value = 1, message = "El id debe ser mayor a 0")
+    private long idAlmacen;
+
+    @NotNull(message = "El tipo de movimiento es obligatorio")
+    private TipoMovimientoKardex tipoMovimiento;
 
     @PositiveOrZero(message = "La cantidad de entrada no puede ser negativa")
     private double cantidadEntrada;
@@ -23,8 +26,8 @@ public class RequestRegistroKardex {
     @PositiveOrZero(message = "El costo de salida no puede ser negativo")
     private double costoSalida;
 
-    @PositiveOrZero(message = "El saldo de cantidad resultante no puede ser negativo")
-    private double saldoCantidad;
-    @PositiveOrZero(message = "El saldo del costo resultante no puede ser negativo")
-    private double saldoCosto;
+    //@PositiveOrZero(message = "El saldo de cantidad resultante no puede ser negativo")
+    //private double saldoCantidad;
+    //@PositiveOrZero(message = "El saldo del costo resultante no puede ser negativo")
+    //private double saldoCosto;
 }

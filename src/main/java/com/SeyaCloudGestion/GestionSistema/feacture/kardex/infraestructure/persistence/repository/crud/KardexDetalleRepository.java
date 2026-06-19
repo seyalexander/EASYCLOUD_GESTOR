@@ -4,6 +4,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.reque
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.response.ResponseDetalleKardex;
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.domain.interfaces.IKardexDetalle;
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.infraestructure.persistence.model.KardexModel;
+import com.SeyaCloudGestion.GestionSistema.feacture.kardex.infraestructure.persistence.model.TipoMovimientoKardex;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,7 +37,7 @@ public class KardexDetalleRepository implements IKardexDetalle {
             Long sucursalId = 1L;
             Long almacenId = 1L;
             setParameter(pstmt, 1, request.getIdArticulo());
-            pstmt.setLong(2, almacenId);
+            pstmt.setLong(2, request.getIdAlmacen());
             pstmt.setLong(3, empresaId);
             pstmt.setLong(4, sucursalId);
 
@@ -52,7 +53,9 @@ public class KardexDetalleRepository implements IKardexDetalle {
                                     ? rs.getTimestamp("fecha").toLocalDateTime()
                                     : null
                     );
-                    item.setTipoMovimiento(rs.getString("tipoMovimiento"));
+                    item.setTipoMovimiento(
+                            TipoMovimientoKardex.valueOf(rs.getString("tipoMovimiento"))
+                    );
                     item.setCantidadEntrada(rs.getDouble("cantidadEntrada"));
                     item.setCostoEntrada(rs.getDouble("costoEntrada"));
                     item.setCantidadSalida(rs.getDouble("cantidadSalida"));

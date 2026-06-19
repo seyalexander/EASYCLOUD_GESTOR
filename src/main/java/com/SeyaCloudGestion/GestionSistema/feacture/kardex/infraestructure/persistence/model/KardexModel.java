@@ -13,7 +13,7 @@ public class KardexModel implements Serializable {
     private long idAlmacen;
 
     private LocalDateTime fecha;
-    private String tipoMovimiento;
+    private TipoMovimientoKardex tipoMovimiento;
     private double cantidadEntrada;
     private double costoEntrada;
 

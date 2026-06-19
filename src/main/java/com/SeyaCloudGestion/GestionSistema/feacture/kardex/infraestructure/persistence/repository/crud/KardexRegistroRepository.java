@@ -24,7 +24,12 @@ public class KardexRegistroRepository implements IKardexRegistro {
     private DataSource con;
 
     @Override
-    public ResponseRegistroKardex RegistroKardex(RequestRegistroKardex request) {
+    public ResponseRegistroKardex RegistroKardex(
+            RequestRegistroKardex request,
+            double saldoCantidad,
+            double saldoCosto
+
+    ) {
         ResponseRegistroKardex rpt = new ResponseRegistroKardex();
         String SQL = "{ call INVENTARIO.sp_RegistrarMovimientoKardex(?,?,?,?,?,?,?,?,?,?,?,?,?) }";
 
@@ -40,13 +45,13 @@ public class KardexRegistroRepository implements IKardexRegistro {
             pstmt.setLong(2, sucursalId);
             pstmt.setLong(3, almacenId);
             pstmt.setLong(4, request.getIdArticulo());
-            pstmt.setString(5, request.getTipoMovimiento());
+            pstmt.setString(5, request.getTipoMovimiento().name());
             setParameter(pstmt, 6, request.getCantidadEntrada() );
             setParameter(pstmt, 7, request.getCostoEntrada() );
             setParameter(pstmt, 8, request.getCantidadSalida() );
             setParameter(pstmt, 9, request.getCostoSalida() );
-            pstmt.setDouble(10, request.getSaldoCantidad());
-            pstmt.setDouble(11, request.getSaldoCosto());
+            pstmt.setDouble(10, saldoCantidad);
+            pstmt.setDouble(11, saldoCosto);
             pstmt.setLong(12, userId);
 
             int rowsAffected = pstmt.executeUpdate();

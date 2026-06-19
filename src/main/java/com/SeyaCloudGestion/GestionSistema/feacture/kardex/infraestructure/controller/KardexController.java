@@ -43,7 +43,7 @@ public class KardexController {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
-
+    /*
     @GetMapping("/{idKardex}")
     @Operation(summary = "Obtener detalle de Kardex", description = "Obtiene los datos completos y auditoría de un único movimiento de Kardex por su ID")
     @ApiResponses(value = {
@@ -61,4 +61,6 @@ public class KardexController {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+
+     */
 }
