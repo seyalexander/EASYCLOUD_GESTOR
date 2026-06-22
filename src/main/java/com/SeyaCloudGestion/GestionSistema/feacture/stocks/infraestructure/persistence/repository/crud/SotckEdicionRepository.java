@@ -27,7 +27,7 @@ public class SotckEdicionRepository implements ISotckEdicion {
     public ResponseEditarAllSotck EditarAllSotck(RequestEditarAllSotck request) {
         ResponseEditarAllSotck rpt = new ResponseEditarAllSotck();
 
-        String SQL = "{ call INVENTARIO.sp_EditarStockProducto(?,?,?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_EditarStockProducto(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -39,7 +39,8 @@ public class SotckEdicionRepository implements ISotckEdicion {
             pstmt.setDouble(2, request.getStock());
             pstmt.setLong(3, sucursalId);
             pstmt.setLong(4, empresaId);
-            pstmt.setLong(5, userId);
+            pstmt.setLong(5, request.getIdAlmacen());
+            pstmt.setLong(6, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 

@@ -14,13 +14,15 @@ public class DetalleSotckUseCase {
         this.sotckService = sotckService;
     }
 
-    public ResponseDetalleSotck DetalleSotck(long idSotck) {
+    public ResponseDetalleSotck DetalleSotck(long idProducto, long idAlmacen) {
         try {
             RequestDetalleSotck request = new RequestDetalleSotck();
-            request.setIdSotck(idSotck);
+            request.setIdProducto(idProducto);
+            request.setIdAlmacen(idAlmacen);
 
             ResponseDetalleSotck response = sotckService.DetalleSotck(request);
             if (response.isExito()) {
+
             }
 
             return response;

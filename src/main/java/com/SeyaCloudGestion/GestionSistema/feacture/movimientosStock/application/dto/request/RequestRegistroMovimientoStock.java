@@ -18,7 +18,7 @@ public class RequestRegistroMovimientoStock {
     private double cantidad;
 
     @PositiveOrZero(message = "El costo no puede ser negativo")
-    private double costo;
+    private double costoUnitario;
 
     @Size(max = 250, message = "La observación no debe superar los 250 caracteres")
     private String observacion;

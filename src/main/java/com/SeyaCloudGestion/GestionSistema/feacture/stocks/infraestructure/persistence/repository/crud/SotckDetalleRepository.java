@@ -28,24 +28,27 @@ public class SotckDetalleRepository implements ISotckDetalle {
 
         ResponseDetalleSotck response = new ResponseDetalleSotck();
 
-        String SQL = "{ call INVENTARIO.sp_ObtenerStockProductoPorId(?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_ObtenerStockProductoPorId(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            pstmt.setLong(1, request.getIdSotck());
+            pstmt.setLong(1, request.getIdProducto());
 
             Long empresaId = 1L;
             pstmt.setLong(2, empresaId);
             Long sucursaleId = 1L;
             pstmt.setLong(3, sucursaleId);
+            pstmt.setLong(4, request.getIdAlmacen());
+
+
             try (ResultSet rs = pstmt.executeQuery()) {
 
                 if (rs.next()) {
 
                     SotckModel item = new SotckModel();
 
-                    item.setIdStockProducto(rs.getLong("idStockProducto"));
+                    item.setIdStock(rs.getLong("idStockProducto"));
                     item.setStock(rs.getDouble("stock"));
 
                     item.setIdProducto(rs.getLong("idProducto"));

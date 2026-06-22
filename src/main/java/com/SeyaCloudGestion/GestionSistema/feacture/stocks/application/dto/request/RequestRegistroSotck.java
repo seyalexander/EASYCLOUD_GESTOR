@@ -7,14 +7,12 @@ import lombok.Data;
 @Data
 public class RequestRegistroSotck {
 
-
-
     @Min(value = 1, message = "El id debe ser mayor a 0")
     private long idProducto;
 
     @Min(value = 1, message = "El id debe ser mayor a 0")
     private long idAlmacen;
 
-    @Positive(message = "El precio debe ser mayor a 0")
+    @Positive(message = "El stock debe ser mayor a 0")
     private double stock;
 }

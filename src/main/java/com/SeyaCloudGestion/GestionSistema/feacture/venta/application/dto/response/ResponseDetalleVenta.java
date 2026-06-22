@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class ResponseDetalleVenta extends ResponseGeneral {
 
-    private VentaModel venta;
+    private VentaModel detalles;
 }

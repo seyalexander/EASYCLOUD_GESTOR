@@ -25,7 +25,7 @@ public class EdicionSotckUseCase {
     public ResponseEditarAllSotck EdicionAllSotck(RequestEditarAllSotck request) {
         try {
             RequestDetalleSotck requestDetalle = new RequestDetalleSotck();
-            requestDetalle.setIdSotck(request.getIdStockProducto());
+            requestDetalle.setIdProducto(request.getIdStockProducto());
 
             ResponseDetalleSotck detalleBD = sotckService.DetalleSotck(requestDetalle);
 

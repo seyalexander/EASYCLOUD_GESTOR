@@ -10,9 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Slf4j
 @Repository
@@ -24,21 +22,43 @@ public class VentaRegistroRepository implements IVentaRegistro {
     private DataSource con;
 
     @Override
-    public ResponseRegistroVenta RegistroVenta(RequestRegistroVenta request) {
+    public ResponseRegistroVenta RegistroVenta(RequestRegistroVenta request, double subTotal, double impuesto, double total) {
         ResponseRegistroVenta rpt = new ResponseRegistroVenta();
-        String SQL = "{ call VENTAS.sp_RegistroVenta(?) }";
+        String SQL = "{ call VENTAS.sp_RegistroVenta(?,?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
-             CallableStatement pstmt = conn.prepareCall(SQL)) {
+             PreparedStatement pstmt = conn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS)) {
 
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+
+            pstmt.setLong(1, request.getIdCliente());
+            pstmt.setLong(2, userId);
+            pstmt.setLong(3, sucursalId);
+            pstmt.setLong(4, empresaId);
+            pstmt.setLong(5, request.getIdTurnoCaja());
+
+            pstmt.setDouble(6, subTotal);
+            pstmt.setDouble(7, impuesto);
+            pstmt.setDouble(8, total);
+
+            pstmt.setLong(9, userId);
+
 
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
-                rpt.setExito(true);
-                rpt.setMessage("Venta insertado correctamente.");
+                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        rpt.setExito(true);
+                        rpt.setIdVenta(generatedKeys.getLong(1));
+                        rpt.setMessage("Venta insertada correctamente.");
+                    } else {
+                        rpt.setExito(false);
+                        rpt.setMessage("Venta insertada, pero no se pudo recuperar el ID generado.");
+                    }
+                }
             } else {
                 rpt.setExito(false);
                 rpt.setMessage("No se insertó Venta.");

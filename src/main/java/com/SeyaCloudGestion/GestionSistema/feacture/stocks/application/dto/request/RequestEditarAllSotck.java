@@ -12,4 +12,8 @@ public class RequestEditarAllSotck {
 
     @Positive(message = "El precio debe ser mayor a 0")
     private double stock;
+
+    @Min(value = 1, message = "El id debe ser mayor a 0")
+    private long idAlmacen;
+
 }

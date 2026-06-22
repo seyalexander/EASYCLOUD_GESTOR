@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 public class SotckModel extends AuditableModel implements Serializable {
-    private long idStockProducto;
+    private long idStock;
     private double stock;
     private long idProducto;
     private String descripcionProducto;

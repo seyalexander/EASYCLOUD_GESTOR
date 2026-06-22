@@ -1,8 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.venta.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.request.RequestEditarAllVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.request.RequestEditarEstadoVenta;
-import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.response.ResponseEditarAllVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.response.ResponseEditarEstadoVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.domain.interfaces.IVentaEdicion;
 import lombok.extern.slf4j.Slf4j;
@@ -26,44 +24,22 @@ public class VentaEdicionRepository implements IVentaEdicion {
     private DataSource con;
 
     @Override
-    public ResponseEditarAllVenta EditarAllVenta(RequestEditarAllVenta request) {
-        ResponseEditarAllVenta rpt = new ResponseEditarAllVenta();
-        String SQL = "{ call VENTAS.sp_EditarVenta(?) }";
-
-        try (Connection conn = con.getConnection();
-             CallableStatement pstmt = conn.prepareCall(SQL)) {
-
-            Long userId = 1L;
-            pstmt.setLong(1, userId);
-
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                rpt.setExito(true);
-                rpt.setMessage("Venta actualizado correctamente.");
-            } else {
-                rpt.setExito(false);
-                rpt.setMessage("No se actualizó Venta.");
-            }
-        } catch (SQLException e) {
-            rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
-            log.error("Error en VENTAS.sp_EditarVenta", e);
-        }
-        return rpt;
-    }
-
-    @Override
     public ResponseEditarEstadoVenta EditarEstadoVenta(RequestEditarEstadoVenta request, int estado) {
         ResponseEditarEstadoVenta rpt = new ResponseEditarEstadoVenta();
-        String SQL = "{ call VENTAS.sp_EditarVenta_Estado(?,?,?) }";
+        String SQL = "{ call VENTAS.sp_EditarVentaEstado(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
-             CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdVenta());
-            pstmt.setInt(2, estado);
+             CallableStatement pstmt = conn.prepareCall(SQL)) {
             Long userId = 1L;
-            pstmt.setLong(3, userId);
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+
+            pstmt.setLong(1, request.getIdVenta());
+            pstmt.setInt(1,estado);
+            pstmt.setLong(3, sucursalId);
+            pstmt.setLong(4, empresaId);
+            pstmt.setLong(4, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

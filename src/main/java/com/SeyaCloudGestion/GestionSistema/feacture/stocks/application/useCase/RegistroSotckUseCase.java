@@ -49,6 +49,7 @@ public class RegistroSotckUseCase {
             ResponseRegistroSotck response = sotckService.RegistroSotck(request);
 
             if (response.isExito()) {
+
             }
 
             return response;
