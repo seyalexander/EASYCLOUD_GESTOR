@@ -4,6 +4,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.reque
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.response.ResponseListaKardex;
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.domain.interfaces.IKardexListado;
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.infraestructure.persistence.model.KardexModel;
+import com.SeyaCloudGestion.GestionSistema.feacture.kardex.infraestructure.persistence.model.TipoMovimientoKardex;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -67,7 +68,9 @@ public class KardexListadoRepository implements IKardexListado {
                                     ? rs.getTimestamp("fecha").toLocalDateTime()
                                     : null
                     );
-                    item.setTipoMovimiento(rs.getString("tipoMovimiento"));
+                    item.setTipoMovimiento(
+                            TipoMovimientoKardex.valueOf(rs.getString("tipoMovimiento"))
+                    );
                     item.setCantidadEntrada(rs.getDouble("cantidadEntrada"));
                     item.setCostoEntrada(rs.getDouble("costoEntrada"));
                     item.setCantidadSalida(rs.getDouble("cantidadSalida"));

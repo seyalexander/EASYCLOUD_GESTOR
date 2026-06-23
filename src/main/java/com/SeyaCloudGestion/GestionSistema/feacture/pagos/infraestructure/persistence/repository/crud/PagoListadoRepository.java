@@ -31,14 +31,13 @@ public class PagoListadoRepository implements IPagoListado {
     public ResponseListaPago listaPago(RequestListaPago request) {
         ResponseListaPago rpt = new ResponseListaPago();
         List<PagoModel> registros = new ArrayList<>();
-        String SQL = "{ call VENTAS.sp_ListarPago() }";
+        String SQL = "{ call VENTAS.sp_ListarPago(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetros de filtro definidos en el request.
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     PagoModel item = new PagoModel();
                 item.setIdPago(rs.getLong("idPago"));
@@ -48,9 +47,14 @@ public class PagoListadoRepository implements IPagoListado {
                 item.setReferencia(rs.getString("referencia"));
                 item.setFechaPago((rs.getTimestamp("fechaPago") != null ? rs.getTimestamp("fechaPago").toLocalDateTime() : null));
                 item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
                     registros.add(item);
                 }
-            }
 
             rpt.setExito(true);
             rpt.setPagos(registros);

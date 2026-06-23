@@ -1,10 +1,11 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestEditarAllCuentasPorCobrar;
-import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestEditarEstadoCuentasPorCobrar;
-import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseEditarAllCuentasPorCobrar;
-import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseEditarEstadoCuentasPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestAbonarCuentaPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestAnularCuentaPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseAbonarCuentaPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseAnularCuentaPorCobrar;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.domain.interfaces.ICuentasPorCobrarEdicion;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.infraestructure.persistence.model.EstadoCuenta;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,63 +27,36 @@ public class CuentasPorCobrarEdicionRepository implements ICuentasPorCobrarEdici
     private DataSource con;
 
     @Override
-    public ResponseEditarAllCuentasPorCobrar EditarAllCuentasPorCobrar(RequestEditarAllCuentasPorCobrar request) {
-        ResponseEditarAllCuentasPorCobrar rpt = new ResponseEditarAllCuentasPorCobrar();
-        String SQL = "{ call VENTAS.sp_ActualizarCuentaPorCobrar(?,?,?,?) }";
+    public ResponseAbonarCuentaPorCobrar AbonarCuentasPorCobrar(RequestAbonarCuentaPorCobrar request, EstadoCuenta estado,double monteoPendienteActual) {
+        ResponseAbonarCuentaPorCobrar rpt = new ResponseAbonarCuentaPorCobrar();
+        String SQL = "{ call VENTAS.sp_ActualizarCuentaPorCobrar(?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
             setParameter(pstmt, 1, request.getIdCuentaPorCobrar());
-            setParameter(pstmt, 2, request.getMontoPendiente());
+            setParameter(pstmt, 2, monteoPendienteActual);
             setParameter(pstmt, 3, request.getFechaVencimiento());
-            setParameter(pstmt, 4, request.getEstado());
-/*
+            String estadoString = (estado != null) ? estado.name() : null;
+            setParameter(pstmt, 4, estadoString);
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+            pstmt.setLong(5, empresaId);
+            pstmt.setLong(6, sucursalId);
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(7, userId);
 
- */
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 rpt.setExito(true);
-                rpt.setMessage("CuentasPorCobrar actualizado correctamente.");
+                rpt.setMessage("CuentasPorCobrar abonado correctamente.");
             } else {
                 rpt.setExito(false);
-                rpt.setMessage("No se actualizó CuentasPorCobrar.");
+                rpt.setMessage("No se abonado CuentasPorCobrar.");
             }
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
             log.error("Error en VENTAS.sp_EditarCuentasPorCobrar", e);
-        }
-        return rpt;
-    }
-
-    @Override
-    public ResponseEditarEstadoCuentasPorCobrar EditarEstadoCuentasPorCobrar(RequestEditarEstadoCuentasPorCobrar request,String estado) {
-        ResponseEditarEstadoCuentasPorCobrar rpt = new ResponseEditarEstadoCuentasPorCobrar();
-        String SQL = "{ call VENTAS.sp_ActualizarEstadoCuentaPorCobrar(?,?) }";
-
-        try (Connection conn = con.getConnection();
-             CallableStatement pstmt = conn.prepareCall(SQL)) {
-
-            setParameter(pstmt, 1, request.getIdCuentasPorCobrar());
-            pstmt.setString(2, estado);
-
-           // Long userId = 1L;
-            //pstmt.setLong(3, userId);
-
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                rpt.setExito(true);
-                rpt.setMessage("CuentasPorCobrar actualizado correctamente.");
-            } else {
-                rpt.setExito(false);
-                rpt.setMessage("No se actualizó CuentasPorCobrar.");
-            }
-        } catch (SQLException e) {
-            rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
-            log.error("Error en VENTAS.sp_EditarCuentasPorCobrar_Estado", e);
         }
         return rpt;
     }

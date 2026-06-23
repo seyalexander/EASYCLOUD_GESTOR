@@ -35,8 +35,10 @@ public class PagoRegistroRepository implements IPagoRegistro {
             setParameter(pstmt, 2, request.getIdTipoPago());
             setParameter(pstmt, 3, request.getMonto());
             setParameter(pstmt, 4, request.getReferencia());
-            setParameter(pstmt, 5, request.getFechaPago());
-            setParameter(pstmt, 6, request.getFechaIngreso());
+            Long empresaId = 1L;
+            Long sucrusalId = 1L;
+            setParameter(pstmt, 5, empresaId);
+            setParameter(pstmt, 6, sucrusalId);
             Long userId = 1L;
             pstmt.setLong(7, userId);
 

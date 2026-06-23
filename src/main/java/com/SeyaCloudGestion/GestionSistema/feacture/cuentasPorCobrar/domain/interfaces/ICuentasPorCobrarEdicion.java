@@ -1,11 +1,11 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.domain.interfaces;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestEditarAllCuentasPorCobrar;
-import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestEditarEstadoCuentasPorCobrar;
-import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseEditarAllCuentasPorCobrar;
-import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseEditarEstadoCuentasPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestAbonarCuentaPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestAnularCuentaPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseAbonarCuentaPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseAnularCuentaPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.infraestructure.persistence.model.EstadoCuenta;
 
 public interface ICuentasPorCobrarEdicion {
-    ResponseEditarAllCuentasPorCobrar EditarAllCuentasPorCobrar(RequestEditarAllCuentasPorCobrar request);
-    ResponseEditarEstadoCuentasPorCobrar EditarEstadoCuentasPorCobrar(RequestEditarEstadoCuentasPorCobrar request, String estado);
+    ResponseAbonarCuentaPorCobrar AbonarCuentasPorCobrar(RequestAbonarCuentaPorCobrar request, EstadoCuenta estado,double monteoPendienteActual);
 }

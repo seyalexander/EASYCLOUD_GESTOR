@@ -26,11 +26,11 @@ public class EdicionVentaEstadoUseCase {
         try {
             ResponseDetalleVenta detalleBD = detalleVentaUseCase.DetalleVenta(idVenta);
 
-            if (!detalleBD.isExito() || detalleBD.getVenta() == null) {
+            if (!detalleBD.isExito() || detalleBD.getDetalles() == null) {
                 throw new IllegalArgumentException("La venta no existe.");
             }
 
-            if (Objects.equals(detalleBD.getVenta().getEstado(), 0)) {
+            if (Objects.equals(detalleBD.getDetalles().getEstado(), 0)) {
                 throw new IllegalArgumentException("La venta ya se encuentra anulada.");
             }
 

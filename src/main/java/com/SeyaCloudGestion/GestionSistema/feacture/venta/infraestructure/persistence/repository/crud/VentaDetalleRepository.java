@@ -65,7 +65,7 @@ public class VentaDetalleRepository implements IVentaDetalle {
 
                     response.setExito(true);
                     response.setMessage("Venta obtenido correctamente.");
-                    response.setVenta(item);
+                    response.setDetalles(item);
                 } else {
                     response.setExito(false);
                     response.setMessage("No se encontró Venta.");

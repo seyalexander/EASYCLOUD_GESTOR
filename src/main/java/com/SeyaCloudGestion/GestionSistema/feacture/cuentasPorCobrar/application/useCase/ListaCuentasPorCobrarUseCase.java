@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.dto.response.ResponseDetalleCliente;
+import com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.useCase.DetalleClienteUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestListaCuentasPorCobrar;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestListaCuentasPorCobrarIDCliente;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseListaCuentasPorCobrar;
@@ -9,10 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ListaCuentasPorCobrarUseCase {
     private final CuentasPorCobrarService cuentasPorCobrarService;
-
-    public ListaCuentasPorCobrarUseCase(CuentasPorCobrarService cuentasPorCobrarService) {
+    private final DetalleClienteUseCase detalleClienteUseCase;
+    public ListaCuentasPorCobrarUseCase(CuentasPorCobrarService cuentasPorCobrarService, DetalleClienteUseCase detalleClienteUseCase) {
         this.cuentasPorCobrarService = cuentasPorCobrarService;
+        this.detalleClienteUseCase = detalleClienteUseCase;
     }
+
     public ResponseListaCuentasPorCobrar ListaCuentasPorCobrar(RequestListaCuentasPorCobrar request) {
         try {
             ResponseListaCuentasPorCobrar response = cuentasPorCobrarService.ListaCuentasPorCobrar(request);
@@ -40,8 +44,15 @@ public class ListaCuentasPorCobrarUseCase {
             return response;
         }
     }
+
     public ResponseListaCuentasPorCobrar ListaCuentasPorCobrarIDCliente(RequestListaCuentasPorCobrarIDCliente request) {
         try {
+            //get cliente
+            ResponseDetalleCliente responseBDcliente = detalleClienteUseCase.DetalleCliente(request.getIdCliente());
+            if (!responseBDcliente.isExito() || responseBDcliente.getCliente() == null) {
+                throw new IllegalArgumentException("El cliente no existe.");
+            }
+
             ResponseListaCuentasPorCobrar response = cuentasPorCobrarService.ListaCuentasPorCobrarIDCliente(request);
 
             if (response.isExito()) {

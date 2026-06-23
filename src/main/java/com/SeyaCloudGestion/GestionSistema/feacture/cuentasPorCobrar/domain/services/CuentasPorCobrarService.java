@@ -3,6 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.domain.ser
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.domain.interfaces.*;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.infraestructure.persistence.model.EstadoCuenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.infraestructure.persistence.repository.crud.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -44,20 +45,15 @@ public class CuentasPorCobrarService implements ICuentasPorCobrarListado, ICuent
     }
 
     @Override
-    @CacheEvict(value = {"cuentasPorCobrar", "cuentasPorCobrar_detalle"}, allEntries = true)
-    public ResponseEditarAllCuentasPorCobrar EditarAllCuentasPorCobrar(RequestEditarAllCuentasPorCobrar request) {
-        return cuentasPorCobrarEdicionRepository.EditarAllCuentasPorCobrar(request);
-    }
-
-    @Override
-    @CacheEvict(value = {"cuentasPorCobrar", "cuentasPorCobrar_detalle"}, allEntries = true)
-    public ResponseEditarEstadoCuentasPorCobrar EditarEstadoCuentasPorCobrar(RequestEditarEstadoCuentasPorCobrar request,String estado) {
-        return cuentasPorCobrarEdicionRepository.EditarEstadoCuentasPorCobrar(request,estado);
-    }
-
-    @Override
     @Cacheable(value = "cuentasPorCobrar_detalle", key = "#request.idCuentaPorCobrar")
     public ResponseDetalleCuentasPorCobrar DetalleCuentasPorCobrar(RequestDetalleCuentasPorCobrar request) {
         return cuentasPorCobrarDetalleRepository.DetalleCuentasPorCobrar(request);
+    }
+
+    @Override
+    @CacheEvict(value = {"cuentasPorCobrar", "cuentasPorCobrar_detalle"}, allEntries = true)
+    public ResponseAbonarCuentaPorCobrar AbonarCuentasPorCobrar(RequestAbonarCuentaPorCobrar request, EstadoCuenta estado, double monteoPendienteActual) {
+        return cuentasPorCobrarEdicionRepository.AbonarCuentasPorCobrar(request,estado,monteoPendienteActual);
+
     }
 }

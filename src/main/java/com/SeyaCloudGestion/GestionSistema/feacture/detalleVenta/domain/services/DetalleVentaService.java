@@ -36,7 +36,7 @@ public class DetalleVentaService implements IDetalleVentaListado, IDetalleVentaR
 
     @Override
     @CacheEvict(value = "venta_detalle", key = "#request.idVenta")
-    public ResponseRegistroDetalleVenta registrarDetalleVenta(RequestRegistroDetalleVenta request, double total) {
-        return detalleVentaRegistroRepository.registrarDetalleVenta(request,total);
+    public ResponseRegistroDetalleVenta registrarDetalleVenta(RequestRegistroDetalleVenta request, double total,double costoUnitario) {
+        return detalleVentaRegistroRepository.registrarDetalleVenta(request,total, costoUnitario);
     }
 }

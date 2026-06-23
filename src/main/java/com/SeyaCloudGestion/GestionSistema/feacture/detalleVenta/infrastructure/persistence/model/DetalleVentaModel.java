@@ -16,6 +16,7 @@ public class DetalleVentaModel extends AuditableModel {
 
     private double cantidad;
     private double precioUnitario;
+    private double costoUnitario;
     private double descuento;
     private double total;
 

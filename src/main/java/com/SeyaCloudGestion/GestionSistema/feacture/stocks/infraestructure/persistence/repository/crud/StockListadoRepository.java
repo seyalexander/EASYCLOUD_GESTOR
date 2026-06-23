@@ -47,7 +47,7 @@ public class StockListadoRepository implements ISotckListado {
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     SotckModel item = new SotckModel();
-                    item.setIdStockProducto(rs.getLong("idStockProducto"));
+                    item.setIdStock(rs.getLong("idStockProducto"));
                     item.setStock(rs.getDouble("stock"));
 
                     item.setIdProducto(rs.getLong("idProducto"));

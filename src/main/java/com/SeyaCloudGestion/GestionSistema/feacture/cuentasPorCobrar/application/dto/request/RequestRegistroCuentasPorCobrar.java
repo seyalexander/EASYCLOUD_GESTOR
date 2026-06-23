@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class RequestRegistroCuentasPorCobrar {
+
     @Min(value = 1, message = "El id de venta debe ser mayor a 0")
     private long idVenta;
 

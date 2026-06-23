@@ -1,7 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.infraestructure.controller;
 
 import com.SeyaCloudGestion.GestionSistema.common.enums.TipoNotificacion;
-import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestEditarAllCuentasPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestAbonarCuentaPorCobrar;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestListaCuentasPorCobrar;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestListaCuentasPorCobrarIDCliente;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestRegistroCuentasPorCobrar;
@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.*;
 public class CuentasPorCobrarController {
     private final ListaCuentasPorCobrarUseCase listaCuentasPorCobrarUseCase;
     private final RegistroCuentasPorCobrarUseCase registroCuentasPorCobrarUseCase;
-    private final EdicionAllCuentasPorCobrarUseCase edicionAllCuentasPorCobrarUseCase;
+    private final AbonarCuentaPorCobrarUseCase edicionAllCuentasPorCobrarUseCase;
     private final EdicionCuentasPorCobrarEstadoUseCase edicionCuentasPorCobrarEstadoUseCase;
     private final DetalleCuentasPorCobrarUseCase detalleCuentasPorCobrarUseCase;
     private final NotificacionCuentasPorCobrarService notificacionCuentasPorCobrarService;
 
-    public CuentasPorCobrarController(ListaCuentasPorCobrarUseCase listaCuentasPorCobrarUseCase, RegistroCuentasPorCobrarUseCase registroCuentasPorCobrarUseCase, EdicionAllCuentasPorCobrarUseCase edicionAllCuentasPorCobrarUseCase, EdicionCuentasPorCobrarEstadoUseCase edicionCuentasPorCobrarEstadoUseCase, DetalleCuentasPorCobrarUseCase detalleCuentasPorCobrarUseCase, NotificacionCuentasPorCobrarService notificacionCuentasPorCobrarService) {
+    public CuentasPorCobrarController(ListaCuentasPorCobrarUseCase listaCuentasPorCobrarUseCase, RegistroCuentasPorCobrarUseCase registroCuentasPorCobrarUseCase, AbonarCuentaPorCobrarUseCase edicionAllCuentasPorCobrarUseCase, EdicionCuentasPorCobrarEstadoUseCase edicionCuentasPorCobrarEstadoUseCase, DetalleCuentasPorCobrarUseCase detalleCuentasPorCobrarUseCase, NotificacionCuentasPorCobrarService notificacionCuentasPorCobrarService) {
         this.listaCuentasPorCobrarUseCase = listaCuentasPorCobrarUseCase;
         this.registroCuentasPorCobrarUseCase = registroCuentasPorCobrarUseCase;
         this.edicionAllCuentasPorCobrarUseCase = edicionAllCuentasPorCobrarUseCase;
@@ -83,10 +83,10 @@ public class CuentasPorCobrarController {
 
     @PutMapping
     @Operation(summary = "Editar cuenta por cobrar", description = "Permite editar todos los datos de una cuenta por cobrar existente")
-    public ResponseEntity<ResponseEditarAllCuentasPorCobrar> edicionAllCuentasPorCobrar(
-            @Validated @RequestBody RequestEditarAllCuentasPorCobrar request
+    public ResponseEntity<ResponseAbonarCuentaPorCobrar> edicionAllCuentasPorCobrar(
+            @Validated @RequestBody RequestAbonarCuentaPorCobrar request
     ) {
-        ResponseEditarAllCuentasPorCobrar response = edicionAllCuentasPorCobrarUseCase.EdicionAllCuentasPorCobrar(request);
+        ResponseAbonarCuentaPorCobrar response = edicionAllCuentasPorCobrarUseCase.EdicionAllCuentasPorCobrar(request);
 
         if (response.isExito()) {
             NotificacionCuentasPorCobrarDTO notificacion = new NotificacionCuentasPorCobrarDTO();

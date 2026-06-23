@@ -2,6 +2,6 @@ package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.applicatio
 
 import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
 
-public class ResponseEditarAllCuentasPorCobrar extends ResponseGeneral {
+public class ResponseAbonarCuentaPorCobrar extends ResponseGeneral {
 
 }
