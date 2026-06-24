@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class PagoService implements IPagoListado, IPagoRegistro {
+public class PagoService implements IPagoRegistro {
 
     private final PagoListadoRepository pagoListadoRepository;
     private final PagoRegistroRepository pagoRegistroRepository;
@@ -25,11 +25,12 @@ public class PagoService implements IPagoListado, IPagoRegistro {
         this.pagoListadoRepository = pagoListadoRepository;
         this.pagoRegistroRepository = pagoRegistroRepository;
     }
-
+    /*
     @Override
     public ResponseListaPago listaPago(RequestListaPago request) {
         return pagoListadoRepository.listaPago(request);
     }
+     */
 
     @Override
     public ResponseRegistroPago RegistroPago(RequestRegistroPago request) {

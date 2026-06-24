@@ -8,15 +8,12 @@ import lombok.Data;
 public class RequestRegistroPago  {
 
     @Min(value = 1, message = "El id de venta debe ser mayor a 0")
-    private long idVenta;
+    private long idCuentaPorCobrar;
 
     @Min(value = 1, message = "El id de tipo pago debe ser mayor a 0")
     private long idTipoPago;
 
     @PositiveOrZero(message = "El monto no puede ser negativo")
     private double monto;
-
-    @Size(max = 250, message = "La referencia no debe superar los 250 caracteres")
-    private String referencia;
 
 }

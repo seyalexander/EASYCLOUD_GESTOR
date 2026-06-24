@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 @Data
 public class MovimientoCajaModel implements Serializable {
     private long idMovimientoCaja;
-    private long idAperturaCaja;
+    private long idEmpleado;
+    private long idTurnoCaja;
     private Movimiento Movimiento;
     private String concepto;
     private double monto;

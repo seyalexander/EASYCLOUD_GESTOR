@@ -3,6 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.useCa
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestDetalleTurnoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.ResponseDetalleTurnoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.domain.services.TurnoCajaService;
+import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.persistence.model.EstadoCaja;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,12 +14,12 @@ public class DetalleTurnoCajaUseCase {
         this.turnoCajaService = turnoCajaService;
     }
 
-    public ResponseDetalleTurnoCaja DetalleTurnoCaja(long idTurnoCaja) {
+    public ResponseDetalleTurnoCaja DetalleTurnoCaja(long idTurnoCaja, EstadoCaja estadoCaja) {
         try {
             RequestDetalleTurnoCaja request = new RequestDetalleTurnoCaja();
-            request.setIdTurnoCaja(idTurnoCaja);
+            request.setIdCaja(idTurnoCaja);
 
-            ResponseDetalleTurnoCaja response = turnoCajaService.DetalleTurnoCaja(request);
+            ResponseDetalleTurnoCaja response = turnoCajaService.DetalleTurnoCaja(request,estadoCaja);
 
             if (response.isExito()) {
             }

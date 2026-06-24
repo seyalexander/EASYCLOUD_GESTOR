@@ -26,7 +26,7 @@ public class TurnoCajaAbrirRepository implements ITurnoCajaAbrir {
     @Override
     public ResponseAbrirTurnoCaja AbrirTurnoCaja(RequestAbrirTurnoCaja request) {
         ResponseAbrirTurnoCaja rpt = new ResponseAbrirTurnoCaja();
-        String SQL = "{ call VENTAS.sp_AbrirTurnoCaja(?,?,?,?) }";
+        String SQL = "{ call VENTAS.sp_AbrirTurnoCaja(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -35,8 +35,9 @@ public class TurnoCajaAbrirRepository implements ITurnoCajaAbrir {
             Long sucursalId = 1L;
             setParameter(pstmt, 2, sucursalId);
             setParameter(pstmt, 3, request.getMontoInicial());
+            setParameter(pstmt, 4, request.getMontoInicial());
             Long empresaId = 1L;
-            pstmt.setLong(4, empresaId);
+            pstmt.setLong(5, empresaId);
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {

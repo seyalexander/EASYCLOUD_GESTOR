@@ -1,6 +1,8 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.useCase;
 
 import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
+import com.SeyaCloudGestion.GestionSistema.feacture.caja.application.dto.response.ResponseDetalleCaja;
+import com.SeyaCloudGestion.GestionSistema.feacture.caja.application.useCase.DetalleCajaUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestCerrarTurnoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestDetalleTurnoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.ResponseCerrarTurnoCaja;
@@ -12,30 +14,34 @@ import org.springframework.stereotype.Component;
 @Component
 public class CerrarTurnoCajaUseCase {
     private final TurnoCajaService turnoCajaService;
+    private final DetalleCajaUseCase detalleCajaUseCase;
+    private final DetalleTurnoCajaUseCase detalleTurnoCajaUseCase;
 
-    public CerrarTurnoCajaUseCase(TurnoCajaService turnoCajaService) {
+    public CerrarTurnoCajaUseCase(TurnoCajaService turnoCajaService, DetalleCajaUseCase detalleCajaUseCase, DetalleTurnoCajaUseCase detalleTurnoCajaUseCase) {
         this.turnoCajaService = turnoCajaService;
+        this.detalleCajaUseCase = detalleCajaUseCase;
+        this.detalleTurnoCajaUseCase = detalleTurnoCajaUseCase;
     }
 
     public ResponseCerrarTurnoCaja CerrarTurnoCaja(RequestCerrarTurnoCaja request) {
         try {
-            //verificar el id
-            RequestDetalleTurnoCaja requestDetalle = new RequestDetalleTurnoCaja();
-            requestDetalle.setIdTurnoCaja(request.getIdTurnoCaja());
-
-            ResponseDetalleTurnoCaja detalleBD= turnoCajaService.DetalleTurnoCaja(requestDetalle);
+            ResponseDetalleCaja responseBDcaja= detalleCajaUseCase.DetalleCaja(request.getIdCaja());
+            if (!responseBDcaja.isExito() || responseBDcaja.getCaja() == null) {
+                throw new IllegalArgumentException("El la caja no existe.");
+            }
+            ResponseDetalleTurnoCaja detalleBD = detalleTurnoCajaUseCase.DetalleTurnoCaja(request.getIdCaja(), EstadoCaja.ABIERTO);
 
             if (!detalleBD.isExito() || detalleBD.getTurnoCaja() == null) {
-                throw new ResourceNotFoundException("El Id no existe.");
+                throw new IllegalArgumentException("No hay ningún turno abierto para esta caja.");
             }
-            //verificar que no este ya cerrado
-            if (detalleBD.getTurnoCaja().getEstado() == EstadoCaja.CERRADO) {
-                throw new IllegalArgumentException("Este turno ya ha sido cerrado previamente.");
-            }
-            //realizamos los sets
 
+            if (detalleBD.getTurnoCaja().getEstado().equals(EstadoCaja.CERRADO)) {
+                throw new IllegalArgumentException("No se puede volver a cerrar una caja ya cerrada");
+            }
+
+            //realizamos los sets
             double montoSistema =detalleBD.getTurnoCaja().getMontoSistema();
-            double diferencia = detalleBD.getTurnoCaja().getMontoSistema()- request.getMontoReal();
+            double diferencia =  request.getMontoReal()-detalleBD.getTurnoCaja().getMontoSistema();
 
             ResponseCerrarTurnoCaja response = turnoCajaService.CerrarTurnoCaja(request,montoSistema,diferencia);
 

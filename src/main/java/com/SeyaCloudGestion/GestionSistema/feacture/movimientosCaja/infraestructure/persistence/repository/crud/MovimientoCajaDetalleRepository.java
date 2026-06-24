@@ -29,25 +29,34 @@ public class MovimientoCajaDetalleRepository implements IMovimientoCajaDetalle {
     @Override
     public ResponseDetalleMovimientoCaja DetalleMovimientoCaja(RequestDetalleMovimientoCaja request) {
         ResponseDetalleMovimientoCaja response = new ResponseDetalleMovimientoCaja();
-        String SQL = "{ call CAJA.sp_ObtenerMovimientoCajaPorId(?) }";
+        String SQL = "{ call CAJA.sp_ObtenerMovimientoCajaPorId(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdMovimientoCaja());
+            setParameter(pstmt, 2, request.getIdTurnoCaja());
+
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+
+            pstmt.setLong(3, empresaId);
+            pstmt.setLong(4, sucursalId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     MovimientoCajaModel item = new MovimientoCajaModel();
                     item.setIdMovimientoCaja(rs.getLong("idMovimientoCaja"));
-                    item.setIdAperturaCaja(rs.getLong("idAperturaCaja"));
-                    String movimiento = rs.getString("movimiento");
+                    item.setIdEmpleado(rs.getLong("idUsuario"));
+                    item.setIdTurnoCaja(rs.getLong("idTurnoCaja"));
+                    String movimiento = rs.getString("tipoMovimiento");
                     if (movimiento != null) {
                         item.setMovimiento(Movimiento.valueOf(movimiento.toUpperCase()));
                     }
                     item.setConcepto(rs.getString("concepto"));
                     item.setMonto(rs.getDouble("monto"));
                     item.setFecha((rs.getTimestamp("fecha") != null ? rs.getTimestamp("fecha").toLocalDateTime() : null));
+
                     response.setExito(true);
                     response.setMessage("MovimientoCaja obtenido correctamente.");
                     response.setMovimientoCaja(item);

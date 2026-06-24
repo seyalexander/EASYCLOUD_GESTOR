@@ -26,18 +26,21 @@ public class TurnoCajaCerrarRepository implements ITurnoCajaCerrar {
     @Override
     public ResponseCerrarTurnoCaja CerrarTurnoCaja(RequestCerrarTurnoCaja request,double montoSistema,double diferencia) {
         ResponseCerrarTurnoCaja rpt = new ResponseCerrarTurnoCaja();
-        String SQL = "{ call VENTAS.sp_CerrarTurnoCaja(?,?,?,?,?,?) }";
+        String SQL = "{ call VENTAS.sp_CerrarTurnoCaja(?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
             setParameter(pstmt, 1, request.getIdTurnoCaja());
-            setParameter(pstmt, 2, montoSistema);
-            setParameter(pstmt, 3, request.getMontoReal());
+            setParameter(pstmt, 2, request.getIdCaja());
+            setParameter(pstmt, 3, montoSistema);
+            setParameter(pstmt, 4, request.getMontoReal());
             Long userId = 1L;
-            pstmt.setLong(4, userId);
-            setParameter(pstmt, 5, diferencia);
+            pstmt.setLong(5, userId);
+            setParameter(pstmt, 6, diferencia);
             Long empresaId = 1L;
-            pstmt.setLong(6, empresaId);
+            pstmt.setLong(7, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(8, sucursalId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

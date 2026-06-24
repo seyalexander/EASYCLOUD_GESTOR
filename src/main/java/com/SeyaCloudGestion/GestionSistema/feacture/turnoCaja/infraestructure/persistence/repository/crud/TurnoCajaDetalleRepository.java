@@ -27,16 +27,19 @@ public class TurnoCajaDetalleRepository implements ITurnoCajaDetalle {
     private DataSource con;
 
     @Override
-    public ResponseDetalleTurnoCaja DetalleTurnoCaja(RequestDetalleTurnoCaja request) {
+    public ResponseDetalleTurnoCaja DetalleTurnoCaja(RequestDetalleTurnoCaja request,EstadoCaja estado) {
         ResponseDetalleTurnoCaja response = new ResponseDetalleTurnoCaja();
-        String SQL = "{ call VENTAS.sp_ObtenerTurnoCajaPorId(?,?) }";
+        String SQL = "{ call VENTAS.sp_ObtenerTurnoCajaAbiertoPorId(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdTurnoCaja());
+            setParameter(pstmt, 1, request.getIdCaja());
+            setParameter(pstmt, 2, estado != null ? estado.name() : null);
             Long empresaId = 1L;
-            pstmt.setLong(2, empresaId);
+            pstmt.setLong(3, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(4, sucursalId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {

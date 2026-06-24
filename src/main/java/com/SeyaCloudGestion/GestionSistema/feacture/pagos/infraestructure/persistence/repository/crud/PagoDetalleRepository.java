@@ -38,11 +38,10 @@ public class PagoDetalleRepository implements IPagoDetalle {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     PagoModel item = new PagoModel();
-                    item.setIdPago(rs.getLong("idPago"));
-                    item.setIdVenta(rs.getLong("idVenta"));
+                    item.setIdPagoCliente(rs.getLong("idPago"));
+                    item.setIdPagoCliente(rs.getLong("idVenta"));
                     item.setIdTipoPago(rs.getLong("idTipoPago"));
                     item.setMonto(rs.getDouble("monto"));
-                    item.setReferencia(rs.getString("referencia"));
                     item.setFechaPago((rs.getTimestamp("fechaPago") != null ? rs.getTimestamp("fechaPago").toLocalDateTime() : null));
                     item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
                     response.setExito(true);

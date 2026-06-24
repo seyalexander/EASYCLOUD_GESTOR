@@ -6,8 +6,9 @@ import lombok.Data;
 
 @Data
 public class RequestRegistroMovimientoCaja {
-    @Min(value = 1, message = "El id de apertura de caja debe ser mayor a 0")
-    private long idAperturaCaja;
+
+    @Min(value = 1, message = "El id del turno caja de caja debe ser mayor a 0")
+    private long idTurnoCaja;
 
     @NotNull(message = "El movimiento es obligatorio")
     private Movimiento movimiento;

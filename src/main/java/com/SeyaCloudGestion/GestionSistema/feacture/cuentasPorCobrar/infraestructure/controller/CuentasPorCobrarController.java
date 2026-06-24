@@ -22,15 +22,13 @@ public class CuentasPorCobrarController {
     private final ListaCuentasPorCobrarUseCase listaCuentasPorCobrarUseCase;
     private final RegistroCuentasPorCobrarUseCase registroCuentasPorCobrarUseCase;
     private final AbonarCuentaPorCobrarUseCase edicionAllCuentasPorCobrarUseCase;
-    private final EdicionCuentasPorCobrarEstadoUseCase edicionCuentasPorCobrarEstadoUseCase;
     private final DetalleCuentasPorCobrarUseCase detalleCuentasPorCobrarUseCase;
     private final NotificacionCuentasPorCobrarService notificacionCuentasPorCobrarService;
 
-    public CuentasPorCobrarController(ListaCuentasPorCobrarUseCase listaCuentasPorCobrarUseCase, RegistroCuentasPorCobrarUseCase registroCuentasPorCobrarUseCase, AbonarCuentaPorCobrarUseCase edicionAllCuentasPorCobrarUseCase, EdicionCuentasPorCobrarEstadoUseCase edicionCuentasPorCobrarEstadoUseCase, DetalleCuentasPorCobrarUseCase detalleCuentasPorCobrarUseCase, NotificacionCuentasPorCobrarService notificacionCuentasPorCobrarService) {
+    public CuentasPorCobrarController(ListaCuentasPorCobrarUseCase listaCuentasPorCobrarUseCase, RegistroCuentasPorCobrarUseCase registroCuentasPorCobrarUseCase, AbonarCuentaPorCobrarUseCase edicionAllCuentasPorCobrarUseCase, DetalleCuentasPorCobrarUseCase detalleCuentasPorCobrarUseCase, NotificacionCuentasPorCobrarService notificacionCuentasPorCobrarService) {
         this.listaCuentasPorCobrarUseCase = listaCuentasPorCobrarUseCase;
         this.registroCuentasPorCobrarUseCase = registroCuentasPorCobrarUseCase;
         this.edicionAllCuentasPorCobrarUseCase = edicionAllCuentasPorCobrarUseCase;
-        this.edicionCuentasPorCobrarEstadoUseCase = edicionCuentasPorCobrarEstadoUseCase;
         this.detalleCuentasPorCobrarUseCase = detalleCuentasPorCobrarUseCase;
         this.notificacionCuentasPorCobrarService = notificacionCuentasPorCobrarService;
     }
@@ -80,7 +78,7 @@ public class CuentasPorCobrarController {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
-
+    /*
     @PutMapping
     @Operation(summary = "Editar cuenta por cobrar", description = "Permite editar todos los datos de una cuenta por cobrar existente")
     public ResponseEntity<ResponseAbonarCuentaPorCobrar> edicionAllCuentasPorCobrar(
@@ -94,29 +92,6 @@ public class CuentasPorCobrarController {
             notificacion.setMensaje("Cuenta por cobrar editada");
 
             notificacionCuentasPorCobrarService.enviarNotificacionCuentasPorCobrar_Edicion(notificacion);
-
-            return ResponseEntity.ok(response);
-        }
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
-
-
-    @PatchMapping("/{idCuentaPorCobrar}/cancelar")
-    @Operation(summary = "cancelar cuenta por cobrar", description = "Cancela una cuenta por cobrar")
-    public ResponseEntity<ResponseEditarEstadoCuentasPorCobrar> CancelarCuentasPorCobrar(
-            @PathVariable long idCuentaPorCobrar
-    ) {
-        ResponseEditarEstadoCuentasPorCobrar response =
-                edicionCuentasPorCobrarEstadoUseCase.CancelarCuentasPorCobrar(idCuentaPorCobrar);
-
-        if (response.isExito()) {
-            NotificacionCuentasPorCobrarDTO notificacion = new NotificacionCuentasPorCobrarDTO();
-            notificacion.setTipo(String.valueOf("Cancelación"));
-            notificacion.setMensaje("Cuenta por cobrar Cancelada");
-            notificacion.setIdCuentaPorCobrar(idCuentaPorCobrar);
-
-            notificacionCuentasPorCobrarService.enviarNotificacionCuentasPorCobrar_Activar(notificacion);
 
             return ResponseEntity.ok(response);
         }
@@ -138,4 +113,5 @@ public class CuentasPorCobrarController {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+     */
 }

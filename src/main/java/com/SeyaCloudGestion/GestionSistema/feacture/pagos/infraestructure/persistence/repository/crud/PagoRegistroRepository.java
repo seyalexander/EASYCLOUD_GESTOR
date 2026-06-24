@@ -26,21 +26,20 @@ public class PagoRegistroRepository implements IPagoRegistro {
     @Override
     public ResponseRegistroPago RegistroPago(RequestRegistroPago request) {
         ResponseRegistroPago rpt = new ResponseRegistroPago();
-        String SQL = "{ call VENTAS.sp_RegistroPago(?,?,?,?,?,?,?) }";
+        String SQL = "{ call VENTAS.sp_RegistrarPagoCliente(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdVenta());
+            setParameter(pstmt, 1, request.getIdCuentaPorCobrar());
             setParameter(pstmt, 2, request.getIdTipoPago());
             setParameter(pstmt, 3, request.getMonto());
-            setParameter(pstmt, 4, request.getReferencia());
             Long empresaId = 1L;
             Long sucrusalId = 1L;
-            setParameter(pstmt, 5, empresaId);
-            setParameter(pstmt, 6, sucrusalId);
+            setParameter(pstmt, 4, empresaId);
+            setParameter(pstmt, 5, sucrusalId);
             Long userId = 1L;
-            pstmt.setLong(7, userId);
+            pstmt.setLong(6, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -54,7 +53,7 @@ public class PagoRegistroRepository implements IPagoRegistro {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en VENTAS.sp_RegistroPago", e);
+            log.error("Error en VENTAS.sp_RegistrarPagoCliente", e);
         }
         return rpt;
     }

@@ -3,6 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.domain.services;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.domain.interfaces.*;
+import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.persistence.model.EstadoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.persistence.repository.crud.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -46,7 +47,7 @@ public class TurnoCajaService implements ITurnoCajaListado, ITurnoCajaAbrir, ITu
 
     @Override
     @Cacheable(value = "turnoCaja_detalle", key = "#request.idTurnoCaja")
-    public ResponseDetalleTurnoCaja DetalleTurnoCaja(RequestDetalleTurnoCaja request) {
-        return turnoCajaDetalleRepository.DetalleTurnoCaja(request);
+    public ResponseDetalleTurnoCaja DetalleTurnoCaja(RequestDetalleTurnoCaja request, EstadoCaja estado) {
+        return turnoCajaDetalleRepository.DetalleTurnoCaja(request,estado);
     }
 }

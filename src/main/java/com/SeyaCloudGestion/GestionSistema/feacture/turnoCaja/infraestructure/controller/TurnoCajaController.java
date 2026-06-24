@@ -88,17 +88,4 @@ public class TurnoCajaController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @GetMapping("/{idTurnoCaja}")
-    @Operation(summary = "Detalle turno de caja", description = "Obtiene el detalle de un turno de caja")
-    public ResponseEntity<ResponseDetalleTurnoCaja> detalleTurnoCaja(
-            @PathVariable long idTurnoCaja
-    ) {
-        ResponseDetalleTurnoCaja response = detalleTurnoCajaUseCase.DetalleTurnoCaja(idTurnoCaja);
-
-        if (response.isExito()) {
-            return ResponseEntity.ok(response);
-        }
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    }
 }

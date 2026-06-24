@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class TurnoCajaModel implements Serializable {
     private long idTurnoCaja;
     private long idUsuario;
+    private long idCaja;
     private long idSucursal;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
