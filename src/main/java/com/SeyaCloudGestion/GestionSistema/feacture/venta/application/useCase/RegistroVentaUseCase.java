@@ -12,6 +12,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.useCase.DetalleTipoMovimientoUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.ResponseDetalleTurnoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.useCase.DetalleTurnoCajaUseCase;
+import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.persistence.model.EstadoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.request.RequestRegistroVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.response.ResponseRegistroVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.domain.services.VentaService;
@@ -49,12 +50,12 @@ public class RegistroVentaUseCase {
                 throw new IllegalArgumentException("El cliente no existe.");
             }
             //turno caja
-            ResponseDetalleTurnoCaja detalleBDturnoCaja = detalleTurnoCajaUseCase.DetalleTurnoCaja(request.getIdTurnoCaja());
+            ResponseDetalleTurnoCaja detalleBDturnoCaja = detalleTurnoCajaUseCase.DetalleTurnoCaja(request.getIdTurnoCaja(), EstadoCaja.ABIERTO);
 
             if (!detalleBDturnoCaja.isExito() || detalleBDturnoCaja.getTurnoCaja() == null) {
                 throw new IllegalArgumentException("El turno caja no existe.");
             }
-            //id tipo movimineot
+            //id tipo movimiento
             ResponseDetalleTipoMovimiento detalleBDTiMov =   detalleTipoMovimientoUseCase.DetalleTipoMovimiento(request.getIdTipoMovimiento());
             if (!detalleBDTiMov.isExito() || detalleBDTiMov.getTipoMovimiento() == null) {
                 throw new IllegalArgumentException("El tipo de movimiento solicitado no existe.");

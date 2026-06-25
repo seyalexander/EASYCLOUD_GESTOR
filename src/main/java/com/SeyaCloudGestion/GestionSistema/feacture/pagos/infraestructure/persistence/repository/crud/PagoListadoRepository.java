@@ -40,8 +40,8 @@ public class PagoListadoRepository implements IPagoListado {
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     PagoModel item = new PagoModel();
-                item.setIdPagoCliente(rs.getLong("idPago"));
-                item.setIdPagoCliente(rs.getLong("idVenta"));
+                item.setIdPago(rs.getLong("idPago"));
+                item.setIdVenta(rs.getLong("idVenta"));
                 item.setIdTipoPago(rs.getLong("idTipoPago"));
                 item.setMonto(rs.getDouble("monto"));
                 item.setFechaPago((rs.getTimestamp("fechaPago") != null ? rs.getTimestamp("fechaPago").toLocalDateTime() : null));

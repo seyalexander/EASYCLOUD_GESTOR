@@ -1,6 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.pagoClientes.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.pagoClientes.application.dto.request.RequestRegistroPagoCliente;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseDetalleCuentasPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagoClientes.application.dto.request.RequestRegistroDetallePagoCliente;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagoClientes.application.dto.response.ResponseRegistroPagoCliente;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagoClientes.domain.interfaces.IPagoClienteRegistro;
 import lombok.extern.slf4j.Slf4j;
@@ -24,19 +25,22 @@ public class PagoClienteRegistroRepository implements IPagoClienteRegistro {
     private DataSource con;
 
     @Override
-    public ResponseRegistroPagoCliente RegistroPagoCliente(RequestRegistroPagoCliente request) {
-        ResponseRegistroPagoCliente rpt = new ResponseRegistroPagoCliente();
-        String SQL = "{ call VENTAS.sp_RegistroPagoCliente(?,?,?,?,?) }";
+    public ResponseDetalleCuentasPorCobrar RegistroDetallePagoCliente(long idCuentaPorCobrar , RequestRegistroDetallePagoCliente request) {
+        ResponseDetalleCuentasPorCobrar rpt = new ResponseDetalleCuentasPorCobrar();
+        String SQL = "{ call VENTAS.sp_RegistrarPagoCliente(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdCuentaPorCobrar());
-            setParameter(pstmt, 2, request.getFechaPago());
-            setParameter(pstmt, 3, request.getMontoPagado());
-            setParameter(pstmt, 4, request.getMetodoPago());
+            setParameter(pstmt, 1, idCuentaPorCobrar);
+            setParameter(pstmt, 2, request.getMontoPagado());
+            setParameter(pstmt, 3, request.getIdTipoPago());
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(5, sucursalId);
             Long userId = 1L;
-            pstmt.setLong(5, userId);
+            pstmt.setLong(6, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 

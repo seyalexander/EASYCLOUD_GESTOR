@@ -17,8 +17,7 @@ public class ListaPagoUseCase {
 
     public ResponseListaPago ListaPago(RequestListaPago request) {
         try {
-            ResponseListaPago response = new ResponseListaPago();
-                    //pagoService.listaPago(request);
+            ResponseListaPago response = pagoService.listaPago(request);
             if (response.isExito()) {}
 
             return response;

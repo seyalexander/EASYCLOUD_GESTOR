@@ -45,7 +45,7 @@ public class PagoClienteListadoRepository implements IPagoClienteListado {
                 item.setIdCuentaPorCobrar(rs.getLong("idCuentaPorCobrar"));
                 item.setFechaPago((rs.getTimestamp("fechaPago") != null ? rs.getTimestamp("fechaPago").toLocalDateTime() : null));
                 item.setMontoPagado(rs.getDouble("montoPagado"));
-                item.setMetodoPago(rs.getString("metodoPago"));
+                item.setIdTipoPago(rs.getLong("idTipoPago"));
                     registros.add(item);
                 }
             }

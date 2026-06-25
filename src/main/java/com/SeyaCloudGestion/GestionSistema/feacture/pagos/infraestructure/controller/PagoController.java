@@ -20,12 +20,16 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:4200")
 public class PagoController {
 
-    @Autowired
-    private ListaPagoUseCase listaPagoUseCase;
 
-    @Autowired
-    private RegistroPagoUseCase registroPagoUseCase;
-    /*
+    private final ListaPagoUseCase listaPagoUseCase;
+
+    private final RegistroPagoUseCase registroPagoUseCase;
+
+    public PagoController(ListaPagoUseCase listaPagoUseCase, RegistroPagoUseCase registroPagoUseCase) {
+        this.listaPagoUseCase = listaPagoUseCase;
+        this.registroPagoUseCase = registroPagoUseCase;
+    }
+
     @GetMapping
     @Operation(summary = "Listar pagos de una venta", description = "Obtiene la lista de pagos asociados a una venta específica filtrada por Tenant (Empresa y Sucursal)")
     public ResponseEntity<ResponseListaPago> listaPago(@Validated @ModelAttribute RequestListaPago request) {
@@ -34,8 +38,7 @@ public class PagoController {
 
         return ResponseEntity.ok(response);
     }
-     */
-
+ /*
     @PostMapping
     @Operation(summary = "Registrar un pago", description = "Permite registrar un nuevo flujo de pago para una transacción de venta")
     @ApiResponses(value = {
@@ -54,4 +57,5 @@ public class PagoController {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+  */
 }

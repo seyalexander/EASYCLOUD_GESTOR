@@ -24,7 +24,7 @@ public class VentaRegistroRepository implements IVentaRegistro {
     @Override
     public ResponseRegistroVenta RegistroVenta(RequestRegistroVenta request, double subTotal, double impuesto, double total) {
         ResponseRegistroVenta rpt = new ResponseRegistroVenta();
-        String SQL = "{ call VENTAS.sp_RegistroVenta(?,?,?,?,?,?,?,?,?) }";
+        String SQL = "{ call VENTAS.sp_RegistroVenta(?,?,?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS)) {
@@ -39,11 +39,13 @@ public class VentaRegistroRepository implements IVentaRegistro {
             pstmt.setLong(4, empresaId);
             pstmt.setLong(5, request.getIdTurnoCaja());
 
-            pstmt.setDouble(6, subTotal);
-            pstmt.setDouble(7, impuesto);
-            pstmt.setDouble(8, total);
+            pstmt.setString(6, request.getCondicionPago().name());
 
-            pstmt.setLong(9, userId);
+            pstmt.setDouble(7, subTotal);
+            pstmt.setDouble(8, impuesto);
+            pstmt.setDouble(9, total);
+
+            pstmt.setLong(10, userId);
 
 
             int rowsAffected = pstmt.executeUpdate();

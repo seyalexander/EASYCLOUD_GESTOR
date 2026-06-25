@@ -8,7 +8,7 @@ import lombok.Data;
 public class RequestRegistroPago  {
 
     @Min(value = 1, message = "El id de venta debe ser mayor a 0")
-    private long idCuentaPorCobrar;
+    private long idVenta;
 
     @Min(value = 1, message = "El id de tipo pago debe ser mayor a 0")
     private long idTipoPago;
@@ -16,4 +16,6 @@ public class RequestRegistroPago  {
     @PositiveOrZero(message = "El monto no puede ser negativo")
     private double monto;
 
+    @NotBlank(message = "La referencia es obligatoria")
+    private String referencia;
 }

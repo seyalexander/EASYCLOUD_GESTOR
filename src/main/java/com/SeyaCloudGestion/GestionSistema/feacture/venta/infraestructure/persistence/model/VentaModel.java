@@ -15,6 +15,7 @@ public class VentaModel  extends AuditableModel implements Serializable {
     private long idUsuario;
     private long idSucursal;
     private long idTurnoCaja;
+    private CondicionPago condicionPago;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime fechaVenta;
     private double subTotal;
