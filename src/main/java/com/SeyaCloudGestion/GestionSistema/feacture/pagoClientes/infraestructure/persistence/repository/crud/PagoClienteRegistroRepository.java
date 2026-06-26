@@ -2,6 +2,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.pagoClientes.infraestructur
 
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseDetalleCuentasPorCobrar;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagoClientes.application.dto.request.RequestRegistroDetallePagoCliente;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagoClientes.application.dto.response.ResponseRegistroDetallePagoCliente;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagoClientes.application.dto.response.ResponseRegistroPagoCliente;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagoClientes.domain.interfaces.IPagoClienteRegistro;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +26,8 @@ public class PagoClienteRegistroRepository implements IPagoClienteRegistro {
     private DataSource con;
 
     @Override
-    public ResponseDetalleCuentasPorCobrar RegistroDetallePagoCliente(long idCuentaPorCobrar , RequestRegistroDetallePagoCliente request) {
-        ResponseDetalleCuentasPorCobrar rpt = new ResponseDetalleCuentasPorCobrar();
+    public ResponseRegistroDetallePagoCliente RegistroDetallePagoCliente(long idCuentaPorCobrar , RequestRegistroDetallePagoCliente request) {
+        ResponseRegistroDetallePagoCliente rpt = new ResponseRegistroDetallePagoCliente();
         String SQL = "{ call VENTAS.sp_RegistrarPagoCliente(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();

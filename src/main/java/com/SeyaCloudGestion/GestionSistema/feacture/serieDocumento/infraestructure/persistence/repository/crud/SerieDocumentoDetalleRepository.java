@@ -1,7 +1,9 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.infraestructure.persistence.repository.crud;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestDetalleSeries;
+import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestObtenerCorrelativo;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.response.ResponseDetalleSerieDocumento;
+import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.response.ResponseObtenerCorrelativo;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.domain.interfaces.ISerieDocumentoDetalle;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.infraestructure.persistence.model.SerieDocumentoModel;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Slf4j
 @Repository
@@ -61,6 +60,43 @@ public class SerieDocumentoDetalleRepository implements ISerieDocumentoDetalle {
             response.setExito(false);
             response.setMessage(e.getMessage());
             log.error("Error en CONFIGURACION.sp_ObtenerSerieDocumentoPorId", e);
+        }
+        return response;
+    }
+
+    @Override
+    public ResponseObtenerCorrelativo ObtenerCorelativo(RequestObtenerCorrelativo request) {
+        ResponseObtenerCorrelativo response = new ResponseObtenerCorrelativo();
+        String SQL = "{ call CONFIGURACION.sp_ObtenerSiguienteCorrelativo(?,?,?,?) }";
+
+        try (Connection conn = con.getConnection();
+             CallableStatement pstmt = conn.prepareCall(SQL)) {
+
+            setParameter(pstmt, 1, request.getIdSerieDocumento());
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+            pstmt.setLong(2, empresaId);
+            pstmt.setLong(3, sucursalId);
+
+            pstmt.registerOutParameter(4, Types.VARCHAR);
+
+            pstmt.executeUpdate();
+
+            String numeroCorrelativoFormateado = pstmt.getString(4);
+
+            if (numeroCorrelativoFormateado != null && !numeroCorrelativoFormateado.trim().isEmpty()) {
+                response.setExito(true);
+                response.setMessage("Siguiente correlativo generado con éxito.");
+                response.setCorrelativo(numeroCorrelativoFormateado);
+            } else {
+                response.setExito(false);
+                response.setMessage("No se pudo recuperar el correlativo formateado.");
+            }
+
+        } catch (SQLException e) {
+            response.setExito(false);
+            response.setMessage(e.getMessage());
+            log.error("Error crítico en CONFIGURACION.sp_ObtenerSiguienteCorrelativo", e);
         }
         return response;
     }

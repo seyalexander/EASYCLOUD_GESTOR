@@ -1,8 +1,10 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.pagos.domain.services;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.request.RequestListaPago;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.request.RequestRegistroDetallePago;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.request.RequestRegistroPago;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.response.ResponseListaPago;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.response.ResponseRegistroDetallePago;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.response.ResponseRegistroPago;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagos.domain.interfaces.IPagoListado;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagos.domain.interfaces.IPagoRegistro;
@@ -31,7 +33,7 @@ public class PagoService implements IPagoRegistro,IPagoListado {
     }
 
     @Override
-    public ResponseRegistroPago RegistroPago(RequestRegistroPago request) {
-        return pagoRegistroRepository.RegistroPago(request);
+    public ResponseRegistroDetallePago RegistroPago(long idVenta, RequestRegistroDetallePago request) {
+        return pagoRegistroRepository.RegistroPago(idVenta,request);
     }
 }

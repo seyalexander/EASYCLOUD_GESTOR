@@ -9,6 +9,9 @@ public class RequestRegistroPagoCliente {
     @Min(value = 1, message = "El id de cuenta por cobrar debe ser mayor a 0")
     private long idCuentaPorCobrar;
 
+    @Min(value = 1, message = "El id de la caja debe ser mayor a 0")
+    private long idCaja;
+
     @NotEmpty(message = "Debe registrar al menos un método de pago")
     private List<RequestRegistroDetallePagoCliente> pagos;
 }

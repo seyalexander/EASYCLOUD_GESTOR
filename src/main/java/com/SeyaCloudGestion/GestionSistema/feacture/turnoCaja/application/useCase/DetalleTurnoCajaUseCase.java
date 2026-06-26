@@ -14,10 +14,10 @@ public class DetalleTurnoCajaUseCase {
         this.turnoCajaService = turnoCajaService;
     }
 
-    public ResponseDetalleTurnoCaja DetalleTurnoCaja(long idTurnoCaja, EstadoCaja estadoCaja) {
+    public ResponseDetalleTurnoCaja DetalleTurnoCaja(long idCaja, EstadoCaja estadoCaja) {
         try {
             RequestDetalleTurnoCaja request = new RequestDetalleTurnoCaja();
-            request.setIdCaja(idTurnoCaja);
+            request.setIdCaja(idCaja);
 
             ResponseDetalleTurnoCaja response = turnoCajaService.DetalleTurnoCaja(request,estadoCaja);
 

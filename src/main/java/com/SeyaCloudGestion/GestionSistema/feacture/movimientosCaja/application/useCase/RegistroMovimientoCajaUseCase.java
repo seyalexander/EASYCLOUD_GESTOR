@@ -5,6 +5,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.application.
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosCaja.domain.services.MovimientoCajaService;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.ResponseDetalleTurnoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.useCase.DetalleTurnoCajaUseCase;
+import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.persistence.model.EstadoCaja;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,7 +20,7 @@ public class RegistroMovimientoCajaUseCase {
 
     public ResponseRegistroMovimientoCaja registroMovimientoCaja(RequestRegistroMovimientoCaja request) {
         try {
-            ResponseDetalleTurnoCaja responseBDturnoCaja = detalleTurnoCajaUseCase.DetalleTurnoCaja(request.getIdTurnoCaja());
+            ResponseDetalleTurnoCaja responseBDturnoCaja = detalleTurnoCajaUseCase.DetalleTurnoCaja(request.getIdTurnoCaja(), EstadoCaja.ABIERTO);
             if (!responseBDturnoCaja.isExito() || responseBDturnoCaja.getTurnoCaja() == null) {
                 throw new IllegalArgumentException("El turno caja no existe.");
             }

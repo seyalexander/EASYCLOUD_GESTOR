@@ -8,6 +8,9 @@ import com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.application.use
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosStock.application.dto.request.RequestProcesarFullStock;
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosStock.application.dto.response.ResponseProcesarFullStock;
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosStock.application.useCase.ProcesarFullMovimientoStockUseCase;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.request.RequestRegistroPago;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.response.ResponseRegistroPago;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.useCase.RegistroPagoUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.response.ResponseDetalleTipoMovimiento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.useCase.DetalleTipoMovimientoUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.ResponseDetalleTurnoCaja;
@@ -28,9 +31,10 @@ public class RegistroVentaUseCase {
     private final DetalleTurnoCajaUseCase detalleTurnoCajaUseCase;
     private final RegistroDetalleVentaUseCase registroDetalleVentaUseCase;
     private final DetalleTipoMovimientoUseCase detalleTipoMovimientoUseCase;
+    private final RegistroPagoUseCase registroPagoUseCase;
     public RegistroVentaUseCase(
             VentaService ventaService,
-            ProcesarFullMovimientoStockUseCase procesarFullMovimientoStockUseCase, DetalleClienteUseCase detalleClienteUseCase, DetalleTurnoCajaUseCase detalleTurnoCajaUseCase, RegistroDetalleVentaUseCase registroDetalleVentaUseCase, DetalleTipoMovimientoUseCase detalleTipoMovimientoUseCase
+            ProcesarFullMovimientoStockUseCase procesarFullMovimientoStockUseCase, DetalleClienteUseCase detalleClienteUseCase, DetalleTurnoCajaUseCase detalleTurnoCajaUseCase, RegistroDetalleVentaUseCase registroDetalleVentaUseCase, DetalleTipoMovimientoUseCase detalleTipoMovimientoUseCase, RegistroPagoUseCase registroPagoUseCase
     ) {
         this.ventaService = ventaService;
         this.procesarFullMovimientoStockUseCase = procesarFullMovimientoStockUseCase;
@@ -38,6 +42,7 @@ public class RegistroVentaUseCase {
         this.detalleTurnoCajaUseCase = detalleTurnoCajaUseCase;
         this.registroDetalleVentaUseCase = registroDetalleVentaUseCase;
         this.detalleTipoMovimientoUseCase = detalleTipoMovimientoUseCase;
+        this.registroPagoUseCase = registroPagoUseCase;
     }
 
     @Transactional("sqlServerTransactionManager")
@@ -111,6 +116,16 @@ public class RegistroVentaUseCase {
                 }
             }
 
+            //registro pago
+            RequestRegistroPago requestRegistroPago = new RequestRegistroPago();
+            requestRegistroPago.setIdVenta(idVentaGenerado);
+            requestRegistroPago.setIdCaja(detalleBDturnoCaja.getTurnoCaja().getIdCaja());
+            requestRegistroPago.setPagos(request.getDetallesPago());
+            ResponseRegistroPago responseRegistroPago = registroPagoUseCase.registrarPago(requestRegistroPago);
+            if (!responseRegistroPago.isExito()) {
+                throw new IllegalArgumentException("Error al registrar el pago");
+            }
+            //generar la boleta o factura
             return response;
 
         } catch (IllegalArgumentException | SecurityException e) {

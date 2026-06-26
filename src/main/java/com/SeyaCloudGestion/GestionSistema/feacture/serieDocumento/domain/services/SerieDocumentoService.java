@@ -31,6 +31,11 @@ public class SerieDocumentoService  implements ISerieDocumentoDetalle, ISerieDoc
     }
 
     @Override
+    public ResponseObtenerCorrelativo ObtenerCorelativo(RequestObtenerCorrelativo request) {
+        return serieDocumentoDetalleRepository.ObtenerCorelativo(request);
+    }
+
+    @Override
     @CacheEvict(value = {"serieDocumentos", "serieDocumentos_detalle"}, allEntries = true)
     public ResponseEditarAllSerieDocumento EditarAllSerieDocumento(RequestEditarAllSeries request) {
         return serieDocumentoEdicionRepository.EditarAllSerieDocumento(request);

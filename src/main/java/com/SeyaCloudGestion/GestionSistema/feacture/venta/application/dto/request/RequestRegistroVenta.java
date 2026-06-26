@@ -1,6 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.request;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.application.dto.request.RequestRegistroDetalleVenta;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.request.RequestRegistroDetallePago;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.request.RequestRegistroPago;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.infraestructure.persistence.model.CondicionPago;
 import jakarta.validation.constraints.Min;
@@ -38,5 +39,5 @@ public class RequestRegistroVenta  {
     @NotEmpty(message = "Debe registrar al menos un producto para realizar la venta")
     private List<RequestRegistroDetalleVenta> detalles;
 
-    private List<RequestRegistroPago> detallesPago;
+    private List<RequestRegistroDetallePago> detallesPago;
 }

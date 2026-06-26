@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.application.dto
 import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.application.dto.response.ResponseRegistroComprobante;
 
 public interface IComprobanteRegistro {
-    ResponseRegistroComprobante RegistroComprobante(RequestRegistroComprobante request);
+    ResponseRegistroComprobante RegistroComprobante(RequestRegistroComprobante request,String urlXml,String urlPdf,String numero);
 }

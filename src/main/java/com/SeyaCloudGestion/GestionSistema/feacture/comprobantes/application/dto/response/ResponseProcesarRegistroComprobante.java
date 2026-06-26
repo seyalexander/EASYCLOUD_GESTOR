@@ -2,6 +2,6 @@ package com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.application.dt
 
 import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
 
-public class ResponseEditarAllComprobante extends ResponseGeneral {
+public class ResponseProcesarRegistroComprobante extends ResponseGeneral {
 
 }
