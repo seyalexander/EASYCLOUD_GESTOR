@@ -2,6 +2,9 @@ package com.SeyaCloudGestion.GestionSistema.feacture.venta.application.useCase;
 
 import com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.dto.response.ResponseDetalleCliente;
 import com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.useCase.DetalleClienteUseCase;
+import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.application.dto.request.RequestProcesarRegistroComprobante;
+import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.application.dto.response.ResponseProcesarRegistroComprobante;
+import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.application.useCase.ProcesarRegistroComprobanteUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.application.dto.request.RequestRegistroDetalleVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.application.dto.response.ResponseRegistroDetalleVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.application.useCase.RegistroDetalleVentaUseCase;
@@ -32,9 +35,11 @@ public class RegistroVentaUseCase {
     private final RegistroDetalleVentaUseCase registroDetalleVentaUseCase;
     private final DetalleTipoMovimientoUseCase detalleTipoMovimientoUseCase;
     private final RegistroPagoUseCase registroPagoUseCase;
+    private final ProcesarRegistroComprobanteUseCase procesarRegistroComprobanteUseCase;
+
     public RegistroVentaUseCase(
             VentaService ventaService,
-            ProcesarFullMovimientoStockUseCase procesarFullMovimientoStockUseCase, DetalleClienteUseCase detalleClienteUseCase, DetalleTurnoCajaUseCase detalleTurnoCajaUseCase, RegistroDetalleVentaUseCase registroDetalleVentaUseCase, DetalleTipoMovimientoUseCase detalleTipoMovimientoUseCase, RegistroPagoUseCase registroPagoUseCase
+            ProcesarFullMovimientoStockUseCase procesarFullMovimientoStockUseCase, DetalleClienteUseCase detalleClienteUseCase, DetalleTurnoCajaUseCase detalleTurnoCajaUseCase, RegistroDetalleVentaUseCase registroDetalleVentaUseCase, DetalleTipoMovimientoUseCase detalleTipoMovimientoUseCase, RegistroPagoUseCase registroPagoUseCase, ProcesarRegistroComprobanteUseCase procesarRegistroComprobanteUseCase
     ) {
         this.ventaService = ventaService;
         this.procesarFullMovimientoStockUseCase = procesarFullMovimientoStockUseCase;
@@ -43,6 +48,7 @@ public class RegistroVentaUseCase {
         this.registroDetalleVentaUseCase = registroDetalleVentaUseCase;
         this.detalleTipoMovimientoUseCase = detalleTipoMovimientoUseCase;
         this.registroPagoUseCase = registroPagoUseCase;
+        this.procesarRegistroComprobanteUseCase = procesarRegistroComprobanteUseCase;
     }
 
     @Transactional("sqlServerTransactionManager")
@@ -65,6 +71,8 @@ public class RegistroVentaUseCase {
             if (!detalleBDTiMov.isExito() || detalleBDTiMov.getTipoMovimiento() == null) {
                 throw new IllegalArgumentException("El tipo de movimiento solicitado no existe.");
             }
+            //validar que sea egreso el movimiento
+
             // get articulos
             if (request.getDetalles() == null || request.getDetalles().isEmpty()) {
                 throw new IllegalArgumentException("No se puede registrar una venta sin detalles de artículos.");
@@ -126,6 +134,26 @@ public class RegistroVentaUseCase {
                 throw new IllegalArgumentException("Error al registrar el pago");
             }
             //generar la boleta o factura
+            //traer el tipoDocumento
+            RequestProcesarRegistroComprobante requestRegistroComprobante= new RequestProcesarRegistroComprobante();
+            requestRegistroComprobante.setIdVenta(idVentaGenerado);
+            requestRegistroComprobante.setIdTipoComprobante(request.getIdTipoComprobante());
+            requestRegistroComprobante.setIdCaja(detalleBDturnoCaja.getTurnoCaja().getIdCaja());
+            requestRegistroComprobante.setIdTipoDocumentoCliente(detalleBDcli.getCliente().getIdTipoDocumento());
+            requestRegistroComprobante.setNumeroDocumentoCliente(detalleBDcli.getCliente().getNumeroDocumento());
+            String nombreFinalCliente;
+            if (detalleBDcli.getCliente().getRazonSocial() != null && !detalleBDcli.getCliente().getRazonSocial().isBlank()) {
+                nombreFinalCliente = detalleBDcli.getCliente().getRazonSocial();
+            } else {
+                nombreFinalCliente = detalleBDcli.getCliente().getNombres() ;
+            }
+
+            requestRegistroComprobante.setRazonSocialCliente(nombreFinalCliente);
+
+            ResponseProcesarRegistroComprobante responseRegistroComprobante = procesarRegistroComprobanteUseCase.procesarRegistro(requestRegistroComprobante);
+            if (!responseRegistroComprobante.isExito()) {
+                throw new IllegalArgumentException("Error al registrar el comprovante");
+            }
             return response;
 
         } catch (IllegalArgumentException | SecurityException e) {

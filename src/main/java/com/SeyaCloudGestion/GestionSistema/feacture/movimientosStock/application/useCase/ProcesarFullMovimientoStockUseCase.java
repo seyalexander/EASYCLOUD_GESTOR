@@ -1,11 +1,5 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.movimientosStock.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.request.RequestDetalleAlmacen;
-import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseDetalleAlmacen;
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.request.RequestDetalleArticulo;
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseDetalleArticulo;
-import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.request.RequestRegistroKardex;
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.request.RequestRegistroKardexRecortado;
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.response.ResponseDetalleKardex;
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.response.ResponseRegistroKardex;
@@ -161,7 +155,7 @@ public class ProcesarFullMovimientoStockUseCase {
             }
 
             ResponseProcesarFullStock response = new ResponseProcesarFullStock();
-
+            response.setExito(true);
             if (response.isExito()) {
 
             }

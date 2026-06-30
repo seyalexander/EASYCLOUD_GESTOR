@@ -13,6 +13,7 @@ public class SerieCajaModel implements Serializable {
     private long idCaja;
     private long idSerieDocumento;
     private String serie;
+    private long idTipoComprobante;
     private String tipoComprobante;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime fechaCreacion;

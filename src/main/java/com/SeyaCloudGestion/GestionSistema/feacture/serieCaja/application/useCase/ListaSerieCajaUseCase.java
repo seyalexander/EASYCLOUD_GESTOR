@@ -18,6 +18,7 @@ public class ListaSerieCajaUseCase {
 
     public ResponseListaSerieCaja ListaSerieCaja(RequestListaSerieCaja request) {
         try {
+
             ResponseListaSerieCaja response = serieCajaService.listaSerieCaja(request);
             if (response.isExito()) {}
 

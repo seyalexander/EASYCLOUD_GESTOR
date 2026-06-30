@@ -7,7 +7,6 @@ import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.d
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.response.ResponseObtenerCorrelativo;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.useCase.DetalleSerieDocumentoUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.useCase.ObtenerCorrelativoUseCase;
-import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.useCase.DetalleTipoDocumentoUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipocomprobante.application.dto.response.ResponseDetalleTipoComprobante;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipocomprobante.application.useCase.DetalleTipoComprobanteUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.response.ResponseDetalleVenta;

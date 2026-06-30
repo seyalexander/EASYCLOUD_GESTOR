@@ -46,6 +46,7 @@ public class SerieCajaListadoRepository implements ISerieCajaListado {
                 item.setIdCaja(rs.getLong("idCaja"));
                 item.setIdSerieDocumento(rs.getLong("idSerieDocumento"));
                 item.setSerie(rs.getString("serie"));
+                item.setIdTipoComprobante(rs.getLong("idTipoComprobante"));
                 item.setTipoComprobante(rs.getString("tipoComprobante"));
                     registros.add(item);
                 }
