@@ -42,7 +42,7 @@ public class PagoClienteDetalleRepository implements IPagoClienteDetalle {
                     item.setIdCuentaPorCobrar(rs.getLong("idCuentaPorCobrar"));
                     item.setFechaPago((rs.getTimestamp("fechaPago") != null ? rs.getTimestamp("fechaPago").toLocalDateTime() : null));
                     item.setMontoPagado(rs.getDouble("montoPagado"));
-                    item.setMetodoPago(rs.getString("metodoPago"));
+                    //item.setMetodoPago(rs.getString("metodoPago"));
                     response.setExito(true);
                     response.setMessage("PagoCliente obtenido correctamente.");
                     response.setPagoCliente(item);

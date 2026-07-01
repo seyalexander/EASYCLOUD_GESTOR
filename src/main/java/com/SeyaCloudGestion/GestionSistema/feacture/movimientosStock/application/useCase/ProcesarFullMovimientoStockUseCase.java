@@ -100,7 +100,7 @@ public class ProcesarFullMovimientoStockUseCase {
             requestKardex.setIdArticulo(request.getIdArticulo());
             requestKardex.setIdAlmacen(request.getIdAlmacen());
             requestKardex.setCantidad(request.getCantidad());
-            requestKardex.setCostoUnitario(request.getCostoUnitario());
+            requestKardex.setCostoUnitario(costoUnitarioParaMovimiento);
             requestKardex.setTipoMovimiento(TipoMovimientoKardex.desdeModelo(detalleBDTiMov.getTipoMovimiento()));
 
             ResponseRegistroKardex responseKardex = registroKardexUseCase.registroKardex(requestKardex);

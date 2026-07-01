@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 public class RequestRegistroDevolucion {
     @Min(value = 1, message = "El id del detalle venta debe ser mayor a 0")
-    private long idDetalleVenta;
+    private long idVenta;
 
     @Min(value = 1, message = "El id del artículo debe ser mayor a 0")
     private long idArticulo;

@@ -31,7 +31,7 @@ public class DevolucionRegistroRepository implements IDevolucionRegistro {
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdDetalleVenta());
+            //setParameter(pstmt, 1, request.getIdDetalleVenta());
             setParameter(pstmt, 2, request.getIdArticulo());
             setParameter(pstmt, 3, request.getCantidad());
             setParameter(pstmt, 4, request.getMotivo());

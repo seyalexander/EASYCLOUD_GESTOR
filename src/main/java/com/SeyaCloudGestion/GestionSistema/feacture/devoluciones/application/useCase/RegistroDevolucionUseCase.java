@@ -31,7 +31,7 @@ public class RegistroDevolucionUseCase {
             if (!response.isExito()) {
                 throw new IllegalArgumentException("No se pudo procesar el reingreso de mercadería: " + response.getMessage());
             }
-
+            /*
             if (request.isVentaACredito() && request.getIdCuentaPorCobrar() > 0) {
                 RequestAnularCuentaPorCobrar requestAnulacionCxc = new RequestAnularCuentaPorCobrar();
                 requestAnulacionCxc.setIdCuentaPorCobrar(request.getIdCuentaPorCobrar());
@@ -42,6 +42,7 @@ public class RegistroDevolucionUseCase {
                     throw new IllegalArgumentException("Mercadería devuelta, pero falló la anulación del saldo: " + responseCxc.getMessage());
                 }
             }
+             */
 
             return response;
 

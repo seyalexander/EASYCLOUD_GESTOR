@@ -1,7 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.proveedores.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.request.RequestRegistroProveedores;
-import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.response.ResponseRegistroProveedores;
+import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.request.RequestRegistroProveedor;
+import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.response.ResponseRegistroProveedor;
 import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.domain.interfaces.IProveedoresRegistro;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +24,9 @@ public class ProveedoresRegistroRepository implements IProveedoresRegistro {
     private DataSource con;
 
     @Override
-    public ResponseRegistroProveedores RegistroProveedores(RequestRegistroProveedores request) {
-        ResponseRegistroProveedores rpt = new ResponseRegistroProveedores();
-        String SQL = "{ call COMPRAS.sp_RegistroProveedores(?,?,?,?,?,?) }";
+    public ResponseRegistroProveedor RegistroProveedores(RequestRegistroProveedor request) {
+        ResponseRegistroProveedor rpt = new ResponseRegistroProveedor();
+        String SQL = "{ call COMPRAS.sp_RegistroProveedor(?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -34,10 +34,13 @@ public class ProveedoresRegistroRepository implements IProveedoresRegistro {
             setParameter(pstmt, 1, request.getRazonSocial());
             setParameter(pstmt, 2, request.getRuc());
             setParameter(pstmt, 3, request.getEmail());
-            setParameter(pstmt, 4, request.getDireccion());
-            setParameter(pstmt, 5, request.getFechaIngreso());
+            setParameter(pstmt, 4, request.getTelefono());
+            setParameter(pstmt, 5, request.getDireccion());
+            setParameter(pstmt, 6, request.getIdTipoDocumento());
+            Long empresaId = 1L;
+            pstmt.setLong(7, empresaId);
             Long userId = 1L;
-            pstmt.setLong(6, userId);
+            pstmt.setLong(8, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -50,7 +53,11 @@ public class ProveedoresRegistroRepository implements IProveedoresRegistro {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe este proveedor .");
+            } else {
+                rpt.setMessage("Error al registrar el proveedor.");
+            }
             log.error("Error en COMPRAS.sp_RegistroProveedores", e);
         }
         return rpt;

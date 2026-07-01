@@ -1,5 +1,10 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.compras.application.dto.request;
 
-public class RequestDetalleCompra {
+import jakarta.validation.constraints.Min;
+import lombok.Data;
 
+@Data
+public class RequestDetalleCompra {
+    @Min(value = 1, message = "El id debe ser mayor a 0")
+    private long idCompra;
 }

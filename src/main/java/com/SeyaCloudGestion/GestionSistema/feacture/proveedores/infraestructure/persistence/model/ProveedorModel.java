@@ -8,10 +8,12 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class ProveedoresModel extends AuditableModel implements Serializable {
+public class ProveedorModel extends AuditableModel implements Serializable {
     private long idProveedor;
     private String razonSocial;
     private String ruc;
+    private long idTipoDocumento;
+    private String telefono;
     private String email;
     private String direccion;
     private int estado;

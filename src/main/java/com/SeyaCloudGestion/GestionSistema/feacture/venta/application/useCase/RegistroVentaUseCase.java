@@ -5,6 +5,9 @@ import com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.useCase
 import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.application.dto.request.RequestProcesarRegistroComprobante;
 import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.application.dto.response.ResponseProcesarRegistroComprobante;
 import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.application.useCase.ProcesarRegistroComprobanteUseCase;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestRegistroCuentasPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseRegistroCuentasPorCobrar;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.useCase.RegistroCuentasPorCobrarUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.application.dto.request.RequestRegistroDetalleVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.application.dto.response.ResponseRegistroDetalleVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.application.useCase.RegistroDetalleVentaUseCase;
@@ -22,8 +25,11 @@ import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.pe
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.request.RequestRegistroVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.response.ResponseRegistroVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.domain.services.VentaService;
+import com.SeyaCloudGestion.GestionSistema.feacture.venta.infraestructure.persistence.model.CondicionPago;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Component
 public class RegistroVentaUseCase {
@@ -36,10 +42,11 @@ public class RegistroVentaUseCase {
     private final DetalleTipoMovimientoUseCase detalleTipoMovimientoUseCase;
     private final RegistroPagoUseCase registroPagoUseCase;
     private final ProcesarRegistroComprobanteUseCase procesarRegistroComprobanteUseCase;
+    private final RegistroCuentasPorCobrarUseCase registroCuentasPorCobrarUseCase;
 
     public RegistroVentaUseCase(
             VentaService ventaService,
-            ProcesarFullMovimientoStockUseCase procesarFullMovimientoStockUseCase, DetalleClienteUseCase detalleClienteUseCase, DetalleTurnoCajaUseCase detalleTurnoCajaUseCase, RegistroDetalleVentaUseCase registroDetalleVentaUseCase, DetalleTipoMovimientoUseCase detalleTipoMovimientoUseCase, RegistroPagoUseCase registroPagoUseCase, ProcesarRegistroComprobanteUseCase procesarRegistroComprobanteUseCase
+            ProcesarFullMovimientoStockUseCase procesarFullMovimientoStockUseCase, DetalleClienteUseCase detalleClienteUseCase, DetalleTurnoCajaUseCase detalleTurnoCajaUseCase, RegistroDetalleVentaUseCase registroDetalleVentaUseCase, DetalleTipoMovimientoUseCase detalleTipoMovimientoUseCase, RegistroPagoUseCase registroPagoUseCase, ProcesarRegistroComprobanteUseCase procesarRegistroComprobanteUseCase, RegistroCuentasPorCobrarUseCase registroCuentasPorCobrarUseCase
     ) {
         this.ventaService = ventaService;
         this.procesarFullMovimientoStockUseCase = procesarFullMovimientoStockUseCase;
@@ -49,6 +56,7 @@ public class RegistroVentaUseCase {
         this.detalleTipoMovimientoUseCase = detalleTipoMovimientoUseCase;
         this.registroPagoUseCase = registroPagoUseCase;
         this.procesarRegistroComprobanteUseCase = procesarRegistroComprobanteUseCase;
+        this.registroCuentasPorCobrarUseCase = registroCuentasPorCobrarUseCase;
     }
 
     @Transactional("sqlServerTransactionManager")
@@ -72,6 +80,9 @@ public class RegistroVentaUseCase {
                 throw new IllegalArgumentException("El tipo de movimiento solicitado no existe.");
             }
             //validar que sea egreso el movimiento
+            if (detalleBDTiMov.getTipoMovimiento().getEsEntrada()!=0) {
+                throw new IllegalArgumentException("No se puede registrar una venta con un movimiento de salida.");
+            }
 
             // get articulos
             if (request.getDetalles() == null || request.getDetalles().isEmpty()) {
@@ -123,16 +134,52 @@ public class RegistroVentaUseCase {
                     throw new IllegalArgumentException("Error de inventario en artículo ID [" + detalle.getIdArticulo() + "]: " + stockResponse.getMessage());
                 }
             }
+            CondicionPago condicion = request.getCondicionPago();
+            if (condicion.equals(CondicionPago.CONTADO)&&request.getDetallesPago().isEmpty()){
+                throw new IllegalArgumentException("Error si la venta es al contado debe aver almenos un detalle de pago");
 
-            //registro pago
-            RequestRegistroPago requestRegistroPago = new RequestRegistroPago();
-            requestRegistroPago.setIdVenta(idVentaGenerado);
-            requestRegistroPago.setIdCaja(detalleBDturnoCaja.getTurnoCaja().getIdCaja());
-            requestRegistroPago.setPagos(request.getDetallesPago());
-            ResponseRegistroPago responseRegistroPago = registroPagoUseCase.registrarPago(requestRegistroPago);
-            if (!responseRegistroPago.isExito()) {
-                throw new IllegalArgumentException("Error al registrar el pago");
             }
+            // total abonado sea venta contado o venta credito
+            double totalAbonado = 0.0;
+            if (request.getDetallesPago() != null) {
+                for (var pago : request.getDetallesPago()) {
+                    totalAbonado += pago.getMonto();
+                }
+            }
+
+            // registrar pago si es al contado o abono de deuda
+            if (totalAbonado > 0) {
+                RequestRegistroPago requestRegistroPago = new RequestRegistroPago();
+                requestRegistroPago.setIdVenta(idVentaGenerado);
+                requestRegistroPago.setIdCaja(detalleBDturnoCaja.getTurnoCaja().getIdCaja());
+                requestRegistroPago.setPagos(request.getDetallesPago());
+
+                ResponseRegistroPago responseRegistroPago = registroPagoUseCase.registrarPago(requestRegistroPago);
+                if (!responseRegistroPago.isExito()) {
+                    throw new IllegalArgumentException("Error al registrar el pago en caja: " + responseRegistroPago.getMessage());
+                }
+            }
+
+            // regitrar deudad
+
+
+            if (condicion.equals(CondicionPago.CREDITO)) {
+                double saldoPendiente = sumaTotalVenta - totalAbonado;
+
+                if (saldoPendiente > 0) {
+
+                    RequestRegistroCuentasPorCobrar requestDeuda = new RequestRegistroCuentasPorCobrar();
+                    requestDeuda.setIdVenta(idVentaGenerado);
+                    requestDeuda.setFechaVencimiento(LocalDateTime.now());
+                    requestDeuda.setMontoPendiente(saldoPendiente);
+
+                    ResponseRegistroCuentasPorCobrar responseDeuda = registroCuentasPorCobrarUseCase.RegistroCuentasPorCobrar(requestDeuda);
+                    if (!responseDeuda.isExito()) {
+                        throw new IllegalArgumentException("Error al generar la cuenta por cobrar: " + responseDeuda.getMessage());
+                    }
+                }
+            }
+
             //generar la boleta o factura
             //traer el tipoDocumento
             RequestProcesarRegistroComprobante requestRegistroComprobante= new RequestProcesarRegistroComprobante();

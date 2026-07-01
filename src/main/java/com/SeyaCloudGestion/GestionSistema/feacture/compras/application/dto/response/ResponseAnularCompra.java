@@ -2,6 +2,6 @@ package com.SeyaCloudGestion.GestionSistema.feacture.compras.application.dto.res
 
 import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
 
-public class ResponseEditarEstadoCompra extends ResponseGeneral {
+public class ResponseAnularCompra extends ResponseGeneral {
 
 }

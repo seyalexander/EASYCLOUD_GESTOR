@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.compras.application.dto.requ
 import com.SeyaCloudGestion.GestionSistema.feacture.compras.application.dto.response.ResponseRegistroCompra;
 
 public interface ICompraRegistro {
-    ResponseRegistroCompra RegistroCompra(RequestRegistroCompra request);
+    ResponseRegistroCompra RegistroCompra(RequestRegistroCompra request,double subTotal, double igv, double total);
 }

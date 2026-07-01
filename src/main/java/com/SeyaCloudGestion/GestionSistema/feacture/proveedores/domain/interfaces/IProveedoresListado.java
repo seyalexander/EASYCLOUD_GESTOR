@@ -1,8 +1,8 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.proveedores.domain.interfaces;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.request.RequestListaProveedores;
-import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.response.ResponseListaProveedores;
+import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.request.RequestListaProveedor;
+import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.response.ResponseListaProveedor;
 
 public interface IProveedoresListado {
-    ResponseListaProveedores listaProveedores(RequestListaProveedores request);
+    ResponseListaProveedor listaProveedores(RequestListaProveedor request);
 }

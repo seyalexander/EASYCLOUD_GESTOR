@@ -59,9 +59,9 @@ public class RegistroDetalleVentaUseCase {
             if (stockKardex > 0) {
                 costoUnitario = responseKardex.getKardex().getSaldoCosto() / stockKardex;
             } else {
-
                 costoUnitario = detalleBDArt.getArticulos().getCostoCompra();
             }
+
             ResponseRegistroDetalleVenta response = detalleVentaService.registrarDetalleVenta(request,total,costoUnitario);
             if (response.isExito()) {
                 response.setTotal(total);

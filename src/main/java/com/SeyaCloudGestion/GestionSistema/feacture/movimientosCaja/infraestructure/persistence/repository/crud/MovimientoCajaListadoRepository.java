@@ -43,7 +43,7 @@ public class MovimientoCajaListadoRepository implements IMovimientoCajaListado {
                 while (rs.next()) {
                     MovimientoCajaModel item = new MovimientoCajaModel();
                 item.setIdMovimientoCaja(rs.getLong("idMovimientoCaja"));
-                item.setIdAperturaCaja(rs.getLong("idAperturaCaja"));
+                item.setIdTurnoCaja(rs.getLong("idAperturaCaja"));
                 item.setMovimiento(Movimiento.valueOf(rs.getString("movimiento")));
                 item.setConcepto(rs.getString("concepto"));
                 item.setMonto(rs.getDouble("monto"));

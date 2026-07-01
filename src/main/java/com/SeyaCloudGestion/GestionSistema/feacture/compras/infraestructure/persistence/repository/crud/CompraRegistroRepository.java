@@ -24,15 +24,28 @@ public class CompraRegistroRepository implements ICompraRegistro {
     private DataSource con;
 
     @Override
-    public ResponseRegistroCompra RegistroCompra(RequestRegistroCompra request) {
+    public ResponseRegistroCompra RegistroCompra(RequestRegistroCompra request,double subTotal, double igv, double total) {
         ResponseRegistroCompra rpt = new ResponseRegistroCompra();
-        String SQL = "{ call COMPRAS.sp_RegistroCompra(?) }";
+        String SQL = "{ call COMPRAS.sp_RegistroCompra(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(1, request.getIdProveedor());
+            Long sucursalId = 1L;
+            pstmt.setLong(2, sucursalId);
+            pstmt.setLong(3, request.getIdAlmacen());
+            pstmt.setLong(4, request.getIdTipoComprobante());
+            pstmt.setString(5, request.getSerieComprobante());
+            pstmt.setString(6, request.getNumeroComprobante());
+
+            pstmt.setDouble(7, subTotal);
+            pstmt.setDouble(8, igv);
+            pstmt.setDouble(9, total);
+            Long empresaId = 1L;
+            Long usuarioId = 1L;
+            pstmt.setLong(10, empresaId);
+            pstmt.setLong(11, usuarioId);
 
             int rowsAffected = pstmt.executeUpdate();
 

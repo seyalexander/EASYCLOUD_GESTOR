@@ -59,13 +59,18 @@ public class RegistroPagoUseCase {
                     throw new IllegalArgumentException("Se detectaron métodos de pago duplicados Los montos deben venir agrupados por tipo de pago.");
                 }
             }
-            //si es al contado tendra que pagar todo (targeta and efectivo o ambos)
-            if (!responsBDVenta.getVenta().getCondicionPago().equals(CondicionPago.CONTADO)) {
-                throw new IllegalArgumentException("Esta venta es a CRÉDITO. Los pagos de deudas deben registrarse a través del módulo de cobranzas.");
-            }
-            //verificar el monto a pagar
-            if (totalAbonado != responsBDVenta.getVenta().getTotal()) {
-                throw new IllegalArgumentException("El monto total ingresado no coincide exactamente con el total de la venta .");
+            //si es al contado tendra que pagar todo (targeta and efectivo o ambos) adelanto credito
+            CondicionPago condicion = responsBDVenta.getVenta().getCondicionPago();
+            double totalVenta = responsBDVenta.getVenta().getTotal();
+
+            if (condicion.equals(CondicionPago.CONTADO)) {
+                if (totalAbonado != totalVenta) {
+                    throw new IllegalArgumentException("Venta al CONTADO: El monto ingresado (" + totalAbonado + ") debe coincidir exactamente con el total de la venta (" + totalVenta + ").");
+                }
+            } else if (condicion.equals(CondicionPago.CREDITO)) {
+                if (totalAbonado > totalVenta) {
+                    throw new IllegalArgumentException("Venta a CRÉDITO: El pago inicial o abono (" + totalAbonado + ") no puede ser mayor al total de la venta (" + totalVenta + ").");
+                }
             }
 
             for (RequestRegistroDetallePago item : request.getPagos()) {

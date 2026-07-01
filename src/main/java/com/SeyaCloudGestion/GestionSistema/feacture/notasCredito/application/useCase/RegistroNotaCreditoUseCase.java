@@ -20,11 +20,11 @@ public class RegistroNotaCreditoUseCase {
         try {
             //get id venta
             ResponseDetalleVenta responseBDventa =detalleVentaUseCase.DetalleVenta(request.getIdVenta());
-            if (!responseBDventa.isExito() || responseBDventa.getDetalles() == null) {
+            if (!responseBDventa.isExito() || responseBDventa.getVenta() == null) {
                 throw new IllegalArgumentException("La venta no existe.");
             }
             //el monto a devolver no supera el total pagado
-            double montoTotalVenta = responseBDventa.getDetalles().getTotal();
+            double montoTotalVenta = responseBDventa.getVenta().getTotal();
             if (request.getMontoADevolver()> montoTotalVenta) {
                 throw new IllegalArgumentException("No se puede devolver mas del monto de la venta ");
             }

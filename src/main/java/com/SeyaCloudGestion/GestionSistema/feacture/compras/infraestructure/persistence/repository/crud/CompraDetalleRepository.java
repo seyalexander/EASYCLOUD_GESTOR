@@ -28,32 +28,39 @@ public class CompraDetalleRepository implements ICompraDetalle {
     @Override
     public ResponseDetalleCompra DetalleCompra(RequestDetalleCompra request) {
         ResponseDetalleCompra response = new ResponseDetalleCompra();
-        String SQL = "{ call COMPRAS.sp_ObtenerCompraPorId() }";
+        String SQL = "{ call COMPRAS.sp_ObtenerCompraPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetro id definido en el request.
+            pstmt.setLong(1, request.getIdCompra());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(3, sucursalId);
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            ResultSet rs = pstmt.executeQuery();
                 if (rs.next()) {
                     CompraModel item = new CompraModel();
                     item.setIdCompra(rs.getLong("idCompra"));
                     item.setIdProveedor(rs.getLong("idProveedor"));
                     item.setIdSucursal(rs.getLong("idSucursal"));
+                    item.setIdAlmacen(rs.getLong("idAlmacen"));
+                    item.setIdTipoComprobante(rs.getLong("idTipoComprobante"));
+                    item.setSerie(rs.getString("serieComprobante"));
+                    item.setNumero(rs.getString("numeroComprobante"));
                     item.setFechaCompra(rs.getString("fechaCompra"));
                     item.setSubTotal(rs.getDouble("subTotal"));
                     item.setImpuesto(rs.getDouble("impuesto"));
                     item.setTotal(rs.getDouble("total"));
                     item.setEstado(rs.getInt("estado"));
-                    item.setFechaIngreso(rs.getString("fechaIngreso"));
+
                     response.setExito(true);
                     response.setMessage("Compra obtenido correctamente.");
                     response.setCompra(item);
                 } else {
                     response.setExito(false);
                     response.setMessage("No se encontró Compra.");
-                }
             }
         } catch (SQLException e) {
             response.setExito(false);

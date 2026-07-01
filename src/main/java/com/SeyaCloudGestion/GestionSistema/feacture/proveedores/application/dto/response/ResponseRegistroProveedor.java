@@ -2,6 +2,6 @@ package com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto
 
 import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
 
-public class ResponseEditarEstadoProveedores extends ResponseGeneral {
+public class ResponseRegistroProveedor extends ResponseGeneral {
 
 }
