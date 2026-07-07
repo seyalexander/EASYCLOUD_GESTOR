@@ -10,9 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Slf4j
 @Repository
@@ -32,29 +30,31 @@ public class CompraRegistroRepository implements ICompraRegistro {
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setLong(1, request.getIdProveedor());
-            Long sucursalId = 1L;
-            pstmt.setLong(2, sucursalId);
-            pstmt.setLong(3, request.getIdAlmacen());
-            pstmt.setLong(4, request.getIdTipoComprobante());
-            pstmt.setString(5, request.getSerieComprobante());
-            pstmt.setString(6, request.getNumeroComprobante());
+            pstmt.setLong(2, request.getIdAlmacen());
+            pstmt.setLong(3, request.getIdTipoComprobante());
+            pstmt.setString(4, request.getSerieComprobante());
+            pstmt.setString(5, request.getNumeroComprobante());
 
-            pstmt.setDouble(7, subTotal);
-            pstmt.setDouble(8, igv);
-            pstmt.setDouble(9, total);
+            pstmt.setDouble(6, subTotal);
+            pstmt.setDouble(7, igv);
+            pstmt.setDouble(8, total);
             Long empresaId = 1L;
             Long usuarioId = 1L;
-            pstmt.setLong(10, empresaId);
+            pstmt.setLong(9, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(10, sucursalId);
             pstmt.setLong(11, usuarioId);
 
-            int rowsAffected = pstmt.executeUpdate();
+            try (ResultSet rs = pstmt.executeQuery()) {
 
-            if (rowsAffected > 0) {
-                rpt.setExito(true);
-                rpt.setMessage("Compra insertado correctamente.");
-            } else {
-                rpt.setExito(false);
-                rpt.setMessage("No se insertó Compra.");
+                if (rs.next()) {
+                    rpt.setIdCompra(rs.getLong("idCompra"));
+                    rpt.setExito(true);
+                    rpt.setMessage("Compra registrada correctamente.");
+                } else {
+                    rpt.setExito(false);
+                    rpt.setMessage("No se pudo obtener el ID de la compra.");
+                }
             }
         } catch (SQLException e) {
             rpt.setExito(false);

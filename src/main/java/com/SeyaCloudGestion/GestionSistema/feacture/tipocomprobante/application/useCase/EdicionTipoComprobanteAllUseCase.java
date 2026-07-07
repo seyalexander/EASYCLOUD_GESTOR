@@ -1,5 +1,4 @@
-package com.SeyaCloudGestion.GestionSistema.feacture.tipocomprobante.application.useCase;// Generado a partir de la arquitectura de subFamilia.
-import com.SeyaCloudGestion.GestionSistema.feacture.tipocomprobante.application.dto.request.RequestDetalleTipoComprobante;
+package com.SeyaCloudGestion.GestionSistema.feacture.tipocomprobante.application.useCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipocomprobante.application.dto.request.RequestEditarAllTipoComprobante;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipocomprobante.application.dto.response.ResponseDetalleTipoComprobante;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipocomprobante.application.dto.response.ResponseEditarAllTipoComprobante;
@@ -12,28 +11,31 @@ public class EdicionTipoComprobanteAllUseCase {
 
     private final TipoComprobanteService tipoComprobanteService;
     private final VerificarCambiosTipoComprobante verificarCambiosTipoComprobante;
-
+    private final DetalleTipoComprobanteUseCase detalleTipoComprobanteUseCase;
     public EdicionTipoComprobanteAllUseCase(
             TipoComprobanteService tipoComprobanteService,
-            VerificarCambiosTipoComprobante verificarCambiosTipoComprobante
+            VerificarCambiosTipoComprobante verificarCambiosTipoComprobante, DetalleTipoComprobanteUseCase detalleTipoComprobanteUseCase
     ){
         this.tipoComprobanteService = tipoComprobanteService;
         this.verificarCambiosTipoComprobante = verificarCambiosTipoComprobante;
+        this.detalleTipoComprobanteUseCase = detalleTipoComprobanteUseCase;
     }
 
     public ResponseEditarAllTipoComprobante EdicionAllTipoComprobante(RequestEditarAllTipoComprobante request) {
         try {
 
-            RequestDetalleTipoComprobante requestDetalle = new RequestDetalleTipoComprobante();
-            requestDetalle.setIdTipoComprobante(request.getIdTipoComprobante());
+            // get id
+            ResponseDetalleTipoComprobante detalleBDTipoComprobante= detalleTipoComprobanteUseCase.DetalleTipoComprobante(request.getIdTipoComprobante());
 
-            ResponseDetalleTipoComprobante detalleBD = tipoComprobanteService.DetalleTipoComprobante(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getTipoCompobante() == null) {
+            if (!detalleBDTipoComprobante.isExito() || detalleBDTipoComprobante.getTipoCompobante() == null) {
                 throw new IllegalArgumentException("El tipo de comprobante no existe.");
             }
 
-            if (!verificarCambiosTipoComprobante.verificarCambios(detalleBD.getTipoCompobante(), request)) {
+            if (!verificarCambiosTipoComprobante.verificarCambios(detalleBDTipoComprobante.getTipoCompobante(), request)) {
+                throw new IllegalArgumentException("No se detectaron cambios para actualizar.");
+            }
+            // verificar cambios
+            if (!verificarCambiosTipoComprobante.verificarCambios(detalleBDTipoComprobante.getTipoCompobante(), request)) {
                 throw new IllegalArgumentException("No se detectaron cambios para actualizar.");
             }
 

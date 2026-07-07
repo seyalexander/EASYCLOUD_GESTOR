@@ -1,7 +1,5 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.response.ResponseDetalleFamilia;
-import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.dto.request.RequestDetalleListaPrecios;
 import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.dto.request.RequestEditarAllListaPrecios;
 import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.dto.response.ResponseDetalleListaPrecios;
 import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.dto.response.ResponseEditarAllListaPrecios;
@@ -13,23 +11,23 @@ import org.springframework.stereotype.Component;
 public class EdicionAllListaPreciosUseCase {
     private final ListaPreciosService listaPreciosService;
     private final VerificarCambiosListaPrecios  verificarCambiosListaPrecios;
+    private final DetalleListaPreciosUseCase detalleListaPreciosUseCase;
 
-    public EdicionAllListaPreciosUseCase(ListaPreciosService listaPreciosService, VerificarCambiosListaPrecios verificarCambiosListaPrecios) {
+    public EdicionAllListaPreciosUseCase(ListaPreciosService listaPreciosService, VerificarCambiosListaPrecios verificarCambiosListaPrecios, DetalleListaPreciosUseCase detalleListaPreciosUseCase) {
         this.listaPreciosService = listaPreciosService;
         this.verificarCambiosListaPrecios = verificarCambiosListaPrecios;
+        this.detalleListaPreciosUseCase = detalleListaPreciosUseCase;
     }
     public ResponseEditarAllListaPrecios EditarAllListaPrecios(RequestEditarAllListaPrecios request) {
         try {
-            RequestDetalleListaPrecios requestDetalle = new RequestDetalleListaPrecios();
-            requestDetalle.setIdListaPrecios(request.getIdListaPrecios());
+            //listaprecio
+            ResponseDetalleListaPrecios detalleBDPrecio= detalleListaPreciosUseCase.DetalleListaPrecios(request.getIdListaPrecios());
 
-            ResponseDetalleListaPrecios detalleBD= listaPreciosService.DetalleListaPrecios(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getListaPrecios() == null) {
+            if (!detalleBDPrecio.isExito() || detalleBDPrecio.getListaPrecios() == null) {
                 throw new IllegalArgumentException("La lista precios no existe.");
             }
 
-            if (!verificarCambiosListaPrecios.verificarCambios(detalleBD.getListaPrecios(), request)) {
+            if (!verificarCambiosListaPrecios.verificarCambios(detalleBDPrecio.getListaPrecios(), request)) {
                 throw new IllegalArgumentException("No se detectaron cambios para actualizar.");
             }
             ResponseEditarAllListaPrecios response = listaPreciosService.EditarAllListaPrecios(request);

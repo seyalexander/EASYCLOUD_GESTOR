@@ -15,6 +15,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.re
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.useCase.DetalleTurnoCajaUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.persistence.model.EstadoCaja;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -82,18 +83,17 @@ public class RegistroPagoClienteUseCase {
                 if (!responseDetalle.isExito()) {
                     throw new RuntimeException("Error en el componente de detalle: " + responseDetalle.getMessage());
                 }
-
-            }
-
-            RequestRegistroMovimientoCaja movCaja = new RequestRegistroMovimientoCaja();
-            movCaja.setIdTurnoCaja(idTurnoCaja);
-            movCaja.setMonto(totalAbonado);
-            movCaja.setMovimiento(Movimiento.INGRESO);
-            movCaja.setConcepto("Abono a cuenta ");
-
-            ResponseRegistroMovimientoCaja responseMov = registroMovimientoCajaUseCase.registroMovimientoCaja(movCaja);
-            if (!responseMov.isExito()) {
-                throw new RuntimeException("No se pudo registrar el ingreso en la caja: " + responseMov.getMessage());
+                // 2. AQUI MISMO: Registrar el movimiento en caja para ESTE método de pago en específico
+                RequestRegistroMovimientoCaja movCaja = new RequestRegistroMovimientoCaja();
+                movCaja.setIdTurnoCaja(idTurnoCaja);
+                movCaja.setMonto(item.getMontoPagado());
+                movCaja.setMovimiento(Movimiento.INGRESO);
+                movCaja.setIdTipoPago(item.getIdTipoPago());
+                movCaja.setConcepto("Abono a cuenta por cobrar Nro: " + request.getIdCuentaPorCobrar());
+                ResponseRegistroMovimientoCaja responseMov = registroMovimientoCajaUseCase.registroMovimientoCaja(movCaja);
+                if (!responseMov.isExito()) {
+                    throw new RuntimeException("No se pudo registrar el ingreso en la caja: " + responseMov.getMessage());
+                }
             }
 
             ResponseRegistroPagoCliente response = new ResponseRegistroPagoCliente();
@@ -106,11 +106,13 @@ public class RegistroPagoClienteUseCase {
             return response;
 
         } catch (IllegalArgumentException | SecurityException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             ResponseRegistroPagoCliente response = new ResponseRegistroPagoCliente();
             response.setExito(false);
             response.setMessage(e.getMessage());
             return response;
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             String mensajeError = "Error inesperado al registrar el pago: " + e.getMessage();
             System.err.println("[ERROR] " + mensajeError);
             ResponseRegistroPagoCliente response = new ResponseRegistroPagoCliente();

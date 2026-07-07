@@ -26,13 +26,15 @@ public class RegistroDetalleCompraUseCase {
         this.detalleKardexUseCase = detalleKardexUseCase;
     }
 
-    public ResponseRegistroDetalleCompra registrarDetalleCompra(RequestRegistroDetalleCompra request,long idAlmacen) {
+    public ResponseRegistroDetalleCompra registrarDetalleCompra(long idCompra,RequestRegistroDetalleCompra request,long idAlmacen) {
         try {
             //get kardex
+            /*
             ResponseDetalleKardex responseKardex =detalleKardexUseCase.detalleKardex(request.getIdArticulo(),idAlmacen);
             if (!responseKardex.isExito() || responseKardex.getKardex() == null) {
                 throw new IllegalArgumentException("El kardex no existe.");
             }
+             */
             //get articulo
             ResponseDetalleArticulo detalleBDArt = detalleArticuloUseCase.DetalleArticulo(request.getIdArticulo());
             if (!detalleBDArt.isExito() || detalleBDArt.getArticulos() == null) {
@@ -46,7 +48,7 @@ public class RegistroDetalleCompraUseCase {
             //total
             double total = request.getCantidad()*request.getCostoUnitario();
 
-            ResponseRegistroDetalleCompra response = detalleVentaService.registrarDetalleCompra(request, total);
+            ResponseRegistroDetalleCompra response = detalleVentaService.registrarDetalleCompra(idCompra,request, total);
             if (response.isExito()) {
                 response.setTotal(total);
             }

@@ -19,6 +19,8 @@ import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.pe
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.response.ResponseDetalleVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.useCase.DetalleVentaUseCase;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Component
 public class ProcesarRegistroComprobanteUseCase {
@@ -38,7 +40,7 @@ public class ProcesarRegistroComprobanteUseCase {
         this.listaSerieCajaUseCase = listaSerieCajaUseCase;
         this.detalleTurnoCajaUseCase = detalleTurnoCajaUseCase;
     }
-
+    @Transactional("sqlServerTransactionManager")
     public ResponseProcesarRegistroComprobante procesarRegistro(RequestProcesarRegistroComprobante request) {
         ResponseProcesarRegistroComprobante response = new ResponseProcesarRegistroComprobante();
         try {
@@ -122,9 +124,11 @@ public class ProcesarRegistroComprobanteUseCase {
             response.setMessage("El comprobante fue procesado y registrado correctamente.");
 
         } catch (IllegalArgumentException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             response.setExito(false);
             response.setMessage(e.getMessage());
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             response.setExito(false);
             response.setMessage("Error inesperado al procesar el comprobante: " + e.getMessage());
         }

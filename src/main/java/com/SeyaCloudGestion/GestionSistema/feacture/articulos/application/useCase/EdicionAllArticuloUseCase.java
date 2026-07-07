@@ -12,23 +12,23 @@ import org.springframework.stereotype.Component;
 public class EdicionAllArticuloUseCase {
     private final ArticulosService articulosService;
     private final VerificacionesArticulo verificarCambiosArticulo;
+    private final DetalleArticuloUseCase detalleArticuloUseCase;
 
-    public EdicionAllArticuloUseCase(ArticulosService articulosService, VerificacionesArticulo verificarCambiosArticulo) {
+    public EdicionAllArticuloUseCase(ArticulosService articulosService, VerificacionesArticulo verificarCambiosArticulo, DetalleArticuloUseCase detalleArticuloUseCase) {
         this.articulosService = articulosService;
         this.verificarCambiosArticulo = verificarCambiosArticulo;
+        this.detalleArticuloUseCase = detalleArticuloUseCase;
     }
     public ResponseEditarAllArticulo EdicionAllArticulo(RequestEditarAllArticulo request) {
         try {
-            RequestDetalleArticulo requestDetalle = new RequestDetalleArticulo();
-            requestDetalle.setIdArticulo(request.getIdArticulos());
+            //articulo
+            ResponseDetalleArticulo detalleBDArticulo= detalleArticuloUseCase.DetalleArticulo(request.getIdArticulos());
 
-            ResponseDetalleArticulo detalleBD= articulosService.DetalleArticulos(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getArticulos() == null) {
+            if (!detalleBDArticulo.isExito() || detalleBDArticulo.getArticulos() == null) {
                 throw new IllegalArgumentException("El articulo no existe.");
             }
 
-            if (!verificarCambiosArticulo.verificarCambios(detalleBD.getArticulos(), request)) {
+            if (!verificarCambiosArticulo.verificarCambios(detalleBDArticulo.getArticulos(), request)) {
                 throw new IllegalArgumentException("No se detectaron cambios para actualizar.");
             }
 

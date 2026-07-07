@@ -13,28 +13,27 @@ import org.springframework.stereotype.Component;
 public class EdicionAllCodigoBarraUseCase {
     private  final CodigoBarraService codigoBarraService;
     private final VerificarCambiosCodigoBarra verificarCambiosCodigoBarra;
-    public EdicionAllCodigoBarraUseCase(CodigoBarraService codigoBarraService, VerificarCambiosCodigoBarra verificarCambiosCodigoBarra) {
+    private final DetalleCodigoBarraUseCase detalleCodigoBarraUseCase;
+    public EdicionAllCodigoBarraUseCase(CodigoBarraService codigoBarraService, VerificarCambiosCodigoBarra verificarCambiosCodigoBarra, DetalleCodigoBarraUseCase detalleCodigoBarraUseCase) {
         this.codigoBarraService = codigoBarraService;
         this.verificarCambiosCodigoBarra = verificarCambiosCodigoBarra;
+        this.detalleCodigoBarraUseCase = detalleCodigoBarraUseCase;
     }
     public ResponseEditarAllCodigoBarra EdicionAllCodigoBarra(RequestEditarAllCodigoBarra request) {
         try {
             //verificar el id
-            RequestDetalleCodigoBarra requestDetalle = new RequestDetalleCodigoBarra();
-            requestDetalle.setIdCodigoBarra(request.getIdCodigoBarra());
+            ResponseDetalleCodigoBarra detalleBDCodigoBarra= detalleCodigoBarraUseCase.DetalleCodigoBarra(request.getIdCodigoBarra());
 
-            ResponseDetalleCodigoBarra detalleBD= codigoBarraService.DetalleCodigoBarra(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getCodigoBarra() == null) {
+            if (!detalleBDCodigoBarra.isExito() || detalleBDCodigoBarra.getCodigoBarra() == null) {
                 throw new ResourceNotFoundException("El Id no existe.");
             }
             //validar edicion
-            if (!verificarCambiosCodigoBarra.verificarCambios(detalleBD.getCodigoBarra(),request)) {
+            if (!verificarCambiosCodigoBarra.verificarCambios(detalleBDCodigoBarra.getCodigoBarra(),request)) {
                 throw new ResourceNotFoundException("No se detectaron cambios para actualizar.");
             }
 
             //obtenemos el id del articulo
-            long idArticulo = detalleBD.getCodigoBarra().getIdArticulo();
+            long idArticulo = detalleBDCodigoBarra.getCodigoBarra().getIdArticulo();
 
 
             ResponseEditarAllCodigoBarra response = codigoBarraService.EditarAllCodigoBarra(request,idArticulo);

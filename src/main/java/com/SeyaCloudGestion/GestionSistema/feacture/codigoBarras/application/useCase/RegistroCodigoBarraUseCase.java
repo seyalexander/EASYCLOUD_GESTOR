@@ -1,8 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.request.RequestDetalleArticulo;
 import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseDetalleArticulo;
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.domain.services.ArticulosService;
+import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.useCase.DetalleArticuloUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.dto.request.RequestRegistroCodigoBarra;
 import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.application.dto.response.ResponseRegistroCodigoBarra;
 import com.SeyaCloudGestion.GestionSistema.feacture.codigoBarras.domain.services.CodigoBarraService;
@@ -12,19 +11,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegistroCodigoBarraUseCase {
     private  final CodigoBarraService codigoBarraService;
-    private final ArticulosService articulosService;
+    private final DetalleArticuloUseCase detalleArticuloUseCase;
 
-    public RegistroCodigoBarraUseCase(CodigoBarraService codigoBarraService, ArticulosService articulosService) {
+    public RegistroCodigoBarraUseCase(CodigoBarraService codigoBarraService, DetalleArticuloUseCase detalleArticuloUseCase) {
         this.codigoBarraService = codigoBarraService;
-        this.articulosService = articulosService;
+        this.detalleArticuloUseCase = detalleArticuloUseCase;
     }
     public ResponseRegistroCodigoBarra RegistroCodigoBarra(RequestRegistroCodigoBarra request) {
         try {
-            RequestDetalleArticulo requestArt = new RequestDetalleArticulo();
-            requestArt.setIdArticulo(request.getIdArticulo());
-            ResponseDetalleArticulo detalleBDArt = articulosService.DetalleArticulos(requestArt);
+            //articulo
+            ResponseDetalleArticulo detalleBDArticulo= detalleArticuloUseCase.DetalleArticulo(request.getIdArticulo());
 
-            CodigoBarraValidator.validarDependenciasParaRegistro(detalleBDArt);
+            if (!detalleBDArticulo.isExito() || detalleBDArticulo.getArticulos() == null) {
+                throw new IllegalArgumentException("El articulo no existe.");
+            }
+
+            CodigoBarraValidator.validarDependenciasParaRegistro(detalleBDArticulo);
 
             ResponseRegistroCodigoBarra response = codigoBarraService.RegistroCodigoBarra(request);
 

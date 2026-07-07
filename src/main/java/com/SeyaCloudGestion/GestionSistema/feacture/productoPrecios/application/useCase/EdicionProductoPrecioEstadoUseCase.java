@@ -1,9 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.useCase;
 
 import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.request.RequestDetalleArticulo;
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseDetalleArticulo;
-import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.request.RequestDetalleProductoPrecio;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.request.RequestEditarEstadoProductoPrecio;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.response.ResponseDetalleProductoPrecio;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.response.ResponseEditarEstadoProductoPrecio;
@@ -14,23 +11,22 @@ import java.util.Objects;
 
 @Component
 public class EdicionProductoPrecioEstadoUseCase {
-    private  final ProductoPrecioService productoPrecioService;
-
-    public EdicionProductoPrecioEstadoUseCase(ProductoPrecioService productoPrecioService) {
+    private final ProductoPrecioService productoPrecioService;
+    private final DetalleProductoPrecioUseCase detalleProductoPrecioUseCase;
+    public EdicionProductoPrecioEstadoUseCase(ProductoPrecioService productoPrecioService, DetalleProductoPrecioUseCase detalleProductoPrecioUseCase) {
         this.productoPrecioService = productoPrecioService;
+        this.detalleProductoPrecioUseCase = detalleProductoPrecioUseCase;
     }
     public ResponseEditarEstadoProductoPrecio AnularProductoPrecio(long idProductoPrecio) {
         try {
-            RequestDetalleProductoPrecio requestDetalle = new RequestDetalleProductoPrecio();
-            requestDetalle.setIdProductoPrecio(idProductoPrecio);
+            //productoPrecio
+            ResponseDetalleProductoPrecio detalleBDProductoPrecio= detalleProductoPrecioUseCase.DetalleProductoPrecio(idProductoPrecio);
 
-            ResponseDetalleProductoPrecio detalleBD= productoPrecioService.DetalleProductoPrecio(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getProductoPrecio() == null) {
+            if (!detalleBDProductoPrecio.isExito() || detalleBDProductoPrecio.getProductoPrecio() == null) {
                 throw new ResourceNotFoundException("El Id no existe.");
             }
 
-            if (Objects.equals(detalleBD.getProductoPrecio().getEstado(), 0)) {
+            if (Objects.equals(detalleBDProductoPrecio.getProductoPrecio().getEstado(), 0)) {
                 throw new IllegalArgumentException("Elarticulo ya se encuentra anulado.");
             }
 
@@ -61,16 +57,14 @@ public class EdicionProductoPrecioEstadoUseCase {
 
     public ResponseEditarEstadoProductoPrecio ActivarProductoPrecio(long idProductoPrecio) {
         try {
-            RequestDetalleProductoPrecio requestDetalle = new RequestDetalleProductoPrecio();
-            requestDetalle.setIdProductoPrecio(idProductoPrecio);
+            //productoPrecio
+            ResponseDetalleProductoPrecio detalleBDProductoPrecio= detalleProductoPrecioUseCase.DetalleProductoPrecio(idProductoPrecio);
 
-            ResponseDetalleProductoPrecio detalleBD= productoPrecioService.DetalleProductoPrecio(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getProductoPrecio() == null) {
+            if (!detalleBDProductoPrecio.isExito() || detalleBDProductoPrecio.getProductoPrecio() == null) {
                 throw new ResourceNotFoundException("El Id no existe.");
             }
 
-            if (Objects.equals(detalleBD.getProductoPrecio().getEstado(), 1)) {
+            if (Objects.equals(detalleBDProductoPrecio.getProductoPrecio().getEstado(), 1)) {
                 throw new IllegalArgumentException("Elarticulo ya se encuentra activado.");
             }
 

@@ -4,9 +4,9 @@ import com.SeyaCloudGestion.GestionSistema.feacture.devoluciones.application.dto
 import com.SeyaCloudGestion.GestionSistema.feacture.devoluciones.application.dto.response.ResponseRegistroDevolucion;
 import com.SeyaCloudGestion.GestionSistema.feacture.devoluciones.domain.services.DevolucionService;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.useCase.AnularCuentaPorCobrarUseCase;
-import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.RequestAnularCuentaPorCobrar;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Component
 public class RegistroDevolucionUseCase {
@@ -47,11 +47,13 @@ public class RegistroDevolucionUseCase {
             return response;
 
         } catch (IllegalArgumentException | SecurityException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             ResponseRegistroDevolucion response = new ResponseRegistroDevolucion();
             response.setExito(false);
             response.setMessage(e.getMessage());
             return response;
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             String mensajeError = "Error inesperado al registrar la devolución: " + e.getMessage();
             System.err.println("[ERROR] " + mensajeError);
             ResponseRegistroDevolucion response = new ResponseRegistroDevolucion();

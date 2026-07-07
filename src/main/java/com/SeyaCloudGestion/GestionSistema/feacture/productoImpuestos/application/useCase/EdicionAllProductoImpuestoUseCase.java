@@ -13,23 +13,24 @@ import org.springframework.stereotype.Component;
 public class EdicionAllProductoImpuestoUseCase {
     private final ProductoImpuestoService productoImpuestoService;
     private final VerificacionesProductoImpuesto verificacionesProductoImpuesto;
+    private final DetalleProductoImpuestoUseCase detalleProductoImpuestoUseCase;
 
-    public EdicionAllProductoImpuestoUseCase(ProductoImpuestoService productoImpuestoService, VerificacionesProductoImpuesto verificacionesProductoImpuesto) {
+    public EdicionAllProductoImpuestoUseCase(ProductoImpuestoService productoImpuestoService, VerificacionesProductoImpuesto verificacionesProductoImpuesto, DetalleProductoImpuestoUseCase detalleProductoImpuestoUseCase) {
         this.productoImpuestoService = productoImpuestoService;
         this.verificacionesProductoImpuesto = verificacionesProductoImpuesto;
+        this.detalleProductoImpuestoUseCase = detalleProductoImpuestoUseCase;
     }
     public ResponseEditarAllProductoImpuesto EditarAllProductoImpuesto(RequestEditarAllProductoImpuesto request) {
         try {
 
-            RequestDetalleProductoImpuesto requestDetalle = new RequestDetalleProductoImpuesto();
-            requestDetalle.setIdProductoImpuesto(request.getIdProductoImpuesto());
+            //productoImpuesto
+            ResponseDetalleProductoImpuesto detalleBDProductoImpuesto= detalleProductoImpuestoUseCase.DetalleProductoImpuesto(request.getIdProductoImpuesto());
 
-            ResponseDetalleProductoImpuesto detalleBD= productoImpuestoService.DetalleProductoImpuesto(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getProductoImpuesto() == null) {
+            if (!detalleBDProductoImpuesto.isExito() || detalleBDProductoImpuesto.getProductoImpuesto() == null) {
                 throw new ResourceNotFoundException("El Id no existe.");
             }
-            if (!verificacionesProductoImpuesto.verificarCambios(detalleBD.getProductoImpuesto(), request)) {
+
+            if (!verificacionesProductoImpuesto.verificarCambios(detalleBDProductoImpuesto.getProductoImpuesto(), request)) {
                 throw new ResourceNotFoundException("No se detectaron cambios para actualizar.");
             }
 

@@ -16,14 +16,8 @@ public class RequestRegistroCuentasPorPagar {
     private double montoPendiente;
 
     @NotNull(message = "La fecha de vencimiento es obligatoria")
+    @FutureOrPresent(message = "La fecha de vencimiento no puede ser menor a hoy")
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime fechaVencimiento;
 
-    @NotBlank(message = "El estado es obligatorio")
-    @Size(max = 20, message = "El estado no debe superar los 20 caracteres")
-    private String estado;
-
-    @NotNull(message = "La fecha de ingreso es obligatoria")
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime fechaIngreso;
 }

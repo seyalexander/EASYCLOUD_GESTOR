@@ -1,8 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.request.RequestDetalleArticulo;
 import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseDetalleArticulo;
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.domain.services.ArticulosService;
+import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.useCase.DetalleArticuloUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.dto.request.RequestRegistroProductoImpuesto;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.dto.response.ResponseRegistroProductoImpuesto;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.domain.services.ProductoImpuestoService;
@@ -12,18 +11,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegistroProductoImpuestoUseCase {
     private final ProductoImpuestoService productoImpuestoService;
-    private final ArticulosService articulosService;
+    private final DetalleArticuloUseCase detalleArticuloUseCase;
 
-    public RegistroProductoImpuestoUseCase(ProductoImpuestoService productoImpuestoService, ArticulosService articulosService) {
+    public RegistroProductoImpuestoUseCase(ProductoImpuestoService productoImpuestoService, DetalleArticuloUseCase detalleArticuloUseCase) {
         this.productoImpuestoService = productoImpuestoService;
-        this.articulosService = articulosService;
+        this.detalleArticuloUseCase = detalleArticuloUseCase;
     }
 
     public ResponseRegistroProductoImpuesto RegistroProductoImpuesto(RequestRegistroProductoImpuesto request) {
         try {
-            RequestDetalleArticulo requestArt = new RequestDetalleArticulo();
-            requestArt.setIdArticulo(request.getIdArticulo());
-            ResponseDetalleArticulo detalleBDArt = articulosService.DetalleArticulos(requestArt);
+            ResponseDetalleArticulo detalleBDArt = detalleArticuloUseCase.DetalleArticulo(request.getIdArticulo());
 
             ValidacionRequest_RegistrarProductoImpuesto.validar(detalleBDArt);
 

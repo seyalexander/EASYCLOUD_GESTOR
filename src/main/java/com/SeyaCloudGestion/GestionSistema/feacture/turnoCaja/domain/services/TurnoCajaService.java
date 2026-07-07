@@ -41,8 +41,8 @@ public class TurnoCajaService implements ITurnoCajaListado, ITurnoCajaAbrir, ITu
 
     @Override
     @CacheEvict(value = {"turnosCaja", "turnoCaja_detalle"}, allEntries = true)
-    public ResponseCerrarTurnoCaja CerrarTurnoCaja(RequestCerrarTurnoCaja request,double montoSistema,double diferencia) {
-        return cerrarTurnoCaja.CerrarTurnoCaja(request,montoSistema,diferencia);
+    public ResponseCerrarTurnoCaja CerrarTurnoCaja(RequestCerrarTurnoCaja request) {
+        return cerrarTurnoCaja.CerrarTurnoCaja(request);
     }
 
     @Override

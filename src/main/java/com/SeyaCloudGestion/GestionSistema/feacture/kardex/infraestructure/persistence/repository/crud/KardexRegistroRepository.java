@@ -31,7 +31,7 @@ public class KardexRegistroRepository implements IKardexRegistro {
 
     ) {
         ResponseRegistroKardex rpt = new ResponseRegistroKardex();
-        String SQL = "{ call INVENTARIO.sp_RegistrarMovimientoKardex(?,?,?,?,?,?,?,?,?,?,?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_RegistrarMovimientoKardex(?,?,?,?,? ,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {

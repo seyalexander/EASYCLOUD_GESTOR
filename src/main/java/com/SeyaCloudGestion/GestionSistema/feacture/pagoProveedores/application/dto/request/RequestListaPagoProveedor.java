@@ -2,14 +2,9 @@ package com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application
 
 import lombok.Data;
 
-import jakarta.validation.constraints.Min;
-
-import jakarta.validation.constraints.Max;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-
 @Data
-public class RequestListaPagoProveedores {
+public class RequestListaPagoProveedor {
+    /*
     @Schema(
             description = "Estado de los pagos a proveedores",
             example = "1",
@@ -18,5 +13,6 @@ public class RequestListaPagoProveedores {
     @Min(value = 0, message = "El estado mínimo permitido es 0")
     @Max(value = 2, message = "El estado máximo permitido es 2")
     private int estado;
+     */
 
 }

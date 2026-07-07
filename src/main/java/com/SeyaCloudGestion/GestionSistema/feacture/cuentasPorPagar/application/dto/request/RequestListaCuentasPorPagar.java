@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorPagar.application.dto.request;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request.FiltroEstadoCuenta;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import jakarta.validation.constraints.Min;
@@ -11,12 +13,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Data
 public class RequestListaCuentasPorPagar {
     @Schema(
-            description = "Estado de las cuentas por pagar",
-            example = "1",
-            allowableValues = {"0: Inactivo", "1: Activo", "2: Todos"}
+            description = "Estado de las cuentas por cobrar a filtrar",
+            example = "PENDIENTE",
+            allowableValues = {"PENDIENTE", "PAGADO", "ANULADO", "TODOS"}
     )
-    @Min(value = 0, message = "El estado mínimo permitido es 0")
-    @Max(value = 2, message = "El estado máximo permitido es 2")
-    private int estado;
+    @NotNull(message = "El filtro de estado es obligatorio")
+    private FiltroEstadoCuenta estado;
 
 }

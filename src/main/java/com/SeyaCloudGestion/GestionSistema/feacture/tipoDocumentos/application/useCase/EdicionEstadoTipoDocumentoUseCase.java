@@ -17,25 +17,25 @@ import java.util.Objects;
 @Component
 public class EdicionEstadoTipoDocumentoUseCase {
     private final TipoDocumentoService tipoDocumentoService;
+    private final DetalleTipoDocumentoUseCase detalleTipoDocumentoUseCase;
 
     public EdicionEstadoTipoDocumentoUseCase(
-            TipoDocumentoService tipoDocumentoService
+            TipoDocumentoService tipoDocumentoService, DetalleTipoDocumentoUseCase detalleTipoDocumentoUseCase
     ){
         this.tipoDocumentoService = tipoDocumentoService;
+        this.detalleTipoDocumentoUseCase = detalleTipoDocumentoUseCase;
     }
 
     public ResponseEditarEstadoTipoDocumento AnularTipoDocumento(long idTipoDocumentos) {
         try {
-            RequestDetalleTipoDocumento requestDetalle = new RequestDetalleTipoDocumento();
-            requestDetalle.setIdTipoDocumentos(idTipoDocumentos);
+            //tipo documento
+            ResponseDetalleTipoDocumento detalleBDTipoDocumento= detalleTipoDocumentoUseCase.DetalleTipoDocumento(idTipoDocumentos);
 
-            ResponseDetalleTipoDocumento detalleBD= tipoDocumentoService.DetalleTipoDocumento(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getTipoDocumento() == null) {
+            if (!detalleBDTipoDocumento.isExito() || detalleBDTipoDocumento.getTipoDocumento() == null) {
                 throw new ResourceNotFoundException("El Id no existe.");
             }
 
-            if (Objects.equals(detalleBD.getTipoDocumento().getEstado(), 0)) {
+            if (Objects.equals(detalleBDTipoDocumento.getTipoDocumento().getEstado(), 0)) {
                 throw new IllegalArgumentException("El tipo documento ya se encuentra anulado.");
             }
 
@@ -81,16 +81,14 @@ public class EdicionEstadoTipoDocumentoUseCase {
 
     public ResponseEditarEstadoTipoDocumento ActivarTipoDocumento(long idTipoDocumentos) {
         try {
-            RequestDetalleTipoDocumento requestDetalle = new RequestDetalleTipoDocumento();
-            requestDetalle.setIdTipoDocumentos(idTipoDocumentos);
+            //tipo documento
+            ResponseDetalleTipoDocumento detalleBDTipoDocumento= detalleTipoDocumentoUseCase.DetalleTipoDocumento(idTipoDocumentos);
 
-            ResponseDetalleTipoDocumento detalleBD= tipoDocumentoService.DetalleTipoDocumento(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getTipoDocumento() == null) {
+            if (!detalleBDTipoDocumento.isExito() || detalleBDTipoDocumento.getTipoDocumento() == null) {
                 throw new ResourceNotFoundException("El Id no existe.");
             }
 
-            if (Objects.equals(detalleBD.getTipoDocumento().getEstado(), 1)) {
+            if (Objects.equals(detalleBDTipoDocumento.getTipoDocumento().getEstado(), 1)) {
                 throw new IllegalArgumentException("El tipo documento ya se encuentra activado.");
             }
 

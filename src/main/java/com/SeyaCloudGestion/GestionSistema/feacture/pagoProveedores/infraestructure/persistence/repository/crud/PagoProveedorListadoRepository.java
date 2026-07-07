@@ -1,9 +1,9 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.request.RequestListaPagoProveedores;
-import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.response.ResponseListaPagoProveedores;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.request.RequestListaPagoProveedor;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.response.ResponseListaPagoProveedor;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.domain.interfaces.IPagoProveedoresListado;
-import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.infraestructure.persistence.model.PagoProveedoresModel;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.infraestructure.persistence.model.PagoProveedorModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,42 +21,50 @@ import java.util.List;
 @Slf4j
 @Repository
 @Transactional("sqlServerTransactionManager")
-public class PagoProveedoresListadoRepository implements IPagoProveedoresListado {
+public class PagoProveedorListadoRepository implements IPagoProveedoresListado {
 
     @Autowired
     @Qualifier("SQLSERVER")
     private DataSource con;
 
     @Override
-    public ResponseListaPagoProveedores listaPagoProveedores(RequestListaPagoProveedores request) {
-        ResponseListaPagoProveedores rpt = new ResponseListaPagoProveedores();
-        List<PagoProveedoresModel> registros = new ArrayList<>();
-        String SQL = "{ call COMPRAS.sp_ListarPagoProveedores(?) }";
+    public ResponseListaPagoProveedor listaPagoProveedor(RequestListaPagoProveedor request) {
+        ResponseListaPagoProveedor rpt = new ResponseListaPagoProveedor();
+        List<PagoProveedorModel> registros = new ArrayList<>();
+        String SQL = "{ call COMPRAS.sp_ListarPagoProveedor(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getEstado());
+            Long empresaId = 1L;
+            pstmt.setLong(1, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(2, sucursalId);
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
-                    PagoProveedoresModel item = new PagoProveedoresModel();
+                    PagoProveedorModel item = new PagoProveedorModel();
                 item.setIdPagoProveedor(rs.getLong("idPagoProveedor"));
                 item.setIdCuentaPorPagar(rs.getLong("idCuentaPorPagar"));
                 item.setFechaPago((rs.getTimestamp("fechaPago") != null ? rs.getTimestamp("fechaPago").toLocalDateTime() : null));
                 item.setMontoPagado(rs.getDouble("montoPagado"));
-                item.setMetodoPago(rs.getString("metodoPago"));
+                item.setIdTipoPago(rs.getLong("idTipoPago"));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
                     registros.add(item);
                 }
-            }
 
             rpt.setExito(true);
-            rpt.setPagoProveedores(registros);
+            rpt.setPagoProveedor(registros);
             rpt.setMessage("Consulta realizada correctamente.");
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en COMPRAS.sp_ListarPagoProveedores", e);
+            log.error("Error en COMPRAS.sp_ListarPagoProveedor", e);
         }
         return rpt;
     }

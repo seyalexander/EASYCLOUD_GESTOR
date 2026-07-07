@@ -26,7 +26,7 @@ public class MovimientoCajaRegistroRepository implements IMovimientoCajaRegistro
     @Override
     public ResponseRegistroMovimientoCaja RegistroMovimientoCaja(RequestRegistroMovimientoCaja request) {
         ResponseRegistroMovimientoCaja rpt = new ResponseRegistroMovimientoCaja();
-        String SQL = "{ call CAJA.sp_RegistrarMovimientoCaja(?,?,?,?,?,?,?) }";
+        String SQL = "{ call CAJA.sp_RegistrarMovimientoCaja(?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -34,15 +34,16 @@ public class MovimientoCajaRegistroRepository implements IMovimientoCajaRegistro
             setParameter(pstmt, 1, request.getIdTurnoCaja());
             String tipoMovimiento = (request.getMovimiento() != null) ? request.getMovimiento().name() : null;
             setParameter(pstmt, 2, tipoMovimiento);
-            setParameter(pstmt, 3, request.getConcepto());
-            setParameter(pstmt, 4, request.getMonto());
+            setParameter(pstmt, 3, request.getIdTipoPago());
+            setParameter(pstmt, 4, request.getConcepto());
+            setParameter(pstmt, 5, request.getMonto());
             Long empresaId = 1L;
             Long sucursalId = 1L;
             Long userId = 1L;
 
-            pstmt.setLong(5, userId);
-            pstmt.setLong(6, empresaId);
-            pstmt.setLong(7, sucursalId);
+            pstmt.setLong(6, userId);
+            pstmt.setLong(7, empresaId);
+            pstmt.setLong(8, sucursalId);
 
             int rowsAffected = pstmt.executeUpdate();
 

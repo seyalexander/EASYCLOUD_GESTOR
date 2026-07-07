@@ -1,6 +1,5 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestDetalleSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestEditarEstadoSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.response.ResponseDetalleSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.response.ResponseEditarEstadoSubFamilia;
@@ -13,19 +12,19 @@ import java.util.Objects;
 public class EdicionSubFamiliaEstadoUseCase {
 
     private final SubFamiliaService subFamiliaService;
+    private final DetalleSubFamiliaUseCase detalleSubFamiliaUseCase;
 
     public EdicionSubFamiliaEstadoUseCase(
-            SubFamiliaService subFamiliaService
+            SubFamiliaService subFamiliaService, DetalleSubFamiliaUseCase detalleSubFamiliaUseCase
     ){
         this.subFamiliaService = subFamiliaService;
+        this.detalleSubFamiliaUseCase = detalleSubFamiliaUseCase;
     }
 
     public ResponseEditarEstadoSubFamilia AnularSubFamilia(long idSubFamilia) {
         try {
-            RequestDetalleSubFamilia requestDetalle = new RequestDetalleSubFamilia();
-            requestDetalle.setIdSubFamilia(idSubFamilia);
-
-            ResponseDetalleSubFamilia detalleBD= subFamiliaService.DetalleSubFamilia(requestDetalle);
+            //sub familia
+            ResponseDetalleSubFamilia detalleBD= detalleSubFamiliaUseCase.DetalleSubFamilia(idSubFamilia);
 
             if (!detalleBD.isExito() || detalleBD.getSubFamilia() == null) {
                 throw new IllegalArgumentException("La subfamilia no existe.");
@@ -61,10 +60,8 @@ public class EdicionSubFamiliaEstadoUseCase {
 
     public ResponseEditarEstadoSubFamilia ActivarSubFamilia(long idSubFamilia) {
         try {
-            RequestDetalleSubFamilia requestDetalle = new RequestDetalleSubFamilia();
-            requestDetalle.setIdSubFamilia(idSubFamilia);
-
-            ResponseDetalleSubFamilia detalleBD= subFamiliaService.DetalleSubFamilia(requestDetalle);
+            //sub familia
+            ResponseDetalleSubFamilia detalleBD= detalleSubFamiliaUseCase.DetalleSubFamilia(idSubFamilia);
 
             if (!detalleBD.isExito() || detalleBD.getSubFamilia() == null) {
                 throw new IllegalArgumentException("La subfamilia no existe.");

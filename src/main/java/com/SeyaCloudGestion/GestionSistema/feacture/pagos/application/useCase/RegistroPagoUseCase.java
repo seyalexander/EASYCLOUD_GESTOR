@@ -16,6 +16,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.useCase.De
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.infraestructure.persistence.model.CondicionPago;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -108,11 +109,13 @@ public class RegistroPagoUseCase {
             return response;
 
         } catch (IllegalArgumentException | SecurityException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             ResponseRegistroPago response = new ResponseRegistroPago();
             response.setExito(false);
             response.setMessage(e.getMessage());
             return response;
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             String mensajeError = "Error inesperado al registrar el pago: " + e.getMessage();
             System.err.println("[ERROR] " + mensajeError);
             ResponseRegistroPago response = new ResponseRegistroPago();

@@ -27,7 +27,7 @@ public class RegistroProveedorUseCase {
                 throw new IllegalArgumentException("El Id del tipo documento no existe.");
             }
             //verificar que el tipo sea ruc
-            if (!"0".equals(detalleTipoDocumentoBD.getTipoDocumento().getCodigoSunat())) {
+            if (!"06".equals(detalleTipoDocumentoBD.getTipoDocumento().getCodigoSunat())) {
                 throw new IllegalArgumentException("El tipo de documento debe ser RUC (Código Sunat 06).");
             }
             //validaciones de longitud y empezar con 20

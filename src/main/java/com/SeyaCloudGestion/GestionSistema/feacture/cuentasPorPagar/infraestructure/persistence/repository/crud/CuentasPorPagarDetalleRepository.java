@@ -1,5 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorPagar.infraestructure.persistence.repository.crud;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.infraestructure.persistence.model.EstadoCuenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorPagar.application.dto.request.RequestDetalleCuentasPorPagar;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorPagar.application.dto.response.ResponseDetalleCuentasPorPagar;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorPagar.domain.interfaces.ICuentasPorPagarDetalle;
@@ -34,6 +35,10 @@ public class CuentasPorPagarDetalleRepository implements ICuentasPorPagarDetalle
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdCuentasPorPagar());
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+            pstmt.setLong(2, empresaId);
+            pstmt.setLong(3, sucursalId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -42,9 +47,15 @@ public class CuentasPorPagarDetalleRepository implements ICuentasPorPagarDetalle
                     item.setIdCompra(rs.getLong("idCompra"));
                     item.setMontoPendiente(rs.getDouble("montoPendiente"));
                     item.setFechaVencimiento((rs.getTimestamp("fechaVencimiento") != null ? rs.getTimestamp("fechaVencimiento").toLocalDateTime() : null));
-                    item.setEstado(rs.getString("estado"));
+                    String estadoBD = rs.getString("estado");
+                    if (estadoBD != null) {
+                        item.setEstado(EstadoCuenta.valueOf(estadoBD.toUpperCase().trim()));
+                    } else {
+                        item.setEstado(null);
+                    }
                     item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
                     response.setExito(true);
+
                     response.setMessage("CuentasPorPagar obtenido correctamente.");
                     response.setCuentasPorPagar(item);
                 } else {
@@ -55,7 +66,7 @@ public class CuentasPorPagarDetalleRepository implements ICuentasPorPagarDetalle
         } catch (SQLException e) {
             response.setExito(false);
             response.setMessage(e.getMessage());
-            log.error("Error en COMPRAS.sp_ObtenerCuentasPorPagarPorId", e);
+            log.error("Error en  COMPRAS.sp_ObtenerCuentasPorPagarPorId", e);
         }
         return response;
     }

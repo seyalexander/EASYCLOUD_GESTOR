@@ -13,23 +13,25 @@ import java.util.Objects;
 @Component
 public class EditarEstadoEmpresaUseCase {
     private final EmpresaService empresaService;
+    private final DetalleEmpresaUseCase detalleEmpresaUseCase;
 
     public EditarEstadoEmpresaUseCase(
-            EmpresaService empresaService
+            EmpresaService empresaService, DetalleEmpresaUseCase detalleEmpresaUseCase
     ){
         this.empresaService = empresaService;
+        this.detalleEmpresaUseCase = detalleEmpresaUseCase;
     }
 
     public ResponseEditarEstadoEmpresa AnularEmpresa(long idEmpresa) {
         try {
-            RequestDetalleEmpresa requestDetalle = new RequestDetalleEmpresa();
-            requestDetalle.setIdEmpresa(idEmpresa);
-            ResponseDetalleEmpresa detalleBD= empresaService.DetalleEmpresa(requestDetalle);
-            if (!detalleBD.isExito() || detalleBD.getEmpresa() == null) {
+            //get datos
+            ResponseDetalleEmpresa detalleBDEmpresa= detalleEmpresaUseCase.DetalleEmpresa(idEmpresa);
+
+            if (!detalleBDEmpresa.isExito() || detalleBDEmpresa.getEmpresa() == null) {
                 throw new ResourceNotFoundException("El Id no existe.");
             }
 
-            if (Objects.equals(detalleBD.getEmpresa().getEstado(), 0)) {
+            if (Objects.equals(detalleBDEmpresa.getEmpresa().getEstado(), 0)) {
                 throw new IllegalArgumentException("La Empresa ya se encuentra anulado.");
             }
 
@@ -62,16 +64,14 @@ public class EditarEstadoEmpresaUseCase {
 
     public ResponseEditarEstadoEmpresa ActivarEmpresa(long idEmpresa) {
         try {
-            RequestDetalleEmpresa requestDetalle = new RequestDetalleEmpresa();
-            requestDetalle.setIdEmpresa(idEmpresa);
+            //get datos
+            ResponseDetalleEmpresa detalleBDEmpresa= detalleEmpresaUseCase.DetalleEmpresa(idEmpresa);
 
-            ResponseDetalleEmpresa detalleBD= empresaService.DetalleEmpresa(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getEmpresa() == null) {
+            if (!detalleBDEmpresa.isExito() || detalleBDEmpresa.getEmpresa() == null) {
                 throw new ResourceNotFoundException("El Id no existe.");
             }
 
-            if (Objects.equals(detalleBD.getEmpresa().getEstado(), 1)) {
+            if (Objects.equals(detalleBDEmpresa.getEmpresa().getEstado(), 1)) {
                 throw new IllegalArgumentException("La Empresa ya se encuentra activada.");
             }
 

@@ -15,6 +15,12 @@ public class RequestAbonarCuentaPorCobrar {
     @PositiveOrZero(message = "El monto no puede ser negativo")
     private double montoAbonado;
 
+    @Min(value = 1, message = "El id debe ser mayor a 0")
+    private long idTipoPago;
+
+    @Min(value = 1, message = "El id de la caja debe ser mayor a 0")
+    private long idCaja;
+
     @NotNull(message = "La fecha de vencimiento es obligatoria")
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     @FutureOrPresent(message = "La fecha de vencimiento no puede ser una fecha pasada")

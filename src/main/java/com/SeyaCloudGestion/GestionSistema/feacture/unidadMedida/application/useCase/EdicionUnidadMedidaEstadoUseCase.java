@@ -12,18 +12,17 @@ import java.util.Objects;
 @Component
 public class EdicionUnidadMedidaEstadoUseCase {
     private final UnidadMedidaService unidadMedidaService;
+    private final DetalleUnidadMedidaUseCase detalleUnidadMedidaUseCase;
 
-    public EdicionUnidadMedidaEstadoUseCase(UnidadMedidaService unidadMedidaService) {
+    public EdicionUnidadMedidaEstadoUseCase(UnidadMedidaService unidadMedidaService, DetalleUnidadMedidaUseCase detalleUnidadMedidaUseCase) {
         this.unidadMedidaService = unidadMedidaService;
+        this.detalleUnidadMedidaUseCase = detalleUnidadMedidaUseCase;
     }
 
     public ResponseEditarEstadoUnidadMedida AnularUnidadMedida(Long idUnidadMedida) {
         try {
-            RequestDetalleUnidadMedida requestDetalle = new RequestDetalleUnidadMedida();
-            requestDetalle.setIdUnidadMedida(idUnidadMedida);
-
-            ResponseDetalleUnidadMedida detalleBD= unidadMedidaService.DetalleUnidadMedida(requestDetalle);
-
+            //unidad medida
+            ResponseDetalleUnidadMedida detalleBD= detalleUnidadMedidaUseCase.DetalleUnidadMedida(idUnidadMedida);
             if (!detalleBD.isExito() || detalleBD.getUnidadMedida() == null) {
                 throw new IllegalArgumentException("La unidad de medida no existe.");
             }
@@ -56,11 +55,8 @@ public class EdicionUnidadMedidaEstadoUseCase {
 
     public ResponseEditarEstadoUnidadMedida ActivarUnidadMedida(Long idUnidadMedida) {
         try {
-            RequestDetalleUnidadMedida requestDetalle = new RequestDetalleUnidadMedida();
-            requestDetalle.setIdUnidadMedida(idUnidadMedida);
-
-            ResponseDetalleUnidadMedida detalleBD= unidadMedidaService.DetalleUnidadMedida(requestDetalle);
-
+            //unidad medida
+            ResponseDetalleUnidadMedida detalleBD= detalleUnidadMedidaUseCase.DetalleUnidadMedida(idUnidadMedida);
             if (!detalleBD.isExito() || detalleBD.getUnidadMedida() == null) {
                 throw new IllegalArgumentException("La unidad de medida no existe.");
             }

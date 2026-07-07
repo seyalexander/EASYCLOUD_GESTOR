@@ -22,6 +22,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.useCase.DetalleTipoMovimientoUseCase;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Component
 public class ProcesarFullMovimientoStockUseCase {
@@ -56,6 +57,9 @@ public class ProcesarFullMovimientoStockUseCase {
     public ResponseProcesarFullStock procesar(RequestProcesarFullStock request) {
 
         try {
+            System.out.println("--- DEBUG PROCESAR FULL STOCK ---");
+            System.out.println("Cantidad: " + request.getCantidad());
+            System.out.println("Costo Unitario: " + request.getCostoUnitario());
             //traerl el tipo movimiento
             ResponseDetalleTipoMovimiento detalleBDTiMov =   detalleTipoMovimientoUseCase.DetalleTipoMovimiento(request.getIdTipoMovimiento());
             if (!detalleBDTiMov.isExito() || detalleBDTiMov.getTipoMovimiento() == null) {
@@ -109,6 +113,7 @@ public class ProcesarFullMovimientoStockUseCase {
             }
             //stock
             ResponseDetalleSotck detalleBDStock = detalleSotckUseCase.DetalleSotck(request.getIdArticulo(),request.getIdAlmacen());
+            System.out.println("detalleBDStock: " + detalleBDStock);
             //si no existe el detalle = que no hay registro (compra inventario o registro invetnario)
             if (!detalleBDStock.isExito() || detalleBDStock.getSotck() == null) {
                 //preparamos el Request
@@ -163,12 +168,14 @@ public class ProcesarFullMovimientoStockUseCase {
             return response;
 
         } catch (IllegalArgumentException | SecurityException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             ResponseProcesarFullStock response = new ResponseProcesarFullStock();
             response.setExito(false);
             response.setMessage(e.getMessage());
             return response;
 
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             String mensajeError = "Error inesperado al procesar el full service de stock: " + e.getMessage();
             System.err.println("[ERROR] " + mensajeError);
 

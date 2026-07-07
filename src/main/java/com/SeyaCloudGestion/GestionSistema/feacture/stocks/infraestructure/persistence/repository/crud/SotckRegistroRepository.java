@@ -60,7 +60,6 @@ public class SotckRegistroRepository  implements ISotckRegistro {
             }
             log.error("Error en INVENTARIO.sp_RegistroStockProducto", e);
         }
-
         return rpt;
     }
 }

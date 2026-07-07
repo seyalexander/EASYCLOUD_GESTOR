@@ -3,6 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application
 import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
 import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.request.RequestDetalleArticulo;
 import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseDetalleArticulo;
+import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.useCase.DetalleArticuloUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.articulos.domain.services.ArticulosService;
 import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.dto.request.RequestDetalleListaPrecios;
 import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.dto.response.ResponseDetalleListaPrecios;
@@ -20,28 +21,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class EdicionAllProductoPrecioUseCase {
     private  final ProductoPrecioService productoPrecioService;
-    private final ListaPreciosService listaPreciosService;
-    private final ArticulosService articulosService;
     private final VerificarCambiosProductoPrecio verificarCambiosProductoPrecio;
+    private final DetalleProductoPrecioUseCase detalleProductoPrecioUseCase;
 
-    public EdicionAllProductoPrecioUseCase(ProductoPrecioService productoPrecioService, ListaPreciosService listaPreciosService, ArticulosService articulosService, VerificarCambiosProductoPrecio verificarCambiosProductoPrecio) {
+    public EdicionAllProductoPrecioUseCase(ProductoPrecioService productoPrecioService, VerificarCambiosProductoPrecio verificarCambiosProductoPrecio, DetalleProductoPrecioUseCase detalleProductoPrecioUseCase1) {
         this.productoPrecioService = productoPrecioService;
-        this.listaPreciosService = listaPreciosService;
-        this.articulosService = articulosService;
         this.verificarCambiosProductoPrecio = verificarCambiosProductoPrecio;
+        this.detalleProductoPrecioUseCase = detalleProductoPrecioUseCase1;
     }
     public ResponseEditarAllProductoPrecio EditarAllProductoPrecio(RequestEditarAllProductoPrecio request) {
         try {
             //verificar el id
-            RequestDetalleProductoPrecio requestDetalle = new RequestDetalleProductoPrecio();
-            requestDetalle.setIdProductoPrecio(request.getIdProductoPrecio());
-
-            ResponseDetalleProductoPrecio detalleBD= productoPrecioService.DetalleProductoPrecio(requestDetalle);
+            ResponseDetalleProductoPrecio detalleBD= detalleProductoPrecioUseCase.DetalleProductoPrecio(request.getIdProductoPrecio());
 
             if (!detalleBD.isExito() || detalleBD.getProductoPrecio() == null) {
                 throw new ResourceNotFoundException("El Id no existe.");
             }
-
             //verificar cambios
             if (!verificarCambiosProductoPrecio.verificarCambios(detalleBD.getProductoPrecio(), request)) {
                 throw new ResourceNotFoundException("No se detectaron cambios para actualizar.");

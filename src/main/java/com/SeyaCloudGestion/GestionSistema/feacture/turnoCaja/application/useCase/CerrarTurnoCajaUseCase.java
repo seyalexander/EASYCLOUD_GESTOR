@@ -40,10 +40,7 @@ public class CerrarTurnoCajaUseCase {
             }
 
             //realizamos los sets
-            double montoSistema =detalleBD.getTurnoCaja().getMontoSistema();
-            double diferencia =  request.getMontoReal()-detalleBD.getTurnoCaja().getMontoSistema();
-
-            ResponseCerrarTurnoCaja response = turnoCajaService.CerrarTurnoCaja(request,montoSistema,diferencia);
+            ResponseCerrarTurnoCaja response = turnoCajaService.CerrarTurnoCaja(request);
 
             if (response.isExito()) {
             }

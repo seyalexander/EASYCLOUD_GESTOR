@@ -15,11 +15,13 @@ import org.springframework.stereotype.Component;
 public class EditarAllEmpresaUseCase {
     private final EmpresaService empresaService;
     private final VerificarCambiosEmpresa verificarCambios;
+    private final DetalleEmpresaUseCase detalleEmpresaUseCase;
     public EditarAllEmpresaUseCase(
-            EmpresaService empresaService, VerificarCambiosEmpresa verificarCambios
+            EmpresaService empresaService, VerificarCambiosEmpresa verificarCambios, DetalleEmpresaUseCase detalleEmpresaUseCase
     ){
         this.empresaService = empresaService;
         this.verificarCambios = verificarCambios;
+        this.detalleEmpresaUseCase = detalleEmpresaUseCase;
     }
 
     public ResponseEditarAllEmpresa EditarEmpresa(RequestEditarAllEmpresa request) {
@@ -54,14 +56,12 @@ public class EditarAllEmpresaUseCase {
                 throw new IllegalArgumentException("El email no tiene un formato válido.");
             }
             //get datos
-            RequestDetalleEmpresa requestDetalle = new RequestDetalleEmpresa();
-            requestDetalle.setIdEmpresa(request.getIdEmpresa());
-
-            ResponseDetalleEmpresa detalleBD= empresaService.DetalleEmpresa(requestDetalle);
+            ResponseDetalleEmpresa detalleBD= detalleEmpresaUseCase.DetalleEmpresa(request.getIdEmpresa());
 
             if (!detalleBD.isExito() || detalleBD.getEmpresa() == null) {
                 throw new ResourceNotFoundException("El Id no existe.");
             }
+
             if (!verificarCambios.verificarCambios(detalleBD.getEmpresa(), request)) {
                 throw new ResourceNotFoundException("No se detectaron cambios para actualizar.");
             }

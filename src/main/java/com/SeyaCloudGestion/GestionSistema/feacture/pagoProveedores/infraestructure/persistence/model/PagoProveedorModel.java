@@ -7,12 +7,15 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class PagoProveedoresModel implements Serializable {
+public class PagoProveedorModel implements Serializable {
     private long idPagoProveedor;
     private long idCuentaPorPagar;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime fechaPago;;
     private double montoPagado;
-    //enum metodo pago global
-    private String metodoPago;
+    private long idTipoPago;
+    //auditoria
+    private long idUsuarioCreacion;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime fechaCreacion;
 }

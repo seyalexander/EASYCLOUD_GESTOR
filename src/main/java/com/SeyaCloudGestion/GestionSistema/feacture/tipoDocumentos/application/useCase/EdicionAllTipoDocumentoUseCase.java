@@ -13,11 +13,13 @@ import org.springframework.stereotype.Component;
 public class EdicionAllTipoDocumentoUseCase {
     private final TipoDocumentoService tipoDocumentoService;
     private final VerificarCambiosTipoDocumento verificarCambios;
+    private final DetalleTipoDocumentoUseCase detalleTipoDocumentoUseCase;
     public EdicionAllTipoDocumentoUseCase(
-            TipoDocumentoService tipoDocumentoService, VerificarCambiosTipoDocumento verificarCambios
+            TipoDocumentoService tipoDocumentoService, VerificarCambiosTipoDocumento verificarCambios, DetalleTipoDocumentoUseCase detalleTipoDocumentoUseCase
     ){
         this.tipoDocumentoService = tipoDocumentoService;
         this.verificarCambios = verificarCambios;
+        this.detalleTipoDocumentoUseCase = detalleTipoDocumentoUseCase;
     }
 
     public ResponseEditarAllTipoDocumento EditarAllTipoDocumento(RequestEditarAllTipoDocumento request) {
@@ -68,17 +70,14 @@ public class EdicionAllTipoDocumentoUseCase {
                 String mensajeError = "El estado no está dentro de los parámetros correctos";
                 throw new IllegalArgumentException(mensajeError);
             }
-            
-            RequestDetalleTipoDocumento requestDetalle = new RequestDetalleTipoDocumento();
-            requestDetalle.setIdTipoDocumentos(request.getIdTipoDocumento());
+            //tipo documento
+            ResponseDetalleTipoDocumento detalleBDTipoDocumento= detalleTipoDocumentoUseCase.DetalleTipoDocumento(request.getIdTipoDocumento());
 
-            ResponseDetalleTipoDocumento detalleBD= tipoDocumentoService.DetalleTipoDocumento(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getTipoDocumento() == null) {
+            if (!detalleBDTipoDocumento.isExito() || detalleBDTipoDocumento.getTipoDocumento() == null) {
                 throw new ResourceNotFoundException("El Id no existe.");
             }
             //verificar cambios
-            if (!verificarCambios.verificarCambios(detalleBD.getTipoDocumento(), request)) {
+            if (!verificarCambios.verificarCambios(detalleBDTipoDocumento.getTipoDocumento(), request)) {
                 throw new ResourceNotFoundException("No se detectaron cambios para actualizar.");
             }
 

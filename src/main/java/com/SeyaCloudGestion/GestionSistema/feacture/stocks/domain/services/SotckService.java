@@ -37,7 +37,7 @@ public class SotckService implements ISotckListado, ISotckRegistro, ISotckEdicio
     }
 
     @Override
-    @Cacheable(value = "stocks_lista", key = "#request.estado")
+    @Cacheable(value = "stocks_lista",  key = "#request.idProducto + '-' + #request.idAlmacen")
     public ResponseListaSotck listaSotck(RequestListaSotck request) {
         return sotckListadoRepository.listaSotck(request);
     }
@@ -55,7 +55,12 @@ public class SotckService implements ISotckListado, ISotckRegistro, ISotckEdicio
     }
 
     @Override
-    @Cacheable(value = "stock_detalle", key = "#request.idSotck")
+    /*
+    @Cacheable(
+            value = "stock_detalle",
+            key = "#request.idProducto + '-' + #request.idAlmacen"
+    )
+     */
     public ResponseDetalleSotck DetalleSotck(RequestDetalleSotck request) {
         return sotckDetalleRepository.DetalleSotck(request);
     }

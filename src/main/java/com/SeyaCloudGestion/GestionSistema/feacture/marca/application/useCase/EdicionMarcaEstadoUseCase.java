@@ -1,6 +1,5 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.marca.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.marca.application.dto.request.RequestDetalleMarca;
 import com.SeyaCloudGestion.GestionSistema.feacture.marca.application.dto.request.RequestEditarEstadoMarca;
 import com.SeyaCloudGestion.GestionSistema.feacture.marca.application.dto.response.ResponseDetalleMarca;
 import com.SeyaCloudGestion.GestionSistema.feacture.marca.application.dto.response.ResponseEditarEstadoMarca;
@@ -12,23 +11,23 @@ import java.util.Objects;
 @Component
 public class EdicionMarcaEstadoUseCase {
     private final MarcaService marcaService;
+    private final DetalleMarcaUseCase detalleMarcaUseCase;
 
-    public EdicionMarcaEstadoUseCase(MarcaService marcaService) {
+    public EdicionMarcaEstadoUseCase(MarcaService marcaService, DetalleMarcaUseCase detalleMarcaUseCase) {
         this.marcaService = marcaService;
+        this.detalleMarcaUseCase = detalleMarcaUseCase;
     }
 
     public ResponseEditarEstadoMarca AnularMarca(Long idMarca) {
         try {
-            RequestDetalleMarca requestDetalle = new RequestDetalleMarca();
-            requestDetalle.setIdMarca(idMarca);
+            //marca
+            ResponseDetalleMarca detalleBDMarca= detalleMarcaUseCase.detalleMarcas(idMarca);
 
-            ResponseDetalleMarca detalleBD= marcaService.DetalleMarca(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getMarca() == null) {
+            if (!detalleBDMarca.isExito() || detalleBDMarca.getMarca() == null) {
                 throw new IllegalArgumentException("La marca no existe.");
             }
 
-            if (Objects.equals(detalleBD.getMarca().getEstado(), 0)) {
+            if (Objects.equals(detalleBDMarca.getMarca().getEstado(), 0)) {
                 throw new IllegalArgumentException("La familia ya se encuentra anulada.");
             }
 
@@ -57,16 +56,14 @@ public class EdicionMarcaEstadoUseCase {
 
     public ResponseEditarEstadoMarca ActivarMarca(Long idMarca) {
         try {
-            RequestDetalleMarca requestDetalle = new RequestDetalleMarca();
-            requestDetalle.setIdMarca(idMarca);
+            //marca
+            ResponseDetalleMarca detalleBDMarca= detalleMarcaUseCase.detalleMarcas(idMarca);
 
-            ResponseDetalleMarca detalleBD= marcaService.DetalleMarca(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getMarca() == null) {
+            if (!detalleBDMarca.isExito() || detalleBDMarca.getMarca() == null) {
                 throw new IllegalArgumentException("La marca no existe.");
             }
 
-            if (Objects.equals(detalleBD.getMarca().getEstado(), 1)) {
+            if (Objects.equals(detalleBDMarca.getMarca().getEstado(), 1)) {
                 throw new IllegalArgumentException("La familia ya se encuentra activada.");
             }
 

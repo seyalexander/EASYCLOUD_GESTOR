@@ -2,6 +2,6 @@ package com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application
 
 import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
 
-public class ResponseRegistroPagoProveedores extends ResponseGeneral {
+public class ResponseRegistroPagoProveedor extends ResponseGeneral {
 
 }

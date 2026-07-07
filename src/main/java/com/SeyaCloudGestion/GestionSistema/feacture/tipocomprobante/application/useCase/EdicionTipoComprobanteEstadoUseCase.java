@@ -15,29 +15,27 @@ public class EdicionTipoComprobanteEstadoUseCase {
 
     private final TipoComprobanteService tipoComprobanteService;
     private final VerificarCambiosTipoComprobante verificarCambiosTipoComprobante;
-
+    private final DetalleTipoComprobanteUseCase detalleTipoComprobanteUseCase;
     public EdicionTipoComprobanteEstadoUseCase(
             TipoComprobanteService tipoComprobanteService,
-            VerificarCambiosTipoComprobante verificarCambiosTipoComprobante
+            VerificarCambiosTipoComprobante verificarCambiosTipoComprobante, DetalleTipoComprobanteUseCase detalleTipoComprobanteUseCase
     ){
         this.tipoComprobanteService = tipoComprobanteService;
         this.verificarCambiosTipoComprobante = verificarCambiosTipoComprobante;
+        this.detalleTipoComprobanteUseCase = detalleTipoComprobanteUseCase;
     }
 
     public ResponseEditarEstadoTipoComprobante EdicionAnularTipoComprobante(long idTipoComprobante) {
         try {
             // get id
-            RequestDetalleTipoComprobante requestDetalle = new RequestDetalleTipoComprobante();
-            requestDetalle.setIdTipoComprobante(idTipoComprobante);
+            ResponseDetalleTipoComprobante detalleBDTipoComprobante= detalleTipoComprobanteUseCase.DetalleTipoComprobante(idTipoComprobante);
 
-            ResponseDetalleTipoComprobante detalleBD = tipoComprobanteService.DetalleTipoComprobante(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getTipoCompobante() == null) {
+            if (!detalleBDTipoComprobante.isExito() || detalleBDTipoComprobante.getTipoCompobante() == null) {
                 throw new IllegalArgumentException("El tipo de comprobante no existe.");
             }
 
             // verificar
-            if (Objects.equals(detalleBD.getTipoCompobante().getEstado(), 0)) {
+            if (Objects.equals(detalleBDTipoComprobante.getTipoCompobante().getEstado(), 0)) {
                 throw new IllegalArgumentException("El tipo de comprobante ya se encuentra anulado.");
             }
 
@@ -67,17 +65,14 @@ public class EdicionTipoComprobanteEstadoUseCase {
     public ResponseEditarEstadoTipoComprobante EdicionActivarTipoComprobante(long idTipoComprobante) {
         try {
             // get id
-            RequestDetalleTipoComprobante requestDetalle = new RequestDetalleTipoComprobante();
-            requestDetalle.setIdTipoComprobante(idTipoComprobante);
+            ResponseDetalleTipoComprobante detalleBDTipoComprobante= detalleTipoComprobanteUseCase.DetalleTipoComprobante(idTipoComprobante);
 
-            ResponseDetalleTipoComprobante detalleBD = tipoComprobanteService.DetalleTipoComprobante(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getTipoCompobante() == null) {
+            if (!detalleBDTipoComprobante.isExito() || detalleBDTipoComprobante.getTipoCompobante() == null) {
                 throw new IllegalArgumentException("El tipo de comprobante no existe.");
             }
 
             // verificar
-            if (Objects.equals(detalleBD.getTipoCompobante().getEstado(), 1)) {
+            if (Objects.equals(detalleBDTipoComprobante.getTipoCompobante().getEstado(), 1)) {
                 throw new IllegalArgumentException("El tipo de comprobante ya se encuentra activado.");
             }
 

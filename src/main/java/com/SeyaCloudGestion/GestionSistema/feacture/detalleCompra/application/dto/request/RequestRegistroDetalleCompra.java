@@ -8,9 +8,6 @@ import lombok.Data;
 public class RequestRegistroDetalleCompra {
 
     @Min(value = 1, message = "El id debe ser mayor a 0")
-    private long idCompra;
-
-    @Min(value = 1, message = "El id debe ser mayor a 0")
     private long idArticulo;
 
     @Positive(message = "La cantidad debe ser mayor a 0")

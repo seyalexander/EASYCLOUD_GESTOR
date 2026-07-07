@@ -24,23 +24,20 @@ public class TurnoCajaCerrarRepository implements ITurnoCajaCerrar {
     private DataSource con;
 
     @Override
-    public ResponseCerrarTurnoCaja CerrarTurnoCaja(RequestCerrarTurnoCaja request,double montoSistema,double diferencia) {
+    public ResponseCerrarTurnoCaja CerrarTurnoCaja(RequestCerrarTurnoCaja request) {
         ResponseCerrarTurnoCaja rpt = new ResponseCerrarTurnoCaja();
-        String SQL = "{ call VENTAS.sp_CerrarTurnoCaja(?,?,?,?,?,?,?,?) }";
+        String SQL = "{ call VENTAS.sp_CerrarTurnoCaja(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
             setParameter(pstmt, 1, request.getIdTurnoCaja());
-            setParameter(pstmt, 2, request.getIdCaja());
-            setParameter(pstmt, 3, montoSistema);
-            setParameter(pstmt, 4, request.getMontoReal());
+            setParameter(pstmt, 2, request.getMontoReal());
+            Long empresaId = 1L;
+            pstmt.setLong(3, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(4, sucursalId);
             Long userId = 1L;
             pstmt.setLong(5, userId);
-            setParameter(pstmt, 6, diferencia);
-            Long empresaId = 1L;
-            pstmt.setLong(7, empresaId);
-            Long sucursalId = 1L;
-            pstmt.setLong(8, sucursalId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

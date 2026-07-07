@@ -28,6 +28,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.venta.domain.services.VentaS
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.infraestructure.persistence.model.CondicionPago;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.time.LocalDateTime;
 
@@ -161,8 +162,6 @@ public class RegistroVentaUseCase {
             }
 
             // regitrar deudad
-
-
             if (condicion.equals(CondicionPago.CREDITO)) {
                 double saldoPendiente = sumaTotalVenta - totalAbonado;
 
@@ -204,11 +203,13 @@ public class RegistroVentaUseCase {
             return response;
 
         } catch (IllegalArgumentException | SecurityException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             ResponseRegistroVenta response = new ResponseRegistroVenta();
             response.setExito(false);
             response.setMessage(e.getMessage());
             return response;
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             String mensajeError = "Error inesperado al registrar las ventas: " + e.getMessage();
             System.err.println("[ERROR] " + mensajeError);
             ResponseRegistroVenta response = new ResponseRegistroVenta();

@@ -18,6 +18,9 @@ public class RequestRegistroCompra {
     @Min(value = 1, message = "El id debe ser mayor a 0")
     private long idTipoComprobante;
 
+    @Min(value = 1, message = "El id debe ser mayor a 0")
+    private long idTipoMovimiento ;
+
     @NotBlank(message = "La serie del comprobante es obligatoria.")
     @Size(min = 1, max = 10, message = "La serie debe tener entre 1 y 10 caracteres.")
     @Pattern(regexp = "^[A-Za-z0-9-]+$", message = "La serie solo puede contener letras, números y guiones.")
@@ -42,4 +45,5 @@ public class RequestRegistroCompra {
 
     @NotEmpty(message = "Debe registrar al menos un producto para realizar la compra")
     private List<RequestRegistroDetalleCompra> detalles;
+
 }

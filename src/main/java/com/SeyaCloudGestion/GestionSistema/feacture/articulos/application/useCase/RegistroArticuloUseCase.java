@@ -6,12 +6,15 @@ import com.SeyaCloudGestion.GestionSistema.feacture.articulos.domain.services.Ar
 import com.SeyaCloudGestion.GestionSistema.feacture.articulos.domain.validations.ValidacionRequest_RegistrarArticulo;
 import com.SeyaCloudGestion.GestionSistema.feacture.marca.application.dto.request.RequestDetalleMarca;
 import com.SeyaCloudGestion.GestionSistema.feacture.marca.application.dto.response.ResponseDetalleMarca;
+import com.SeyaCloudGestion.GestionSistema.feacture.marca.application.useCase.DetalleMarcaUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.marca.domain.services.MarcaService;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestDetalleSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.response.ResponseDetalleSubFamilia;
+import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.useCase.DetalleSubFamiliaUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.domain.services.SubFamiliaService;
 import com.SeyaCloudGestion.GestionSistema.feacture.unidadMedida.application.dto.request.RequestDetalleUnidadMedida;
 import com.SeyaCloudGestion.GestionSistema.feacture.unidadMedida.application.dto.response.ResponseDetalleUnidadMedida;
+import com.SeyaCloudGestion.GestionSistema.feacture.unidadMedida.application.useCase.DetalleUnidadMedidaUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.unidadMedida.domain.services.UnidadMedidaService;
 import org.springframework.stereotype.Component;
 
@@ -19,17 +22,18 @@ import org.springframework.stereotype.Component;
 public class RegistroArticuloUseCase {
 
     private final ArticulosService articulosService;
-    private final SubFamiliaService subFamiliaService;
-    private final UnidadMedidaService unidadMedidaService;
-    private final MarcaService marcaService;
+    private final DetalleSubFamiliaUseCase detalleSubFamiliaUseCase;
+    private final DetalleUnidadMedidaUseCase detalleUnidadMedidaUseCase;
+    private final DetalleMarcaUseCase detalleMarcaUseCase;
+
 
     public RegistroArticuloUseCase(
-            ArticulosService articulosService, SubFamiliaService subFamiliaService, UnidadMedidaService unidadMedidaService, MarcaService marcaService
+            ArticulosService articulosService, DetalleSubFamiliaUseCase detalleSubFamiliaUseCase, DetalleUnidadMedidaUseCase detalleUnidadMedidaUseCase, DetalleMarcaUseCase detalleMarcaUseCase
     ){
         this.articulosService = articulosService;
-        this.subFamiliaService = subFamiliaService;
-        this.unidadMedidaService = unidadMedidaService;
-        this.marcaService = marcaService;
+        this.detalleSubFamiliaUseCase = detalleSubFamiliaUseCase;
+        this.detalleUnidadMedidaUseCase = detalleUnidadMedidaUseCase;
+        this.detalleMarcaUseCase = detalleMarcaUseCase;
     }
 
     public ResponseRegistroArticulo RegistrarArticulo(RequestRegistroArticulo request) {
@@ -39,17 +43,11 @@ public class RegistroArticuloUseCase {
             long userId = 1L;
             long idEmpresa = 1L;
             //verificaciones all
-            RequestDetalleSubFamilia requestDetalleSubFamilia = new RequestDetalleSubFamilia();
-            requestDetalleSubFamilia.setIdSubFamilia(request.getIdSubFamilia());
-            ResponseDetalleSubFamilia detalleBDSub= subFamiliaService.DetalleSubFamilia(requestDetalleSubFamilia);
+            ResponseDetalleSubFamilia detalleBDSub= detalleSubFamiliaUseCase.DetalleSubFamilia(request.getIdSubFamilia());
 
-            RequestDetalleMarca requestDetalleMar = new RequestDetalleMarca();
-            requestDetalleMar.setIdMarca(request.getIdMarca());
-            ResponseDetalleMarca detalleBDMar= marcaService.DetalleMarca(requestDetalleMar);
+            ResponseDetalleMarca detalleBDMar= detalleMarcaUseCase.detalleMarcas(request.getIdMarca());
 
-            RequestDetalleUnidadMedida requestDetalleUnidadMedida = new RequestDetalleUnidadMedida();
-            requestDetalleUnidadMedida.setIdUnidadMedida(request.getIdUnidadMedida());
-            ResponseDetalleUnidadMedida detalleBDUni= unidadMedidaService.DetalleUnidadMedida(requestDetalleUnidadMedida);
+            ResponseDetalleUnidadMedida detalleBDUni= detalleUnidadMedidaUseCase.DetalleUnidadMedida(request.getIdUnidadMedida());
 
             ValidacionRequest_RegistrarArticulo.validarRegistroArticulo(detalleBDSub,detalleBDMar, detalleBDUni);
 

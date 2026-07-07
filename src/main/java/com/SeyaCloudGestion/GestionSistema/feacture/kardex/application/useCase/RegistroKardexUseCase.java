@@ -29,6 +29,10 @@ public class RegistroKardexUseCase {
 
     public ResponseRegistroKardex registroKardex(RequestRegistroKardexRecortado request) {
         try {
+            System.out.println("--- DEBUG KARDEX ---");
+            System.out.println("Cantidad: " + request.getCantidad());
+            System.out.println("Costo Unitario: " + request.getCostoUnitario());
+            System.out.println("Cálculo Resultado: " + (request.getCantidad() * request.getCostoUnitario()));
             //verificar los id antes de que truene todo
             //get articulo
             ResponseDetalleArticulo detalleBDArt = detalleArticuloUseCase.DetalleArticulo(request.getIdArticulo());

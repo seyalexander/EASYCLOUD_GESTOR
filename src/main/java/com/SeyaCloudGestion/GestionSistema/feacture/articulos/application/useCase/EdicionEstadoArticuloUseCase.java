@@ -14,29 +14,27 @@ import java.util.Objects;
 @Component
 public class EdicionEstadoArticuloUseCase {
     private final ArticulosService articulosService;
-
-    public EdicionEstadoArticuloUseCase(ArticulosService articulosService) {
+    private final DetalleArticuloUseCase detalleArticuloUseCase;
+    public EdicionEstadoArticuloUseCase(ArticulosService articulosService, DetalleArticuloUseCase detalleArticuloUseCase) {
         this.articulosService = articulosService;
+        this.detalleArticuloUseCase = detalleArticuloUseCase;
     }
 
-    public ResponseEditarEstadoArticulo AnularArticulo(long idArticulos) {
+    public ResponseEditarEstadoArticulo AnularArticulo(long idArticulo) {
         try {
+            //articulo
+            ResponseDetalleArticulo detalleBDArticulo= detalleArticuloUseCase.DetalleArticulo(idArticulo);
 
-            RequestDetalleArticulo requestDetalle = new RequestDetalleArticulo();
-            requestDetalle.setIdArticulo(idArticulos);
-
-            ResponseDetalleArticulo detalleBD= articulosService.DetalleArticulos(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getArticulos() == null) {
+            if (!detalleBDArticulo.isExito() || detalleBDArticulo.getArticulos() == null) {
                 throw new IllegalArgumentException("El articulo no existe.");
             }
 
-            if (Objects.equals(detalleBD.getArticulos().getEstado(), 0)) {
+            if (Objects.equals(detalleBDArticulo.getArticulos().getEstado(), 0)) {
                 throw new IllegalArgumentException("Elarticulo ya se encuentra anulado.");
             }
 
             RequestEditarEstadoArticulo request = new RequestEditarEstadoArticulo();
-            request.setIdArticulo(idArticulos);
+            request.setIdArticulo(idArticulo);
 
             ResponseEditarEstadoArticulo response = articulosService.EditarEstadoArticulos(request, 0);
 
@@ -62,23 +60,21 @@ public class EdicionEstadoArticuloUseCase {
         }
     }
 
-    public ResponseEditarEstadoArticulo ActivarArticulo(long idArticulos) {
+    public ResponseEditarEstadoArticulo ActivarArticulo(long idArticulo) {
         try {
-            RequestDetalleArticulo requestDetalle = new RequestDetalleArticulo();
-            requestDetalle.setIdArticulo(idArticulos);
+            //articulo
+            ResponseDetalleArticulo detalleBDArticulo= detalleArticuloUseCase.DetalleArticulo(idArticulo);
 
-            ResponseDetalleArticulo detalleBD= articulosService.DetalleArticulos(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getArticulos() == null) {
+            if (!detalleBDArticulo.isExito() || detalleBDArticulo.getArticulos() == null) {
                 throw new IllegalArgumentException("El articulo no existe.");
             }
 
-            if (Objects.equals(detalleBD.getArticulos().getEstado(), 1)) {
+            if (Objects.equals(detalleBDArticulo.getArticulos().getEstado(), 1)) {
                 throw new IllegalArgumentException("Elarticulo ya se encuentra activado.");
             }
 
             RequestEditarEstadoArticulo request = new RequestEditarEstadoArticulo();
-            request.setIdArticulo(idArticulos);
+            request.setIdArticulo(idArticulo);
 
             ResponseEditarEstadoArticulo response = articulosService.EditarEstadoArticulos(request, 1);
 

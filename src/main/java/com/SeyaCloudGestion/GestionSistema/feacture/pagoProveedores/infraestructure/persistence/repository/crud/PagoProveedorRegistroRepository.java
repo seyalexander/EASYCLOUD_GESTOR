@@ -1,7 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.request.RequestRegistroPagoProveedores;
-import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.response.ResponseRegistroPagoProveedores;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.request.RequestRegistroPagoProveedor;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.response.ResponseRegistroPagoProveedor;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.domain.interfaces.IPagoProveedoresRegistro;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,40 +17,43 @@ import java.sql.SQLException;
 @Slf4j
 @Repository
 @Transactional("sqlServerTransactionManager")
-public class PagoProveedoresRegistroRepository implements IPagoProveedoresRegistro {
+public class PagoProveedorRegistroRepository implements IPagoProveedoresRegistro {
 
     @Autowired
     @Qualifier("SQLSERVER")
     private DataSource con;
 
     @Override
-    public ResponseRegistroPagoProveedores RegistroPagoProveedores(RequestRegistroPagoProveedores request) {
-        ResponseRegistroPagoProveedores rpt = new ResponseRegistroPagoProveedores();
-        String SQL = "{ call COMPRAS.sp_RegistroPagoProveedores(?,?,?,?,?) }";
+    public ResponseRegistroPagoProveedor RegistroPagoProveedor(RequestRegistroPagoProveedor request) {
+        ResponseRegistroPagoProveedor rpt = new ResponseRegistroPagoProveedor();
+        String SQL = "{ call COMPRAS.sp_RegistrarPagoProveedor(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdCuentaPorPagar());
-            setParameter(pstmt, 2, request.getFechaPago());
-            setParameter(pstmt, 3, request.getMontoPagado());
-            setParameter(pstmt, 4, request.getMetodoPago());
+            setParameter(pstmt, 2, request.getMontoPagado());
+            setParameter(pstmt, 3, request.getIdTipoPago());
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(5, sucursalId);
             Long userId = 1L;
-            pstmt.setLong(5, userId);
+            pstmt.setLong(6, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
                 rpt.setExito(true);
-                rpt.setMessage("PagoProveedores insertado correctamente.");
+                rpt.setMessage("pago insertado correctamente.");
             } else {
                 rpt.setExito(false);
-                rpt.setMessage("No se insertó PagoProveedores.");
+                rpt.setMessage("No se insertó el pago.");
             }
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en COMPRAS.sp_RegistroPagoProveedores", e);
+            log.error("Error en COMPRAS.sp_RegistrarPagoProveedor", e);
         }
         return rpt;
     }

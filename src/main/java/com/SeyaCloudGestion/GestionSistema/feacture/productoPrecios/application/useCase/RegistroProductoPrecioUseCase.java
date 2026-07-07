@@ -1,11 +1,9 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.useCase;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.request.RequestDetalleArticulo;
 import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseDetalleArticulo;
-import com.SeyaCloudGestion.GestionSistema.feacture.articulos.domain.services.ArticulosService;
-import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.dto.request.RequestDetalleListaPrecios;
+import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.useCase.DetalleArticuloUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.dto.response.ResponseDetalleListaPrecios;
-import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.domain.services.ListaPreciosService;
+import com.SeyaCloudGestion.GestionSistema.feacture.listaPrecios.application.useCase.DetalleListaPreciosUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.request.RequestRegistroProductoPrecio;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.application.dto.response.ResponseRegistroProductoPrecio;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoPrecios.domain.services.ProductoPrecioService;
@@ -15,24 +13,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegistroProductoPrecioUseCase {
     private final ProductoPrecioService productoPrecioService;
-    private final ListaPreciosService listaPreciosService;
-    private final ArticulosService articulosService;
+    private final DetalleListaPreciosUseCase detalleListaPreciosUseCase;
+    private final DetalleArticuloUseCase detalleArticuloUseCase;
 
-    public RegistroProductoPrecioUseCase(ProductoPrecioService productoPrecioService, ListaPreciosService listaPreciosService, ArticulosService articulosService) {
+    public RegistroProductoPrecioUseCase(ProductoPrecioService productoPrecioService, DetalleListaPreciosUseCase detalleListaPreciosUseCase, DetalleArticuloUseCase detalleArticuloUseCase) {
         this.productoPrecioService = productoPrecioService;
-        this.listaPreciosService = listaPreciosService;
-        this.articulosService = articulosService;
+
+        this.detalleListaPreciosUseCase = detalleListaPreciosUseCase;
+        this.detalleArticuloUseCase = detalleArticuloUseCase;
     }
 
     public ResponseRegistroProductoPrecio RegistroProductoPrecio(RequestRegistroProductoPrecio request) {
         try {
-            RequestDetalleArticulo requestArt = new RequestDetalleArticulo();
-            requestArt.setIdArticulo(request.getIdArticulo());
-            ResponseDetalleArticulo detalleBDArt = articulosService.DetalleArticulos(requestArt);
+            ResponseDetalleArticulo detalleBDArt = detalleArticuloUseCase.DetalleArticulo(request.getIdArticulo());
 
-            RequestDetalleListaPrecios requestLis = new RequestDetalleListaPrecios();
-            requestLis.setIdListaPrecios(request.getIdListaPrecio());
-            ResponseDetalleListaPrecios detalleBDLis = listaPreciosService.DetalleListaPrecios(requestLis);
+            ResponseDetalleListaPrecios detalleBDLis = detalleListaPreciosUseCase.DetalleListaPrecios(request.getIdListaPrecio());
 
             ValidacionRequest_RegistrarProductoPrecio.validarRegistroArticulo(detalleBDArt,detalleBDLis);
 
