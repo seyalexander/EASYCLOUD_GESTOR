@@ -26,16 +26,18 @@ public class CuentasPorPagarRegistroRepository implements ICuentasPorPagarRegist
     @Override
     public ResponseRegistroCuentasPorPagar RegistroCuentasPorPagar(RequestRegistroCuentasPorPagar request) {
         ResponseRegistroCuentasPorPagar rpt = new ResponseRegistroCuentasPorPagar();
-        String SQL = "{ call COMPRAS.sp_RegistroCuentasPorPagar(?,?,?,?,?,?) }";
+        String SQL = "{ call COMPRAS.sp_RegistroCuentaPorPagar(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdCompra());
-            setParameter(pstmt, 2, request.getMontoPendiente());
-            setParameter(pstmt, 3, request.getFechaVencimiento());
-            setParameter(pstmt, 4, request.getEstado());
-            setParameter(pstmt, 5, request.getFechaIngreso());
+            Long emoresalId = 1L;
+            pstmt.setLong(2, emoresalId);
+            Long sucursalId = 1L;
+            pstmt.setLong(3, sucursalId);
+            setParameter(pstmt, 4, request.getMontoPendiente());
+            setParameter(pstmt, 5, request.getFechaVencimiento());
             Long userId = 1L;
             pstmt.setLong(6, userId);
 

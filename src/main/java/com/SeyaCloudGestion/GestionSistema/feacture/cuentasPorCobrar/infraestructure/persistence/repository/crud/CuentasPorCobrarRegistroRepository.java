@@ -26,7 +26,7 @@ public class CuentasPorCobrarRegistroRepository implements ICuentasPorCobrarRegi
     @Override
     public ResponseRegistroCuentasPorCobrar RegistroCuentasPorCobrar(RequestRegistroCuentasPorCobrar request) {
         ResponseRegistroCuentasPorCobrar rpt = new ResponseRegistroCuentasPorCobrar();
-        String SQL = "{ call VENTAS.sp_RegistroCuentaPorCobrar(?,?,?) }";
+        String SQL = "{ call VENTAS.sp_RegistroCuentaPorCobrar(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -34,10 +34,12 @@ public class CuentasPorCobrarRegistroRepository implements ICuentasPorCobrarRegi
             setParameter(pstmt, 1, request.getIdVenta());
             setParameter(pstmt, 2, request.getMontoPendiente());
             setParameter(pstmt, 3, request.getFechaVencimiento());
-            /*
             Long userId = 1L;
-            pstmt.setLong(5, userId);
-             */
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+            pstmt.setLong(4, empresaId);
+            pstmt.setLong(5, sucursalId);
+            pstmt.setLong(6, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 

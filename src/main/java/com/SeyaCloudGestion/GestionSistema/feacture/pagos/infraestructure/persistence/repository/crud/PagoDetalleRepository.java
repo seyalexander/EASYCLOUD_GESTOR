@@ -45,6 +45,7 @@ public class PagoDetalleRepository implements IPagoDetalle {
                     item.setReferencia(rs.getString("referencia"));
                     item.setFechaPago((rs.getTimestamp("fechaPago") != null ? rs.getTimestamp("fechaPago").toLocalDateTime() : null));
                     item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
+
                     response.setExito(true);
                     response.setMessage("Pago obtenido correctamente.");
                     response.setPago(item);

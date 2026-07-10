@@ -33,7 +33,14 @@ public class MovimientoStockDetalleRepository implements IMovimientoStockDetalle
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetro id definido en el request.
+
+            setParameter(pstmt, 1, request.getIdDetalleMovimiento());
+            Long empresaId= 1L;
+            Long sucursalId= 1L;
+            setParameter(pstmt, 2, empresaId);
+            setParameter(pstmt, 3, sucursalId);
+            Long almacenId= 1L;
+            setParameter(pstmt, 4, almacenId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -48,6 +55,27 @@ public class MovimientoStockDetalleRepository implements IMovimientoStockDetalle
                     item.setFechaMovimiento((rs.getTimestamp("fechaMovimiento") != null ? rs.getTimestamp("fechaMovimiento").toLocalDateTime() : null));
                     item.setEstado(rs.getInt("estado"));
                     item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaAnulacion(
+                            rs.getTimestamp("fechaAnulacion") != null
+                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+
                     response.setExito(true);
                     response.setMessage("MovimientoStock obtenido correctamente.");
                     response.setMovimientoStock(item);

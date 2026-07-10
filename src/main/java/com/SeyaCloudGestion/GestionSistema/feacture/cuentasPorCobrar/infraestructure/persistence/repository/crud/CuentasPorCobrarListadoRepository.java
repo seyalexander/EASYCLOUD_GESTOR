@@ -5,6 +5,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseListaCuentasPorCobrar;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.domain.interfaces.ICuentasPorCobrarListado;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.infraestructure.persistence.model.CuentasPorCobrarModel;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.infraestructure.persistence.model.EstadoCuenta;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,12 +33,17 @@ public class CuentasPorCobrarListadoRepository implements ICuentasPorCobrarLista
     public ResponseListaCuentasPorCobrar ListaCuentasPorCobrar(RequestListaCuentasPorCobrar request) {
         ResponseListaCuentasPorCobrar rpt = new ResponseListaCuentasPorCobrar();
         List<CuentasPorCobrarModel> registros = new ArrayList<>();
-        String SQL = "{ call VENTAS.sp_ListarCuentaPorCobrar(?) }";
+        String SQL = "{ call VENTAS.sp_ListarCuentaPorCobrar(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getEstado());
+            String estadoString = (request.getEstado() != null) ? request.getEstado().name() : "TODOS";
+            setParameter(pstmt, 1, estadoString);
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+            pstmt.setLong(2, empresaId);
+            pstmt.setLong(3, sucursalId);
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     CuentasPorCobrarModel item = new CuentasPorCobrarModel();
@@ -45,7 +51,12 @@ public class CuentasPorCobrarListadoRepository implements ICuentasPorCobrarLista
                 item.setIdVenta(rs.getLong("idVenta"));
                 item.setMontoPendiente(rs.getDouble("montoPendiente"));
                 item.setFechaVencimiento((rs.getTimestamp("fechaVencimiento") != null ? rs.getTimestamp("fechaVencimiento").toLocalDateTime() : null));
-                item.setEstado(rs.getString("estado"));
+                    String estadoBD = rs.getString("estado");
+                    if (estadoBD != null) {
+                        item.setEstado(EstadoCuenta.valueOf(estadoBD.toUpperCase().trim()));
+                    } else {
+                        item.setEstado(null);
+                    }
                     registros.add(item);
                 }
 
@@ -55,7 +66,7 @@ public class CuentasPorCobrarListadoRepository implements ICuentasPorCobrarLista
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en VENTAS.sp_ListarCuentasPorCobrar", e);
+            log.error("Error en VENTAS.sp_ListarCuentaPorCobrar", e);
         }
         return rpt;
     }
@@ -64,12 +75,17 @@ public class CuentasPorCobrarListadoRepository implements ICuentasPorCobrarLista
     public ResponseListaCuentasPorCobrar ListaCuentasPorCobrarIDCliente(RequestListaCuentasPorCobrarIDCliente request) {
         ResponseListaCuentasPorCobrar rpt = new ResponseListaCuentasPorCobrar();
         List<CuentasPorCobrarModel> registros = new ArrayList<>();
-        String SQL = "{ call VENTAS.sp_ListarCuentaPorCobrarPorCliente(?) }";
+        String SQL = "{ call VENTAS.sp_ListarCuentaPorCobrarPorCliente(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
             setParameter(pstmt, 1, request.getIdCliente());
-            setParameter(pstmt, 1, request.getEstado());
+            String estadoString = (request.getEstado() != null) ? request.getEstado().name() : "TODOS";
+            setParameter(pstmt, 2, estadoString);
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+            pstmt.setLong(3, empresaId);
+            pstmt.setLong(4, sucursalId);
 
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
@@ -78,7 +94,12 @@ public class CuentasPorCobrarListadoRepository implements ICuentasPorCobrarLista
                     item.setIdVenta(rs.getLong("idVenta"));
                     item.setMontoPendiente(rs.getDouble("montoPendiente"));
                     item.setFechaVencimiento((rs.getTimestamp("fechaVencimiento") != null ? rs.getTimestamp("fechaVencimiento").toLocalDateTime() : null));
-                    item.setEstado(rs.getString("estado"));
+                    String estadoBD = rs.getString("estado");
+                    if (estadoBD != null) {
+                        item.setEstado(EstadoCuenta.valueOf(estadoBD.toUpperCase().trim()));
+                    } else {
+                        item.setEstado(null);
+                    }
                     registros.add(item);
                 }
 
@@ -88,7 +109,7 @@ public class CuentasPorCobrarListadoRepository implements ICuentasPorCobrarLista
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en VENTAS.sp_ListarCuentasPorCobrar", e);
+            log.error("Error en VENTAS.sp_ListarCuentaPorCobrarPorCliente", e);
         }
         return rpt;
     }

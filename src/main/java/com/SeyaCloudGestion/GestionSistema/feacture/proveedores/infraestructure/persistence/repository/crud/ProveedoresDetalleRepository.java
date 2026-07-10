@@ -1,9 +1,9 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.proveedores.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.request.RequestDetalleProveedores;
-import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.response.ResponseDetalleProveedores;
+import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.request.RequestDetalleProveedor;
+import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.response.ResponseDetalleProveedor;
 import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.domain.interfaces.IProveedoresDetalle;
-import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.infraestructure.persistence.model.ProveedoresModel;
+import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.infraestructure.persistence.model.ProveedorModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,28 +26,32 @@ public class ProveedoresDetalleRepository implements IProveedoresDetalle {
     private DataSource con;
 
     @Override
-    public ResponseDetalleProveedores DetalleProveedores(RequestDetalleProveedores request) {
-        ResponseDetalleProveedores response = new ResponseDetalleProveedores();
-        String SQL = "{ call COMPRAS.sp_ObtenerProveedoresPorId(?) }";
+    public ResponseDetalleProveedor DetalleProveedores(RequestDetalleProveedor request) {
+        ResponseDetalleProveedor response = new ResponseDetalleProveedor();
+        String SQL = "{ call COMPRAS.sp_ObtenerProveedorPorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdProveedores());
+            setParameter(pstmt, 1, request.getIdProveedor());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    ProveedoresModel item = new ProveedoresModel();
+                    ProveedorModel item = new ProveedorModel();
                     item.setIdProveedor(rs.getLong("idProveedor"));
                     item.setRazonSocial(rs.getString("razonSocial"));
                     item.setRuc(rs.getString("ruc"));
+                    item.setIdTipoDocumento(rs.getLong("idTipoDocumentoIdentidad"));
+                    item.setRuc(rs.getString("telefono"));
                     item.setEmail(rs.getString("email"));
                     item.setDireccion(rs.getString("direccion"));
                     item.setEstado(rs.getInt("estado"));
                     item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
                     response.setExito(true);
-                    response.setMessage("Proveedores obtenido correctamente.");
-                    response.setProveedores(item);
+                    response.setMessage("Proveedores obtenidos correctamente.");
+                    response.setProveedor(item);
                 } else {
                     response.setExito(false);
                     response.setMessage("No se encontró Proveedores.");

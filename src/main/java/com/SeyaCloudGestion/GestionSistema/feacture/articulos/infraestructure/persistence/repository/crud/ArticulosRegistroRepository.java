@@ -33,17 +33,19 @@ public class ArticulosRegistroRepository implements IArticulosRegistro {
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             Long userId = 1L;
+            Long empresaId= 1l;
             pstmt.setString(1, request.getImagenUrl());
             pstmt.setString(2, request.getDescripcion());
             pstmt.setString(3, request.getCodigoArticulo());
-            pstmt.setString(4, request.getCodigoBarras());
-            pstmt.setDouble(5, request.getPrecioVenta());
-            pstmt.setLong(6, request.getIdSubFamilia());
-            pstmt.setLong(7, request.getIdUnidadMedida());
-            pstmt.setDouble(8, request.getCostoCompra());
-            pstmt.setDouble(9, request.getStockMinimo());
-            pstmt.setLong(10, request.getIdMarca());
-            pstmt.setLong(11, userId);
+            //pstmt.setString(4, request.getCodigoBarras());
+            pstmt.setDouble(4, request.getPrecioVenta());
+            pstmt.setLong(5, request.getIdSubFamilia());
+            pstmt.setLong(6, request.getIdUnidadMedida());
+            pstmt.setDouble(7, request.getCostoCompra());
+            pstmt.setDouble(8, request.getStockMinimo());
+            pstmt.setLong(9, request.getIdMarca());
+            pstmt.setLong(10, userId);
+            pstmt.setLong(11, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -57,7 +59,11 @@ public class ArticulosRegistroRepository implements IArticulosRegistro {
 
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un articulo con ese codigo.");
+            } else {
+                rpt.setMessage("Error al registrar el articulo.");
+            }
         }
 
         return rpt;

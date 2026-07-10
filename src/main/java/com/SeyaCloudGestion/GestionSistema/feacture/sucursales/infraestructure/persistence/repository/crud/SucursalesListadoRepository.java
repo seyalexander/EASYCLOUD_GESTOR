@@ -31,12 +31,15 @@ public class SucursalesListadoRepository implements ISucursalesListado {
     public ResponseListaSucursales ListaSucursales(RequestListaSucursales request) {
         ResponseListaSucursales rpt = new ResponseListaSucursales();
         List<SucursalesModel> registros = new ArrayList<>();
-        String SQL = "{ call INVENTARIO.sp_ListarSucursales(?) }";
+        String SQL = "{ call INVENTARIO.sp_ListarSucursales(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setLong(1, request.getEstado());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
+
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     SucursalesModel item = new SucursalesModel();

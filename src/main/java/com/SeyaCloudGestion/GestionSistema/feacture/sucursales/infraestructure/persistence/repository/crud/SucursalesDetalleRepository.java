@@ -28,12 +28,14 @@ public class SucursalesDetalleRepository implements ISucursalesDetalle {
     @Override
     public ResponseDetalleSucursales DetalleSucursales(RequestDetalleSucursales request) {
         ResponseDetalleSucursales response = new ResponseDetalleSucursales();
-        String SQL = "{ call INVENTARIO.sp_ObtenerSucursalesPorId(?) }";
+        String SQL = "{ call INVENTARIO.sp_ObtenerSucursalesPorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdSucursales());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {

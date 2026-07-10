@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class RequestRegistroDevolucion {
-    @Min(value = 1, message = "El id de venta debe ser mayor a 0")
+    @Min(value = 1, message = "El id del detalle venta debe ser mayor a 0")
     private long idVenta;
 
     @Min(value = 1, message = "El id del artículo debe ser mayor a 0")
@@ -21,14 +21,4 @@ public class RequestRegistroDevolucion {
     @Size(max = 250, message = "El motivo no debe superar los 250 caracteres")
     private String motivo;
 
-    @NotNull(message = "La fecha de devolución es obligatoria")
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime fechaDevolucion;
-
-    @Min(value = 1, message = "El id de usuario debe ser mayor a 0")
-    private long idUsuario;
-
-    @NotNull(message = "La fecha de ingreso es obligatoria")
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime fechaIngreso;
 }

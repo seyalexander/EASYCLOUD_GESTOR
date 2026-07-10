@@ -28,12 +28,13 @@ public class CodigoBarraDetalleRepository implements ICodigoBarraDetalle {
     @Override
     public ResponseDetalleCodigoBarra DetalleCodigoBarra(RequestDetalleCodigoBarra request) {
         ResponseDetalleCodigoBarra response = new ResponseDetalleCodigoBarra();
-        String SQL = "{ call PRODUCTOS.sp_ObtenerCodigoBarraPorId() }";
+        String SQL = "{ call PRODUCTOS.sp_ObtenerCodigoBarraPorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
-
-            // Sin parámetro id definido en el request.
+            pstmt.setLong(1,request.getIdCodigoBarra());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {

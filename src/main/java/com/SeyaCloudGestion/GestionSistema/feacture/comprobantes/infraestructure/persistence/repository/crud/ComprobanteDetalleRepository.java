@@ -4,6 +4,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.application.dto
 import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.application.dto.response.ResponseDetalleComprobante;
 import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.domain.interfaces.IComprobanteDetalle;
 import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.infraestructure.persistence.model.ComprobanteModel;
+import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.infraestructure.persistence.model.EstadoComprobante;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -46,7 +47,10 @@ public class ComprobanteDetalleRepository implements IComprobanteDetalle {
                     item.setFechaEmision((rs.getTimestamp("fechaEmision") != null ? rs.getTimestamp("fechaEmision").toLocalDateTime() : null));
                     item.setUrlXml(rs.getString("urlXml"));
                     item.setUrlPdf(rs.getString("urlPdf"));
-                    item.setEstado(rs.getString("estado"));
+                    String estadoBD = rs.getString("estado");
+                    if (estadoBD != null) {
+                        item.setEstado(EstadoComprobante.valueOf(estadoBD.toUpperCase().trim()));
+                    }
                     item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
                     response.setExito(true);
                     response.setMessage("Comprobante obtenido correctamente.");

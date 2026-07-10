@@ -26,7 +26,7 @@ public class ListaPreciosRegistroRepository implements IListaPreciosRegistro {
     @Override
     public ResponseRegistroListaPrecios RegistroListaPrecios(RequestRegistroListaPrecios request) {
         ResponseRegistroListaPrecios rpt = new ResponseRegistroListaPrecios();
-        String SQL = "{ call PRODUCTOS.sp_RegistroListaPrecio(?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroListaPrecio(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -34,6 +34,8 @@ public class ListaPreciosRegistroRepository implements IListaPreciosRegistro {
             pstmt.setString(1,request.getDescripcion());
             Long userId = 1L;
             pstmt.setLong(2, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(3, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -46,7 +48,11 @@ public class ListaPreciosRegistroRepository implements IListaPreciosRegistro {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe una lista precio con esa descripción.");
+            } else {
+                rpt.setMessage("Error al registrar la unidad de medida.");
+            }
             log.error("Error en PRODUCTOS.sp_RegistroListaPrecio", e);
         }
         return rpt;

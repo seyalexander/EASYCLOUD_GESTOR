@@ -1,18 +1,25 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.request.RequestDetalleTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.request.RequestEditarAllTipoDocumento;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.response.ResponseDetalleTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.response.ResponseEditarAllTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.domain.services.TipoDocumentoService;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.domain.validations.VerificarCambiosTipoDocumento;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EdicionAllTipoDocumentoUseCase {
     private final TipoDocumentoService tipoDocumentoService;
-
+    private final VerificarCambiosTipoDocumento verificarCambios;
+    private final DetalleTipoDocumentoUseCase detalleTipoDocumentoUseCase;
     public EdicionAllTipoDocumentoUseCase(
-            TipoDocumentoService tipoDocumentoService
+            TipoDocumentoService tipoDocumentoService, VerificarCambiosTipoDocumento verificarCambios, DetalleTipoDocumentoUseCase detalleTipoDocumentoUseCase
     ){
         this.tipoDocumentoService = tipoDocumentoService;
+        this.verificarCambios = verificarCambios;
+        this.detalleTipoDocumentoUseCase = detalleTipoDocumentoUseCase;
     }
 
     public ResponseEditarAllTipoDocumento EditarAllTipoDocumento(RequestEditarAllTipoDocumento request) {
@@ -32,11 +39,12 @@ public class EdicionAllTipoDocumentoUseCase {
                 String mensajeError = "La descripción no puede estar vacía";
                 throw new IllegalArgumentException(mensajeError);
             }
-
+            /*
             if (request.getTipoCaracter() == 0) {
                 String mensajeError = "El tipo carácter no se está enviando correctamente";
                 throw new IllegalArgumentException(mensajeError);
             }
+             */
 
             if (request.getCodigoSunat() == null || request.getCodigoSunat().isEmpty()) {
                 String mensajeError = "El Código SUNAT del documento no puede enviarse en vacío";
@@ -61,6 +69,16 @@ public class EdicionAllTipoDocumentoUseCase {
             if (request.getEstado() > 1 || request.getEstado() < 0) {
                 String mensajeError = "El estado no está dentro de los parámetros correctos";
                 throw new IllegalArgumentException(mensajeError);
+            }
+            //tipo documento
+            ResponseDetalleTipoDocumento detalleBDTipoDocumento= detalleTipoDocumentoUseCase.DetalleTipoDocumento(request.getIdTipoDocumento());
+
+            if (!detalleBDTipoDocumento.isExito() || detalleBDTipoDocumento.getTipoDocumento() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+            //verificar cambios
+            if (!verificarCambios.verificarCambios(detalleBDTipoDocumento.getTipoDocumento(), request)) {
+                throw new ResourceNotFoundException("No se detectaron cambios para actualizar.");
             }
 
             //long userId = SecurityUtils.getCurrentUserId();

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class DevolucionModel extends AuditableModel {
     private long idDevolucion;
-    private long idVenta;
+    private long idDetalleVenta;
     private long idArticulo;
     private double cantidad;
     private String motivo;

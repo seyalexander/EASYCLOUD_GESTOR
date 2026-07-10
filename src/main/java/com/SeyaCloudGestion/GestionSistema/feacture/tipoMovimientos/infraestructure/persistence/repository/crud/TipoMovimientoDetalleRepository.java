@@ -28,12 +28,14 @@ public class TipoMovimientoDetalleRepository implements ITipoMovimientoDetalle {
     @Override
     public ResponseDetalleTipoMovimiento DetalleTipoMovimiento(RequestDetalleTipoMovimiento request) {
         ResponseDetalleTipoMovimiento response = new ResponseDetalleTipoMovimiento();
-        String SQL = "{ call INVENTARIO.sp_ObtenerTipoMovimientoPorId(?) }";
+        String SQL = "{ call INVENTARIO.sp_ObtenerTipoMovimientoPorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setLong(1, request.getIdTipoMovimiento());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -64,6 +66,7 @@ public class TipoMovimientoDetalleRepository implements ITipoMovimientoDetalle {
                     item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
                     item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
 
+                    response.setExito(true);
                     response.setMessage("TipoMovimiento obtenido correctamente.");
                     response.setTipoMovimiento(item);
                 } else {
@@ -74,7 +77,7 @@ public class TipoMovimientoDetalleRepository implements ITipoMovimientoDetalle {
         } catch (SQLException e) {
             response.setExito(false);
             response.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_ObtenerTipoMovimientoPorId", e);
+            log.error("Error en INVENTARIO.sp_ObtenerTipoMovimientoPorId", e);
         }
         return response;
     }

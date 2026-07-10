@@ -10,5 +10,5 @@ import java.util.List;
 @Data
 public class ResponseListaCuentasPorPagar extends ResponseGeneral implements Serializable {
 
-    private List<CuentasPorPagarModel> cuentasPorPagares;
+    private List<CuentasPorPagarModel> cuentasPorPagar;
 }

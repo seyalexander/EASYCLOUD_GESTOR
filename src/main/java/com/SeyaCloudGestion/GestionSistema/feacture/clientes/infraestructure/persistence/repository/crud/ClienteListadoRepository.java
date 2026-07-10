@@ -31,49 +31,50 @@ public class ClienteListadoRepository implements IClienteListado {
     public ResponseListaCliente ListaCliente(RequestListaCliente request) {
         ResponseListaCliente rpt = new ResponseListaCliente();
         List<ClienteModel> registros = new ArrayList<>();
-        String SQL = "{ call CLIENTES.sp_ListarCliente(?) }";
+        String SQL = "{ call CLIENTES.sp_ListarCliente(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            pstmt .setInt(1, request.getEstado());
+            pstmt.setInt(1, request.getEstado());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
+            ResultSet rs = pstmt.executeQuery();
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    ClienteModel item = new ClienteModel();
+            while (rs.next()) {
+                ClienteModel item = new ClienteModel();
                 item.setIdCliente(rs.getLong("idCliente"));
                 item.setNombres(rs.getString("nombres"));
                 item.setApellidos(rs.getString("apellidos"));
                 item.setRazonSocial(rs.getString("razonSocial"));
                 item.setNumeroDocumento(rs.getString("numeroDocumento"));
-                item.setIdTipoDocumento(rs.getLong("idTipoDocumento"));
+                item.setIdTipoDocumento(rs.getLong("idTipoDocumentoIdentidad"));
                 item.setIdTipoCliente(rs.getLong("idTipoCliente"));
                 item.setTelefono(rs.getString("telefono"));
                 item.setEmail(rs.getString("email"));
                 item.setEstado(rs.getInt("estado"));
-                    item.setFechaCreacion(
-                            rs.getTimestamp("fechaCreacion") != null
-                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
-                                    : null
-                    );
+                item.setFechaCreacion(
+                        rs.getTimestamp("fechaCreacion") != null
+                                ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                : null
+                );
 
-                    item.setFechaEdicion(
-                            rs.getTimestamp("fechaEdicion") != null
-                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
-                                    : null
-                    );
+                item.setFechaEdicion(
+                        rs.getTimestamp("fechaEdicion") != null
+                                ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                : null
+                );
 
-                    item.setFechaAnulacion(
-                            rs.getTimestamp("fechaAnulacion") != null
-                                    ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
-                                    : null
-                    );
-                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
-                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
-                    item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
+                item.setFechaAnulacion(
+                        rs.getTimestamp("fechaAnulacion") != null
+                                ? rs.getTimestamp("fechaAnulacion").toLocalDateTime()
+                                : null
+                );
+                item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+                item.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
 
-                    registros.add(item);
-                }
+                registros.add(item);
             }
 
             rpt.setExito(true);

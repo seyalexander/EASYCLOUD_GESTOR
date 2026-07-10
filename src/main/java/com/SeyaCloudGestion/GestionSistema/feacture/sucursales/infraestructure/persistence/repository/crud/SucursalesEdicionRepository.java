@@ -28,7 +28,7 @@ public class SucursalesEdicionRepository implements ISucursalesEdicion {
     @Override
     public ResponseEditarAllSucursales EditarAllSucursales(RequestEditarAllSucursales request) {
         ResponseEditarAllSucursales rpt = new ResponseEditarAllSucursales();
-        String SQL = "{ call INVENTARIO.sp_EditarSucursales(?,?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_EditarSucursales(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -38,6 +38,8 @@ public class SucursalesEdicionRepository implements ISucursalesEdicion {
             pstmt.setInt(3, request.getEstado());
             Long userId = 1L;
             pstmt.setLong(4, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(5, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -49,7 +51,11 @@ public class SucursalesEdicionRepository implements ISucursalesEdicion {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe una sucursal con esa descripción.");
+            } else {
+                rpt.setMessage("Error al actualizar la sucursal.");
+            }
             log.error("Error en INVENTARIO.sp_EditarSucursales", e);
         }
         return rpt;
@@ -58,7 +64,7 @@ public class SucursalesEdicionRepository implements ISucursalesEdicion {
     @Override
     public ResponseEditarEstadoSucursales EditarEstadoSucursales(RequestEditarEstadoSucursales request, int estado) {
         ResponseEditarEstadoSucursales rpt = new ResponseEditarEstadoSucursales();
-        String SQL = "{ call INVENTARIO.sp_EditarSucursales_Estado(?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_EditarSucursales_Estado(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -67,6 +73,8 @@ public class SucursalesEdicionRepository implements ISucursalesEdicion {
             pstmt.setInt(2, estado);
             Long userId = 1L;
             pstmt.setLong(3, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

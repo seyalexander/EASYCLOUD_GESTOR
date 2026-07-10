@@ -17,7 +17,7 @@ public class ComprobanteModel extends AuditableModel implements Serializable {
     private LocalDateTime fechaEmision;
     private String urlXml;
     private String urlPdf;
-    private String estado;
+    private EstadoComprobante estado;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime fechaIngreso;
 }

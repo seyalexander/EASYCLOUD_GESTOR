@@ -1,9 +1,9 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.proveedores.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.request.RequestEditarAllProveedores;
-import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.request.RequestEditarEstadoProveedores;
-import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.response.ResponseEditarAllProveedores;
-import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.response.ResponseEditarEstadoProveedores;
+import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.request.RequestEditarAllProveedor;
+import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.request.RequestEditarEstadoProveedor;
+import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.response.ResponseEditarAllProveedor;
+import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.application.dto.response.ResponseEditarEstadoProveedor;
 import com.SeyaCloudGestion.GestionSistema.feacture.proveedores.domain.interfaces.IProveedoresEdicion;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +26,24 @@ public class ProveedoresEdicionRepository implements IProveedoresEdicion {
     private DataSource con;
 
     @Override
-    public ResponseEditarAllProveedores EditarAllProveedores(RequestEditarAllProveedores request) {
-        ResponseEditarAllProveedores rpt = new ResponseEditarAllProveedores();
-        String SQL = "{ call COMPRAS.sp_EditarProveedores(?) }";
+    public ResponseEditarAllProveedor EditarAllProveedores(RequestEditarAllProveedor request) {
+        ResponseEditarAllProveedor rpt = new ResponseEditarAllProveedor();
+        String SQL = "{ call COMPRAS.sp_EditarProveedor(?, ?, ?, ?, ?, ?, ?, ?, ?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
+            pstmt.setLong(1, request.getIdProveedor());
+            pstmt.setString(2, request.getRazonSocial());
+            pstmt.setString(3, request.getRuc());
+            pstmt.setString(4, request.getTelefono());
+            pstmt.setString(5, request.getEmail());
+            pstmt.setString(6, request.getDireccion());
+            Long empresaId = 1L;
+            pstmt.setLong(7, empresaId);
+            pstmt.setInt(8, request.getEstado());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(9, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -53,17 +62,19 @@ public class ProveedoresEdicionRepository implements IProveedoresEdicion {
     }
 
     @Override
-    public ResponseEditarEstadoProveedores EditarEstadoProveedores(RequestEditarEstadoProveedores request, int estado) {
-        ResponseEditarEstadoProveedores rpt = new ResponseEditarEstadoProveedores();
-        String SQL = "{ call COMPRAS.sp_EditarProveedores_Estado(?,?,?) }";
+    public ResponseEditarEstadoProveedor EditarEstadoProveedores(RequestEditarEstadoProveedor request, int estado) {
+        ResponseEditarEstadoProveedor rpt = new ResponseEditarEstadoProveedor();
+        String SQL = "{ call COMPRAS.sp_EditarProveedor_Estado(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdProveedores());
+            setParameter(pstmt, 1, request.getIdProveedor());
             pstmt.setInt(2, estado);
             Long userId = 1L;
             pstmt.setLong(3, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -75,8 +86,12 @@ public class ProveedoresEdicionRepository implements IProveedoresEdicion {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
-            log.error("Error en COMPRAS.sp_EditarProveedores_Estado", e);
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe este proveedor .");
+            } else {
+                rpt.setMessage("Error al registrar el proveedor.");
+            }
+            log.error("Error en COMPRAS.sp_EditarProveedor_Estado", e);
         }
         return rpt;
     }

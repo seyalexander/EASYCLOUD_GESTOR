@@ -12,18 +12,18 @@ import org.springframework.stereotype.Component;
 public class EdicionUnidadMedidaUseCase {
     private final UnidadMedidaService unidadMedidaService;
     private final VerificarCambiosUnidadMedida verificarCambiosUnidadMedida;
+    private final DetalleUnidadMedidaUseCase detalleUnidadMedidaUseCase;
 
-    public EdicionUnidadMedidaUseCase(UnidadMedidaService unidadMedidaService, VerificarCambiosUnidadMedida verificarCambiosUnidadMedida) {
+    public EdicionUnidadMedidaUseCase(UnidadMedidaService unidadMedidaService, VerificarCambiosUnidadMedida verificarCambiosUnidadMedida, DetalleUnidadMedidaUseCase detalleUnidadMedidaUseCase) {
         this.unidadMedidaService = unidadMedidaService;
         this.verificarCambiosUnidadMedida = verificarCambiosUnidadMedida;
+        this.detalleUnidadMedidaUseCase = detalleUnidadMedidaUseCase;
     }
 
     public ResponseEditarAllUnidadMedida EdicionAllUnidadMedida(RequestEditarAllUnidadMedida request) {
         try {
-            RequestDetalleUnidadMedida requestDetalle = new RequestDetalleUnidadMedida();
-            requestDetalle.setIdUnidadMedida(request.getIdUnidadMedida());
-
-            ResponseDetalleUnidadMedida detalleBD= unidadMedidaService.DetalleUnidadMedida(requestDetalle);
+            //unidad medida
+            ResponseDetalleUnidadMedida detalleBD= detalleUnidadMedidaUseCase.DetalleUnidadMedida(request.getIdUnidadMedida());
             if (!detalleBD.isExito() || detalleBD.getUnidadMedida() == null) {
                 throw new IllegalArgumentException("La unidad de medida no existe.");
             }

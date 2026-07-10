@@ -1,6 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.dto.request;
 
 import com.SeyaCloudGestion.GestionSistema.common.anotations.NumeroTelefonicoValidator.ValidarTelefono;
+import com.SeyaCloudGestion.GestionSistema.common.anotations.letras.SoloLetras;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -8,9 +9,11 @@ import lombok.Data;
 public class RequestRegistroCliente {
 
     @Size(max = 150, message = "Los nombres no deben superar los 150 caracteres")
+    @SoloLetras
     private String nombres;
 
     @Size(max = 150, message = "Los apellidos no deben superar los 150 caracteres")
+    @SoloLetras
     private String apellidos;
 
     @Size(max = 200, message = "La razón social no debe superar los 200 caracteres")

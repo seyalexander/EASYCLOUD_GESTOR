@@ -9,10 +9,13 @@ public class CompraModel implements Serializable {
     private long idCompra;
     private long idProveedor;
     private long idSucursal;
+    private long idAlmacen;
+    private long idTipoComprobante;
+    private String serie;
+    private String numero;
     private String fechaCompra;
     private double subTotal;
     private double impuesto;
     private double total;
     private int estado;
-    private String fechaIngreso;
 }

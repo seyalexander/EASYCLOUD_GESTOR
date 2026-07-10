@@ -1,9 +1,14 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
+import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestDetalleSeries;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.request.RequestEditarEstadoSeries;
+import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.response.ResponseDetalleSerieDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.application.dto.response.ResponseEditarEstadoSerieDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.serieDocumento.domain.services.SerieDocumentoService;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 public class EdicionSerieDocumentoEstadoUseCase {
@@ -14,6 +19,19 @@ public class EdicionSerieDocumentoEstadoUseCase {
     }
     public ResponseEditarEstadoSerieDocumento AnularSerieDocumento(Long idSerieDocumento) {
         try {
+            RequestDetalleSeries requestDetalle = new RequestDetalleSeries();
+            requestDetalle.setIdSeries(idSerieDocumento);
+
+            ResponseDetalleSerieDocumento detalleBD= serieDocumentoService.DetalleSerieDocumento(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getSerieDocumento() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getSerieDocumento().getEstado(), 0)) {
+                throw new IllegalArgumentException("La serie ya se encuentra anulada.");
+            }
+
             RequestEditarEstadoSeries request = new RequestEditarEstadoSeries();
             request.setIdSeries(idSerieDocumento);
             ResponseEditarEstadoSerieDocumento response = serieDocumentoService.EditarEstadoSerieDocumento(request,0);
@@ -38,6 +56,19 @@ public class EdicionSerieDocumentoEstadoUseCase {
 
     public ResponseEditarEstadoSerieDocumento ActivarSerieDocumento(Long idSerieDocumento) {
         try {
+            RequestDetalleSeries requestDetalle = new RequestDetalleSeries();
+            requestDetalle.setIdSeries(idSerieDocumento);
+
+            ResponseDetalleSerieDocumento detalleBD= serieDocumentoService.DetalleSerieDocumento(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getSerieDocumento() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getSerieDocumento().getEstado(), 1)) {
+                throw new IllegalArgumentException("La serie ya se encuentra activada.");
+            }
+
             RequestEditarEstadoSeries request = new RequestEditarEstadoSeries();
             request.setIdSeries(idSerieDocumento);
             ResponseEditarEstadoSerieDocumento response = serieDocumentoService.EditarEstadoSerieDocumento(request,1);

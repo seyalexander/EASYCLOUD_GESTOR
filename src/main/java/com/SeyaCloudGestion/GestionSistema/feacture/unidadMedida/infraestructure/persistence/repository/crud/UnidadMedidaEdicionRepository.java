@@ -52,7 +52,11 @@ public class UnidadMedidaEdicionRepository implements IUnidadMedidaEdicion {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe una unidad de medida con esa descripción.");
+            } else {
+                rpt.setMessage("Error al actualizar la unidad de medida.");
+            }
             log.error("Error en PRODUCTOS.sp_EditarUnidadMedida", e);
         }
         return rpt;

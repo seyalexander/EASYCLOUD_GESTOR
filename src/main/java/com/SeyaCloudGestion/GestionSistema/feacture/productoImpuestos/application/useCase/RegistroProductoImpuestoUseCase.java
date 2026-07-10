@@ -1,20 +1,29 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseDetalleArticulo;
+import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.useCase.DetalleArticuloUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.dto.request.RequestRegistroProductoImpuesto;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.application.dto.response.ResponseRegistroProductoImpuesto;
 import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.domain.services.ProductoImpuestoService;
+import com.SeyaCloudGestion.GestionSistema.feacture.productoImpuestos.domain.validations.ValidacionRequest_RegistrarProductoImpuesto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RegistroProductoImpuestoUseCase {
     private final ProductoImpuestoService productoImpuestoService;
+    private final DetalleArticuloUseCase detalleArticuloUseCase;
 
-    public RegistroProductoImpuestoUseCase(ProductoImpuestoService productoImpuestoService) {
+    public RegistroProductoImpuestoUseCase(ProductoImpuestoService productoImpuestoService, DetalleArticuloUseCase detalleArticuloUseCase) {
         this.productoImpuestoService = productoImpuestoService;
+        this.detalleArticuloUseCase = detalleArticuloUseCase;
     }
 
     public ResponseRegistroProductoImpuesto RegistroProductoImpuesto(RequestRegistroProductoImpuesto request) {
         try {
+            ResponseDetalleArticulo detalleBDArt = detalleArticuloUseCase.DetalleArticulo(request.getIdArticulo());
+
+            ValidacionRequest_RegistrarProductoImpuesto.validar(detalleBDArt);
+
             ResponseRegistroProductoImpuesto response = productoImpuestoService.RegistroProductoImpuesto(request);
 
             if (response.isExito()) {}

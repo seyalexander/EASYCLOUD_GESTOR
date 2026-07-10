@@ -48,7 +48,7 @@ public class ArticulosService implements IArticulosRegistro, IArticulosListado, 
     }
 
     @Override
-    @Cacheable(value = "articulo_detalle", key = "#request.idArticulos")
+    @Cacheable(value = "articulo_detalle", key = "#request.idArticulo")
     public ResponseDetalleArticulo DetalleArticulos(RequestDetalleArticulo request) {
         return articuloDetalleRepository.DetalleArticulos(request);
     }

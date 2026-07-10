@@ -28,7 +28,7 @@ public class TipoMovimientoEdicionRepository implements ITipoMovimientoEdicion {
     @Override
     public ResponseEditarAllTipoMovimiento EditarAllTipoMovimiento(RequestEditarAllTipoMovimiento request) {
         ResponseEditarAllTipoMovimiento rpt = new ResponseEditarAllTipoMovimiento();
-        String SQL = "{ call INVENTARIO.sp_EditarTipoMovimiento(?,?,?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_EditarTipoMovimiento(?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -38,6 +38,8 @@ public class TipoMovimientoEdicionRepository implements ITipoMovimientoEdicion {
             setParameter(pstmt, 4, request.getEstado());
             Long userId = 1L;
             pstmt.setLong(5, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(6, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -49,8 +51,12 @@ public class TipoMovimientoEdicionRepository implements ITipoMovimientoEdicion {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_EditarTipoMovimiento", e);
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un tipo de movimiento con esa descripción.");
+            } else {
+                rpt.setMessage("Error al registrar el tipo movimiento.");
+            }
+            log.error("Error en INVENTARIO.sp_EditarTipoMovimiento", e);
         }
         return rpt;
     }
@@ -58,7 +64,7 @@ public class TipoMovimientoEdicionRepository implements ITipoMovimientoEdicion {
     @Override
     public ResponseEditarEstadoTipoMovimiento EditarEstadoTipoMovimiento(RequestEditarEstadoTipoMovimiento request, int estado) {
         ResponseEditarEstadoTipoMovimiento rpt = new ResponseEditarEstadoTipoMovimiento();
-        String SQL = "{ call INVENTARIO.sp_EditarTipoMovimiento_Estado(?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_EditarTipoMovimiento_Estado(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -67,6 +73,8 @@ public class TipoMovimientoEdicionRepository implements ITipoMovimientoEdicion {
             pstmt.setInt(2, estado);
             Long userId = 1L;
             pstmt.setLong(3, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

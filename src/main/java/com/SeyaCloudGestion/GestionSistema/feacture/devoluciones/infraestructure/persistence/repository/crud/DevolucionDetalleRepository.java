@@ -39,7 +39,7 @@ public class DevolucionDetalleRepository implements IDevolucionDetalle {
                 if (rs.next()) {
                     DevolucionModel item = new DevolucionModel();
                     item.setIdDevolucion(rs.getLong("idDevolucion"));
-                    item.setIdVenta(rs.getLong("idVenta"));
+                    item.setIdDetalleVenta(rs.getLong("idVenta"));
                     item.setIdArticulo(rs.getLong("idArticulo"));
                     item.setCantidad(rs.getDouble("cantidad"));
                     item.setMotivo(rs.getString("motivo"));

@@ -47,7 +47,4 @@ public class RequestRegistroArticulo {
     @Min(value = 1, message = "Debe seleccionar una marca válida")
     private long idMarca;
 
-    @NotNull(message = "La fecha de ingreso es obligatoria")
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime fechaIngreso;
 }

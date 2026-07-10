@@ -47,7 +47,11 @@ public class TipoPagosRegistroRepository implements ITipoPagosRegistro {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un tipo de pago con esa descripción.");
+            } else {
+                rpt.setMessage("Error al registrar el tipo de pago.");
+            }
             log.error("Error en VENTAS.sp_RegistroTipoPago", e);
         }
         return rpt;

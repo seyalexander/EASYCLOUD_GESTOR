@@ -1,22 +1,39 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
+import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.request.RequestDetalleEmpresa;
 import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.request.RequestEditarEstadoEmpresa;
+import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.response.ResponseDetalleEmpresa;
 import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.response.ResponseEditarEstadoEmpresa;
 import com.SeyaCloudGestion.GestionSistema.feacture.empresa.domain.services.EmpresaService;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class EditarEstadoEmpresaUseCase {
     private final EmpresaService empresaService;
+    private final DetalleEmpresaUseCase detalleEmpresaUseCase;
 
     public EditarEstadoEmpresaUseCase(
-            EmpresaService empresaService
+            EmpresaService empresaService, DetalleEmpresaUseCase detalleEmpresaUseCase
     ){
         this.empresaService = empresaService;
+        this.detalleEmpresaUseCase = detalleEmpresaUseCase;
     }
 
     public ResponseEditarEstadoEmpresa AnularEmpresa(long idEmpresa) {
         try {
+            //get datos
+            ResponseDetalleEmpresa detalleBDEmpresa= detalleEmpresaUseCase.DetalleEmpresa(idEmpresa);
+
+            if (!detalleBDEmpresa.isExito() || detalleBDEmpresa.getEmpresa() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+
+            if (Objects.equals(detalleBDEmpresa.getEmpresa().getEstado(), 0)) {
+                throw new IllegalArgumentException("La Empresa ya se encuentra anulado.");
+            }
 
             RequestEditarEstadoEmpresa request = new  RequestEditarEstadoEmpresa();
             request.setIdEmpresa(idEmpresa);
@@ -47,6 +64,16 @@ public class EditarEstadoEmpresaUseCase {
 
     public ResponseEditarEstadoEmpresa ActivarEmpresa(long idEmpresa) {
         try {
+            //get datos
+            ResponseDetalleEmpresa detalleBDEmpresa= detalleEmpresaUseCase.DetalleEmpresa(idEmpresa);
+
+            if (!detalleBDEmpresa.isExito() || detalleBDEmpresa.getEmpresa() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+
+            if (Objects.equals(detalleBDEmpresa.getEmpresa().getEstado(), 1)) {
+                throw new IllegalArgumentException("La Empresa ya se encuentra activada.");
+            }
 
             RequestEditarEstadoEmpresa request = new  RequestEditarEstadoEmpresa();
             request.setIdEmpresa(idEmpresa);

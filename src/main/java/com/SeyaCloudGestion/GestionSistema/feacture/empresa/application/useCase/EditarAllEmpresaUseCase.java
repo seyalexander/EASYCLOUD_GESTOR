@@ -1,20 +1,27 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
+import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.request.RequestDetalleEmpresa;
 import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.request.RequestEditarAllEmpresa;
 import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.request.RequestEditarEstadoEmpresa;
+import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.response.ResponseDetalleEmpresa;
 import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.response.ResponseEditarAllEmpresa;
 import com.SeyaCloudGestion.GestionSistema.feacture.empresa.application.dto.response.ResponseEditarEstadoEmpresa;
 import com.SeyaCloudGestion.GestionSistema.feacture.empresa.domain.services.EmpresaService;
+import com.SeyaCloudGestion.GestionSistema.feacture.empresa.domain.validations.VerificarCambiosEmpresa;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EditarAllEmpresaUseCase {
     private final EmpresaService empresaService;
-
+    private final VerificarCambiosEmpresa verificarCambios;
+    private final DetalleEmpresaUseCase detalleEmpresaUseCase;
     public EditarAllEmpresaUseCase(
-            EmpresaService empresaService
+            EmpresaService empresaService, VerificarCambiosEmpresa verificarCambios, DetalleEmpresaUseCase detalleEmpresaUseCase
     ){
         this.empresaService = empresaService;
+        this.verificarCambios = verificarCambios;
+        this.detalleEmpresaUseCase = detalleEmpresaUseCase;
     }
 
     public ResponseEditarAllEmpresa EditarEmpresa(RequestEditarAllEmpresa request) {
@@ -48,7 +55,16 @@ public class EditarAllEmpresaUseCase {
             if ( !request.getEmail().trim().isEmpty() && !request.getEmail().trim().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
                 throw new IllegalArgumentException("El email no tiene un formato válido.");
             }
+            //get datos
+            ResponseDetalleEmpresa detalleBD= detalleEmpresaUseCase.DetalleEmpresa(request.getIdEmpresa());
 
+            if (!detalleBD.isExito() || detalleBD.getEmpresa() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+
+            if (!verificarCambios.verificarCambios(detalleBD.getEmpresa(), request)) {
+                throw new ResourceNotFoundException("No se detectaron cambios para actualizar.");
+            }
             //long userId = SecurityUtils.getCurrentUserId();
             long userId = 1L;
 

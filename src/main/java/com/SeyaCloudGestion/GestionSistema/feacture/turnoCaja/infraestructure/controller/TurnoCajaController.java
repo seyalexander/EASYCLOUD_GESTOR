@@ -1,9 +1,9 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.controller;
 
 import com.SeyaCloudGestion.GestionSistema.common.enums.TipoNotificacion;
-import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestEditarAllTurnoCaja;
+import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestCerrarTurnoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestListaTurnoCaja;
-import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestRegistroTurnoCaja;
+import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.RequestAbrirTurnoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.useCase.*;
 import com.SeyaCloudGestion.GestionSistema.websockets.application.dto.*;
@@ -20,20 +20,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/TurnoCaja")
 public class TurnoCajaController {
     private final ListaTurnoCajaUseCase listaTurnoCajaUseCase;
-    private final RegistroTurnoCajaUseCase registroTurnoCajaUseCase;
-    private final EdicionTurnoCajaUseCase edicionTurnoCajaUseCase;
-    private final EdicionTurnoCajaEstadoUseCase edicionTurnoCajaEstadoUseCase;
+    private final AbrirTurnoCajaUseCase abrirTurnoCajaUseCase;
+    private final CerrarTurnoCajaUseCase cerrarTurnoCajaUseCase;
     private final DetalleTurnoCajaUseCase detalleTurnoCajaUseCase;
     private final NotificacionTurnoCajaService notificacionTurnoCajaService;
 
-    public TurnoCajaController(ListaTurnoCajaUseCase listaTurnoCajaUseCase, RegistroTurnoCajaUseCase registroTurnoCajaUseCase, EdicionTurnoCajaUseCase edicionTurnoCajaUseCase, EdicionTurnoCajaEstadoUseCase edicionTurnoCajaEstadoUseCase, DetalleTurnoCajaUseCase detalleTurnoCajaUseCase, NotificacionTurnoCajaService notificacionTurnoCajaService) {
+    public TurnoCajaController(ListaTurnoCajaUseCase listaTurnoCajaUseCase, AbrirTurnoCajaUseCase abrirTurnoCajaUseCase, CerrarTurnoCajaUseCase cerrarTurnoCajaUseCase, DetalleTurnoCajaUseCase detalleTurnoCajaUseCase, NotificacionTurnoCajaService notificacionTurnoCajaService) {
         this.listaTurnoCajaUseCase = listaTurnoCajaUseCase;
-        this.registroTurnoCajaUseCase = registroTurnoCajaUseCase;
-        this.edicionTurnoCajaUseCase = edicionTurnoCajaUseCase;
-        this.edicionTurnoCajaEstadoUseCase = edicionTurnoCajaEstadoUseCase;
+        this.abrirTurnoCajaUseCase = abrirTurnoCajaUseCase;
+        this.cerrarTurnoCajaUseCase = cerrarTurnoCajaUseCase;
         this.detalleTurnoCajaUseCase = detalleTurnoCajaUseCase;
         this.notificacionTurnoCajaService = notificacionTurnoCajaService;
     }
+
 
     @GetMapping
     @Operation(summary = "Listar turnos de caja", description = "Obtiene la lista de turnos de caja según los filtros enviados")
@@ -45,21 +44,21 @@ public class TurnoCajaController {
     }
 
     @PostMapping
-    @Operation(summary = "Registrar turno de caja", description = "Permite registrar un nuevo turno de caja")
+    @Operation(summary = "Abrir turno de caja", description = "Permite Abrir un nuevo turno de caja")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Turno de caja registrado correctamente"),
             @ApiResponse(responseCode = "400", description = "Error en los datos enviados"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public ResponseEntity<ResponseRegistroTurnoCaja> registroTurnoCaja(
-            @Validated @RequestBody RequestRegistroTurnoCaja request
+    public ResponseEntity<ResponseAbrirTurnoCaja> abrirTurnoCaja(
+            @Validated @RequestBody RequestAbrirTurnoCaja request
     ) {
-        ResponseRegistroTurnoCaja response = registroTurnoCajaUseCase.RegistroTurnoCaja(request);
+        ResponseAbrirTurnoCaja response = abrirTurnoCajaUseCase.RegistroTurnoCaja(request);
 
         if (response.isExito()) {
             NotificacionTurnoCajaDTO notificacion = new NotificacionTurnoCajaDTO();
-            notificacion.setTipo(String.valueOf(TipoNotificacion.REGISTRO));
-            notificacion.setMensaje("Nuevo turno de caja registrado");
+            notificacion.setTipo("CAJA ABIERTA");
+            notificacion.setMensaje("Caja ABIERTA");
 
             notificacionTurnoCajaService.enviarNotificacionTurnoCaja_Registro(notificacion);
 
@@ -70,16 +69,16 @@ public class TurnoCajaController {
     }
 
     @PutMapping
-    @Operation(summary = "Editar turno de caja", description = "Permite editar todos los datos de un turno de caja existente")
-    public ResponseEntity<ResponseEditarAllTurnoCaja> edicionAllTurnoCaja(
-            @Validated @RequestBody RequestEditarAllTurnoCaja request
+    @Operation(summary = "Cerrar turno de caja", description = "Permite Cerrar un turno de caja existente")
+    public ResponseEntity<ResponseCerrarTurnoCaja> cerrarTurnoCaja(
+            @Validated @RequestBody RequestCerrarTurnoCaja request
     ) {
-        ResponseEditarAllTurnoCaja response = edicionTurnoCajaUseCase.EdicionAllTurnoCaja(request);
+        ResponseCerrarTurnoCaja response = cerrarTurnoCajaUseCase.CerrarTurnoCaja(request);
 
         if (response.isExito()) {
             NotificacionTurnoCajaDTO notificacion = new NotificacionTurnoCajaDTO();
-            notificacion.setTipo(String.valueOf(TipoNotificacion.EDICION));
-            notificacion.setMensaje("Turno de caja editado");
+            notificacion.setTipo("Cerrado");
+            notificacion.setMensaje("Turno de caja cerrado");
 
             notificacionTurnoCajaService.enviarNotificacionTurnoCaja_Edicion(notificacion);
 
@@ -89,17 +88,4 @@ public class TurnoCajaController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @GetMapping("/{idTurnoCaja}")
-    @Operation(summary = "Detalle turno de caja", description = "Obtiene el detalle de un turno de caja")
-    public ResponseEntity<ResponseDetalleTurnoCaja> detalleTurnoCaja(
-            @PathVariable long idTurnoCaja
-    ) {
-        ResponseDetalleTurnoCaja response = detalleTurnoCajaUseCase.DetalleTurnoCaja(idTurnoCaja);
-
-        if (response.isExito()) {
-            return ResponseEntity.ok(response);
-        }
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    }
 }

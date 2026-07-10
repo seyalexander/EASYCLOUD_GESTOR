@@ -26,7 +26,7 @@ public class MovimientoStockRegistroRepository implements IMovimientoStockRegist
     @Override
     public ResponseRegistroMovimientoStock RegistroMovimientoStock(RequestRegistroMovimientoStock request) {
         ResponseRegistroMovimientoStock rpt = new ResponseRegistroMovimientoStock();
-        String SQL = "{ call ALMACEN.sp_RegistroMovimientoStock(?,?,?,?,?,?,?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_RegistroMovimientoStock(?,?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -37,10 +37,13 @@ public class MovimientoStockRegistroRepository implements IMovimientoStockRegist
             setParameter(pstmt, 4, request.getCantidad());
             setParameter(pstmt, 5, request.getCostoUnitario());
             setParameter(pstmt, 6, request.getObservacion());
-            setParameter(pstmt, 7, request.getFechaMovimiento());
-            setParameter(pstmt, 8, request.getFechaIngreso());
             Long userId = 1L;
-            pstmt.setLong(9, userId);
+            pstmt.setLong(7, userId);
+            Long empresaId= 1L;
+            Long sucursalId= 1L;
+            setParameter(pstmt, 8, empresaId);
+            setParameter(pstmt, 9, sucursalId);
+
 
             int rowsAffected = pstmt.executeUpdate();
 

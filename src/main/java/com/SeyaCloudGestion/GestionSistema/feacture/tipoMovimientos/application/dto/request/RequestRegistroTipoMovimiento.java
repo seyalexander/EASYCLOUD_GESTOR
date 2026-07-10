@@ -1,10 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 public class RequestRegistroTipoMovimiento {
@@ -17,7 +14,4 @@ public class RequestRegistroTipoMovimiento {
     @Max(value = 1, message = "El valor máximo permitido para entrada es 1")
     private int esEntrada;
 
-    @NotNull(message = "La fecha de ingreso es obligatoria")
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime fechaIngreso;
 }

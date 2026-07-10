@@ -11,6 +11,7 @@ public class MovimientoStockModel extends AuditableModel implements Serializable
 
     private long idMovimientoStock;
     private long idArticulo;
+    private long idSucursal;
     private long idAlmacen;
     private long idTipoMovimiento;
     private double cantidad;

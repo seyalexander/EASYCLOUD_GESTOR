@@ -12,6 +12,7 @@ public class DetalleArticuloUseCase {
     public DetalleArticuloUseCase(ArticulosService articulosService) {
         this.articulosService = articulosService;
     }
+
     public ResponseDetalleArticulo DetalleArticulo(long idArticulos) {
         try {
             RequestDetalleArticulo request = new RequestDetalleArticulo();

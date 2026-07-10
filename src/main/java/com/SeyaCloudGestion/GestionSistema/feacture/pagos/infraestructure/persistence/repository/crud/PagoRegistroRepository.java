@@ -1,6 +1,8 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.pagos.infraestructure.persistence.repository.crud;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.request.RequestRegistroDetallePago;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.request.RequestRegistroPago;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.response.ResponseRegistroDetallePago;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagos.application.dto.response.ResponseRegistroPago;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagos.domain.interfaces.IPagoRegistro;
 import lombok.extern.slf4j.Slf4j;
@@ -24,19 +26,22 @@ public class PagoRegistroRepository implements IPagoRegistro {
     private DataSource con;
 
     @Override
-    public ResponseRegistroPago RegistroPago(RequestRegistroPago request) {
-        ResponseRegistroPago rpt = new ResponseRegistroPago();
+    public ResponseRegistroDetallePago RegistroPago(long idVenta, RequestRegistroDetallePago request) {
+        ResponseRegistroDetallePago rpt = new ResponseRegistroDetallePago();
         String SQL = "{ call VENTAS.sp_RegistroPago(?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdVenta());
+            setParameter(pstmt, 1, idVenta);
             setParameter(pstmt, 2, request.getIdTipoPago());
             setParameter(pstmt, 3, request.getMonto());
             setParameter(pstmt, 4, request.getReferencia());
-            setParameter(pstmt, 5, request.getFechaPago());
-            setParameter(pstmt, 6, request.getFechaIngreso());
+
+            Long empresaId = 1L;
+            Long sucrusalId = 1L;
+            setParameter(pstmt, 5, empresaId);
+            setParameter(pstmt, 6, sucrusalId);
             Long userId = 1L;
             pstmt.setLong(7, userId);
 

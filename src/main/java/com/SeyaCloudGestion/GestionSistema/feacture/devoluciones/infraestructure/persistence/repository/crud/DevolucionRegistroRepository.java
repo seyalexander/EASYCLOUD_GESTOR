@@ -26,20 +26,21 @@ public class DevolucionRegistroRepository implements IDevolucionRegistro {
     @Override
     public ResponseRegistroDevolucion RegistroDevolucion(RequestRegistroDevolucion request) {
         ResponseRegistroDevolucion rpt = new ResponseRegistroDevolucion();
-        String SQL = "{ call VENTAS.sp_RegistroDevolucion(?,?,?,?,?,?,?,?) }";
+        String SQL = "{ call VENTAS.sp_RegistroDevolucion(?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdVenta());
+            //setParameter(pstmt, 1, request.getIdDetalleVenta());
             setParameter(pstmt, 2, request.getIdArticulo());
             setParameter(pstmt, 3, request.getCantidad());
             setParameter(pstmt, 4, request.getMotivo());
-            setParameter(pstmt, 5, request.getFechaDevolucion());
-            setParameter(pstmt, 6, request.getIdUsuario());
-            setParameter(pstmt, 7, request.getFechaIngreso());
+            Long empresaId = 1L;
+            pstmt.setLong(5, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(6, sucursalId);
             Long userId = 1L;
-            pstmt.setLong(8, userId);
+            pstmt.setLong(7, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 

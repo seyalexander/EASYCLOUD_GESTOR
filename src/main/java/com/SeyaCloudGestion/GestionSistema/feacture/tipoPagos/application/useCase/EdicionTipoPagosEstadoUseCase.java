@@ -1,9 +1,14 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.request.RequestDetalleTipoPagos;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.request.RequestEditarEstadoTipoPagos;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.response.ResponseDetalleTipoPagos;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.response.ResponseEditarEstadoTipoPagos;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.domain.services.TipoPagosService;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 public class EdicionTipoPagosEstadoUseCase {
@@ -14,6 +19,19 @@ public class EdicionTipoPagosEstadoUseCase {
     }
     public ResponseEditarEstadoTipoPagos AnularTipoPagos(long idTipoPago) {
         try {
+            RequestDetalleTipoPagos requestDetalle = new RequestDetalleTipoPagos();
+            requestDetalle.setIdTipoPago(idTipoPago);
+
+            ResponseDetalleTipoPagos detalleBD= tipoPagosService.DetalleTipoPagos(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getTipoPagos() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getTipoPagos().getEstado(), 0)) {
+                throw new IllegalArgumentException("El tipo pago ya se encuentra anulado.");
+            }
+
             RequestEditarEstadoTipoPagos request = new RequestEditarEstadoTipoPagos();
             request.setIdTipoPago(idTipoPago);
 
@@ -43,6 +61,19 @@ public class EdicionTipoPagosEstadoUseCase {
 
     public ResponseEditarEstadoTipoPagos ActivarTipoPagos(long idTipoPago) {
         try {
+            RequestDetalleTipoPagos requestDetalle = new RequestDetalleTipoPagos();
+            requestDetalle.setIdTipoPago(idTipoPago);
+
+            ResponseDetalleTipoPagos detalleBD= tipoPagosService.DetalleTipoPagos(requestDetalle);
+
+            if (!detalleBD.isExito() || detalleBD.getTipoPagos() == null) {
+                throw new ResourceNotFoundException("El Id no existe.");
+            }
+
+            if (Objects.equals(detalleBD.getTipoPagos().getEstado(), 1)) {
+                throw new IllegalArgumentException("El tipo pago ya se encuentra Activado.");
+            }
+
             RequestEditarEstadoTipoPagos request = new RequestEditarEstadoTipoPagos();
             request.setIdTipoPago(idTipoPago);
 

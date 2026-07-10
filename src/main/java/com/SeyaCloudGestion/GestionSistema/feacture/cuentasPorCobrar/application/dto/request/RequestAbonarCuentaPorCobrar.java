@@ -1,0 +1,29 @@
+package com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.request;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.*;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+@Data
+public class RequestAbonarCuentaPorCobrar {
+
+    @Min(value = 1, message = "El id de venta debe ser mayor a 0")
+    private long idCuentaPorCobrar;
+
+    @PositiveOrZero(message = "El monto no puede ser negativo")
+    private double montoAbonado;
+
+    @Min(value = 1, message = "El id debe ser mayor a 0")
+    private long idTipoPago;
+
+    @Min(value = 1, message = "El id de la caja debe ser mayor a 0")
+    private long idCaja;
+
+    @NotNull(message = "La fecha de vencimiento es obligatoria")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    @FutureOrPresent(message = "La fecha de vencimiento no puede ser una fecha pasada")
+    private LocalDateTime fechaVencimiento;
+
+}

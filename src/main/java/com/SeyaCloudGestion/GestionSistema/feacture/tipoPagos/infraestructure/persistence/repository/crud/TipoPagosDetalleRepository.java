@@ -3,7 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.infraestructure.p
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.request.RequestDetalleTipoPagos;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.application.dto.response.ResponseDetalleTipoPagos;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.domain.interfaces.ITipoPagosDetalle;
-import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.infraestructure.persistence.model.TipoPagosModel;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoPagos.infraestructure.persistence.model.TipoPagoModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,7 +37,7 @@ public class TipoPagosDetalleRepository implements ITipoPagosDetalle {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    TipoPagosModel item = new TipoPagosModel();
+                    TipoPagoModel item = new TipoPagoModel();
                     item.setIdTipoPago(rs.getLong("idTipoPago"));
                     item.setDescripcion(rs.getString("descripcion"));
                     item.setImagenUrl(rs.getString("imagenUrl"));

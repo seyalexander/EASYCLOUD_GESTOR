@@ -3,7 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.infraestruc
 import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.request.RequestDetallePagoProveedores;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.application.dto.response.ResponseDetallePagoProveedores;
 import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.domain.interfaces.IPagoProveedoresDetalle;
-import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.infraestructure.persistence.model.PagoProveedoresModel;
+import com.SeyaCloudGestion.GestionSistema.feacture.pagoProveedores.infraestructure.persistence.model.PagoProveedorModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,12 +37,12 @@ public class PagoProveedoresDetalleRepository implements IPagoProveedoresDetalle
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    PagoProveedoresModel item = new PagoProveedoresModel();
+                    PagoProveedorModel item = new PagoProveedorModel();
                     item.setIdPagoProveedor(rs.getLong("idPagoProveedor"));
                     item.setIdCuentaPorPagar(rs.getLong("idCuentaPorPagar"));
                     item.setFechaPago((rs.getTimestamp("fechaPago") != null ? rs.getTimestamp("fechaPago").toLocalDateTime() : null));
                     item.setMontoPagado(rs.getDouble("montoPagado"));
-                    item.setMetodoPago(rs.getString("metodoPago"));
+                    item.setIdTipoPago(rs.getLong("idTipoPago"));
                     response.setExito(true);
                     response.setMessage("PagoProveedores obtenido correctamente.");
                     response.setPagoProveedores(item);

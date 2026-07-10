@@ -28,19 +28,21 @@ public class SerieDocumentoEdicionRepository implements ISerieDocumentoEdicion {
     @Override
     public ResponseEditarAllSerieDocumento EditarAllSerieDocumento(RequestEditarAllSeries request) {
         ResponseEditarAllSerieDocumento rpt = new ResponseEditarAllSerieDocumento();
-        String SQL = "{ call dbo.sp_EditarSerieDocumento(?,?,?,?,?,?) }";
+        String SQL = "{ call CONFIGURACION.sp_EditarSerieDocumento(?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             Long userId = 1L;
-            //pstmt.setLong(1, userId);
             pstmt.setLong(1, request.getIdSerieDocumento());
-            pstmt.setLong(2, request.getIdTipoDocumento());
-            pstmt.setString(3, request.getSerie());
-            pstmt.setLong(4, request.getCorrelativoActual());
-            pstmt.setInt(5, request.getEsElectronico());
-            pstmt.setInt(6, request.getEstado());
+            pstmt.setString(2, request.getSerie());
+            pstmt.setInt(3, request.getEsElectronico());
+            pstmt.setInt(4, request.getEstado());
+            pstmt.setLong(5, userId);
+            Long sucursalId = 1L;
+            Long empresaId = 1L;
+            pstmt.setLong(6, sucursalId);
+            pstmt.setLong(7, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -52,8 +54,12 @@ public class SerieDocumentoEdicionRepository implements ISerieDocumentoEdicion {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
-            log.error("Error en dbo.sp_EditarSerieDocumento", e);
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe una serie con esa descripción.");
+            } else {
+                rpt.setMessage("Error al actualizar la serie.");
+            }
+            log.error("Error en CONFIGURACION.sp_EditarSerieDocumento", e);
         }
         return rpt;
     }
@@ -61,15 +67,19 @@ public class SerieDocumentoEdicionRepository implements ISerieDocumentoEdicion {
     @Override
     public ResponseEditarEstadoSerieDocumento EditarEstadoSerieDocumento(RequestEditarEstadoSeries request, int estado) {
         ResponseEditarEstadoSerieDocumento rpt = new ResponseEditarEstadoSerieDocumento();
-        String SQL = "{ call dbo.sp_EditarSerieDocumento_Estado(?,?) }";
+        String SQL = "{ call CONFIGURACION.sp_EditarSerieDocumento_Estado(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setLong(1, request.getIdSeries());
             pstmt.setInt(2, estado);
-            //Long userId = 1L;
-            //pstmt.setLong(3, userId);
+            Long userId = 1L;
+            pstmt.setLong(3, userId);
+            Long sucursalId = 1L;
+            Long empresaId = 1L;
+            pstmt.setLong(4, sucursalId);
+            pstmt.setLong(5, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -82,7 +92,7 @@ public class SerieDocumentoEdicionRepository implements ISerieDocumentoEdicion {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en dbo.sp_EditarSerieDocumento_Estado", e);
+            log.error("Error en CONFIGURACION.sp_EditarSerieDocumento_Estado", e);
         }
         return rpt;
     }

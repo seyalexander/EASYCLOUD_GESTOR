@@ -3,6 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.domain.services;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.request.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.application.dto.response.*;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.domain.interfaces.*;
+import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.persistence.model.EstadoCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.turnoCaja.infraestructure.persistence.repository.crud.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -11,52 +12,42 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class TurnoCajaService implements ITurnoCajaListado, ITurnoCajaRegistro, ITurnoCajaEdicion, ITurnoCajaDetalle {
+public class TurnoCajaService implements ITurnoCajaListado, ITurnoCajaAbrir, ITurnoCajaCerrar, ITurnoCajaDetalle {
 
     private final TurnoCajaListadoRepository turnoCajaListadoRepository;
-    private final TurnoCajaRegistroRepository turnoCajaRegistroRepository;
-    private final TurnoCajaEdicionRepository turnoCajaEdicionRepository;
+    private final TurnoCajaAbrirRepository abrirTurnoCaja;
+    private final TurnoCajaCerrarRepository cerrarTurnoCaja;
     private final TurnoCajaDetalleRepository turnoCajaDetalleRepository;
 
-    public TurnoCajaService(
-            TurnoCajaListadoRepository turnoCajaListadoRepository,
-            TurnoCajaRegistroRepository turnoCajaRegistroRepository,
-            TurnoCajaEdicionRepository turnoCajaEdicionRepository,
-            TurnoCajaDetalleRepository turnoCajaDetalleRepository
-    ) {
+    public TurnoCajaService(TurnoCajaListadoRepository turnoCajaListadoRepository, TurnoCajaAbrirRepository abrirTurnoCaja, TurnoCajaCerrarRepository cerrarTurnoCaja, TurnoCajaDetalleRepository turnoCajaDetalleRepository) {
         this.turnoCajaListadoRepository = turnoCajaListadoRepository;
-        this.turnoCajaRegistroRepository = turnoCajaRegistroRepository;
-        this.turnoCajaEdicionRepository = turnoCajaEdicionRepository;
+        this.abrirTurnoCaja = abrirTurnoCaja;
+        this.cerrarTurnoCaja = cerrarTurnoCaja;
         this.turnoCajaDetalleRepository = turnoCajaDetalleRepository;
     }
 
+
     @Override
-    @Cacheable(value = "turnosCaja", key = "#request")
+    @Cacheable(value = "turnosCaja", key = "#request.estado")
     public ResponseListaTurnoCaja ListaTurnoCaja(RequestListaTurnoCaja request) {
         return turnoCajaListadoRepository.ListaTurnoCaja(request);
     }
 
     @Override
     @CacheEvict(value = {"turnosCaja", "turnoCaja_detalle"}, allEntries = true)
-    public ResponseRegistroTurnoCaja RegistroTurnoCaja(RequestRegistroTurnoCaja request) {
-        return turnoCajaRegistroRepository.RegistroTurnoCaja(request);
+    public ResponseAbrirTurnoCaja AbrirTurnoCaja(RequestAbrirTurnoCaja request) {
+        return abrirTurnoCaja.AbrirTurnoCaja(request);
     }
 
     @Override
     @CacheEvict(value = {"turnosCaja", "turnoCaja_detalle"}, allEntries = true)
-    public ResponseEditarAllTurnoCaja EditarAllTurnoCaja(RequestEditarAllTurnoCaja request) {
-        return turnoCajaEdicionRepository.EditarAllTurnoCaja(request);
+    public ResponseCerrarTurnoCaja CerrarTurnoCaja(RequestCerrarTurnoCaja request) {
+        return cerrarTurnoCaja.CerrarTurnoCaja(request);
     }
 
     @Override
-    @CacheEvict(value = {"turnosCaja", "turnoCaja_detalle"}, allEntries = true)
-    public ResponseEditarEstadoTurnoCaja EditarEstadoTurnoCaja(RequestEditarEstadoTurnoCaja request, int estado) {
-        return turnoCajaEdicionRepository.EditarEstadoTurnoCaja(request, estado);
-    }
-
-    @Override
-    @Cacheable(value = "turnoCaja_detalle", key = "#request.idTurnoCaja")
-    public ResponseDetalleTurnoCaja DetalleTurnoCaja(RequestDetalleTurnoCaja request) {
-        return turnoCajaDetalleRepository.DetalleTurnoCaja(request);
+    @Cacheable(value = "turnoCaja_detalle", key = "#request.idCaja")
+    public ResponseDetalleTurnoCaja DetalleTurnoCaja(RequestDetalleTurnoCaja request, EstadoCaja estado) {
+        return turnoCajaDetalleRepository.DetalleTurnoCaja(request,estado);
     }
 }

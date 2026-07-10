@@ -2,6 +2,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.useC
 
 import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.request.RequestDetalleFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.response.ResponseDetalleFamilia;
+import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.useCase.DetalleFamiliaUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.familia.domain.services.FamiliaService;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestRegistrarSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.response.ResponseRegistroSubFamilia;
@@ -11,23 +12,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegistroSubFamiliaUseCase {
     private final SubFamiliaService subFamiliaService;
-    private final FamiliaService familiaService;
+    private final DetalleFamiliaUseCase detalleFamiliaUseCase;
 
     public RegistroSubFamiliaUseCase(
             SubFamiliaService subFamiliaService,
-            FamiliaService familiaService
+            DetalleFamiliaUseCase detalleFamiliaUseCase
     ){
         this.subFamiliaService = subFamiliaService;
-        this.familiaService = familiaService;
+        this.detalleFamiliaUseCase = detalleFamiliaUseCase;
     }
 
     public ResponseRegistroSubFamilia RegistroSubFamilia(RequestRegistrarSubFamilia request) {
         try {
             //verificamos el id familia
-            RequestDetalleFamilia requestDetalle = new RequestDetalleFamilia();
-            requestDetalle.setIdFamilia(request.getIdFamilia());
-
-            ResponseDetalleFamilia detalleBD= familiaService.DetalleFamilia(requestDetalle);
+            ResponseDetalleFamilia detalleBD= detalleFamiliaUseCase.DetalleFamilia(request.getIdFamilia());
 
             if (!detalleBD.isExito() || detalleBD.getFamilia() == null) {
                 throw new IllegalArgumentException("El id familia no existe.");

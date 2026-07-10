@@ -61,7 +61,15 @@ public class SubFamiliaEdicionRepository implements ISubFamiliaEdicion {
 
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            String mensaje = e.getMessage();
+
+            if (mensaje != null && mensaje.contains("UQ_SubFamilia_Familia")) {
+                rpt.setMessage("Ya existe una sub familia con esa descripción.");
+            }
+
+            else {
+                rpt.setMessage("Error al actualizar la sub familia.");
+            }
         }
 
         return rpt;

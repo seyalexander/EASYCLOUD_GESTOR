@@ -33,9 +33,11 @@ public class NotaCreditoRegistroRepository implements INotaCreditoRegistro {
 
             setParameter(pstmt, 1, request.getIdVenta());
             setParameter(pstmt, 2, request.getMotivo());
-            setParameter(pstmt, 3, request.getFechaEmision());
-            setParameter(pstmt, 4, request.getTotal());
-            setParameter(pstmt, 5, request.getFechaIngreso());
+            setParameter(pstmt, 3, request.getMontoADevolver());
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(5, sucursalId);
             Long userId = 1L;
             pstmt.setLong(6, userId);
 

@@ -24,7 +24,7 @@ public class ComprobanteRegistroRepository implements IComprobanteRegistro {
     private DataSource con;
 
     @Override
-    public ResponseRegistroComprobante RegistroComprobante(RequestRegistroComprobante request) {
+    public ResponseRegistroComprobante RegistroComprobante(RequestRegistroComprobante request,String urlXml,String urlPdf,String numero) {
         ResponseRegistroComprobante rpt = new ResponseRegistroComprobante();
         String SQL = "{ call VENTAS.sp_RegistroComprobante(?,?,?,?,?,?,?,?,?,?) }";
 
@@ -32,14 +32,17 @@ public class ComprobanteRegistroRepository implements IComprobanteRegistro {
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdVenta());
-            setParameter(pstmt, 2, request.getIdTipoDocumento());
+            setParameter(pstmt, 2, request.getIdTipoComprobante());
             setParameter(pstmt, 3, request.getIdSerieDocumento());
-            setParameter(pstmt, 4, request.getNumero());
-            setParameter(pstmt, 5, request.getFechaEmision());
-            setParameter(pstmt, 6, request.getUrlXml());
-            setParameter(pstmt, 7, request.getUrlPdf());
-            setParameter(pstmt, 8, request.getEstado());
-            setParameter(pstmt, 9, request.getFechaIngreso());
+            setParameter(pstmt, 4, numero);
+            String estadoString = (request.getEstado() != null) ? request.getEstado().name() : null;
+            setParameter(pstmt, 5, estadoString);
+            setParameter(pstmt, 6, urlXml);
+            setParameter(pstmt, 7, urlPdf);
+            Long empresaId = 1L;
+            pstmt.setLong(8, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(9, sucursalId);
             Long userId = 1L;
             pstmt.setLong(10, userId);
 

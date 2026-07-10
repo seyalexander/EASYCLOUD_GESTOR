@@ -3,6 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.venta.infraestructure.persi
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.request.RequestDetalleVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.response.ResponseDetalleVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.domain.interfaces.IVentaDetalle;
+import com.SeyaCloudGestion.GestionSistema.feacture.venta.infraestructure.persistence.model.CondicionPago;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.infraestructure.persistence.model.VentaModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,16 @@ public class VentaDetalleRepository implements IVentaDetalle {
     @Override
     public ResponseDetalleVenta DetalleVenta(RequestDetalleVenta request) {
         ResponseDetalleVenta response = new ResponseDetalleVenta();
-        String SQL = "{ call VENTAS.sp_ObtenerVentaPorId(?) }";
+        String SQL = "{ call VENTAS.sp_ObtenerVentaPorId(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
 
             setParameter(pstmt, 1, request.getIdVenta());
+            pstmt.setLong(2, sucursalId);
+            pstmt.setLong(3, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -43,12 +48,25 @@ public class VentaDetalleRepository implements IVentaDetalle {
                     item.setIdUsuario(rs.getLong("idUsuario"));
                     item.setIdSucursal(rs.getLong("idSucursal"));
                     item.setIdTurnoCaja(rs.getLong("idTurnoCaja"));
-                    item.setFechaVenta(rs.getString("fechaVenta"));
+                    item.setCondicionPago(
+                            CondicionPago.valueOf(rs.getString("condicionPago"))
+                    );
+                    item.setFechaVenta(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
                     item.setSubTotal(rs.getDouble("subTotal"));
                     item.setImpuesto(rs.getDouble("impuesto"));
                     item.setTotal(rs.getDouble("total"));
                     item.setEstado(rs.getInt("estado"));
-                    item.setFechaIngreso(rs.getString("fechaIngreso"));
+                    item.setFechaIngreso(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+
                     response.setExito(true);
                     response.setMessage("Venta obtenido correctamente.");
                     response.setVenta(item);

@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.reque
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.response.ResponseRegistroKardex;
 
 public interface IKardexRegistro {
-    ResponseRegistroKardex RegistroKardex(RequestRegistroKardex request);
+    ResponseRegistroKardex RegistroKardex(RequestRegistroKardex request, double saldoCantidad, double saldoCosto);
 }

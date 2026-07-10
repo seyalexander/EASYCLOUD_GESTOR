@@ -8,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.sql.DataSource;
 import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
+import javax.sql.DataSource;
+import java.sql.*;
 
 @Slf4j
 @Repository
@@ -24,24 +22,43 @@ public class VentaRegistroRepository implements IVentaRegistro {
     private DataSource con;
 
     @Override
-    public ResponseRegistroVenta RegistroVenta(RequestRegistroVenta request) {
+    public ResponseRegistroVenta RegistroVenta(long idCaja,RequestRegistroVenta request, double subTotal, double impuesto, double total) {
         ResponseRegistroVenta rpt = new ResponseRegistroVenta();
-        String SQL = "{ call VENTAS.sp_RegistroVenta(?) }";
+        String SQL = "{ call VENTAS.sp_RegistroVenta(?,?,?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+
+            pstmt.setLong(1, request.getIdCliente());
+            pstmt.setLong(2, userId);
+            pstmt.setLong(3, sucursalId);
+            pstmt.setLong(4, empresaId);
+            pstmt.setLong(5, idCaja);
+
+            pstmt.setString(6, request.getCondicionPago().name());
+
+            pstmt.setDouble(7, subTotal);
+            pstmt.setDouble(8, impuesto);
+            pstmt.setDouble(9, total);
+
+            pstmt.setLong(10, userId);
+
 
             int rowsAffected = pstmt.executeUpdate();
 
-            if (rowsAffected > 0) {
-                rpt.setExito(true);
-                rpt.setMessage("Venta insertado correctamente.");
-            } else {
-                rpt.setExito(false);
-                rpt.setMessage("No se insertó Venta.");
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    rpt.setIdVenta(rs.getLong("idVenta"));
+                    rpt.setExito(true);
+                    rpt.setMessage("Venta registrada correctamente.");
+                } else {
+                    rpt.setExito(false);
+                    rpt.setMessage("No se pudo obtener el ID de la venta.");
+                }
             }
         } catch (SQLException e) {
             rpt.setExito(false);

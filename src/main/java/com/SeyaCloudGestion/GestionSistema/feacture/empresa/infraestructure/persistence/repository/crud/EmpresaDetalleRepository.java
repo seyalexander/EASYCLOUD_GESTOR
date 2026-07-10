@@ -72,18 +72,18 @@ public class EmpresaDetalleRepository implements IEmpresaDetalle {
                     empresa.setIdUsuarioAnulacion(rs.getLong("idUsuarioAnulacion"));
 
                     response.setExito(true);
-                    response.setMessage("Tipo Documento obtenido correctamente");
+                    response.setMessage("Empresa obtenida correctamente");
                     response.setEmpresa(empresa);
 
                 } else {
                     response.setExito(false);
-                    response.setMessage("No se encontró al Tipo Documento");
+                    response.setMessage("No se encontró la empresa");
                 }
             }
 
         } catch (SQLException e) {
             response.setExito(false);
-            response.setMessage("Error al obtener la Tipo Documento");
+            response.setMessage("Error al obtener la empresa");
             log.error("Error en CONFIGURACION.sp_ObtenerTipoDocumentoPorId", e);
         }
 

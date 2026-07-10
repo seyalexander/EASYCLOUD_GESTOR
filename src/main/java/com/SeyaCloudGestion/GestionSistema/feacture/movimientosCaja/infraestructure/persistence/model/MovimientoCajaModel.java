@@ -9,8 +9,10 @@ import java.time.LocalDateTime;
 @Data
 public class MovimientoCajaModel implements Serializable {
     private long idMovimientoCaja;
-    private long idAperturaCaja;
+    private long idEmpleado;
+    private long idTurnoCaja;
     private Movimiento Movimiento;
+    private long idTipoPago;
     private String concepto;
     private double monto;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")

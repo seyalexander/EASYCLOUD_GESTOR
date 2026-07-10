@@ -31,10 +31,13 @@ public class CodigoBarraListadoRepository implements ICodigoBarraListado {
     public ResponseListaCodigoBarra ListaCodigoBarra( ) {
         ResponseListaCodigoBarra rpt = new ResponseListaCodigoBarra();
         List<CodigoBarraModel> registros = new ArrayList<>();
-        String SQL = "{ call PRODUCTOS.sp_ListarCodigoBarra }";
+        String SQL = "{ call PRODUCTOS.sp_ListarCodigoBarra (?)}";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
+
+            Long empresaId = 1L;
+            pstmt.setLong(1, empresaId);
 
             ResultSet rs = pstmt.executeQuery();
 

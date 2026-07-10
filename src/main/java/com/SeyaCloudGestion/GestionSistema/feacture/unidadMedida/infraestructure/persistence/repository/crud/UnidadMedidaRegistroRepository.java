@@ -47,6 +47,7 @@ public class UnidadMedidaRegistroRepository implements IUnidadMedidaRegistro {
                 rpt.setMessage("No se insertó UnidadMedida.");
             }
         } catch (SQLException e) {
+            rpt.setExito(false);
             if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
                 rpt.setMessage("Ya existe una unidad de medida con esa descripción.");
             } else {

@@ -6,6 +6,5 @@ import lombok.Data;
 
 @Data
 public class ResponseDetalleKardex extends ResponseGeneral {
-
-    private KardexModel kardex;
+    KardexModel kardex;
 }

@@ -12,25 +12,23 @@ import org.springframework.stereotype.Component;
 public class EdicionMarcaUseCase {
     private final MarcaService marcaService;
     private final VerificarCambiosMarca verificarCambiosMarca;
-
-    public EdicionMarcaUseCase(MarcaService marcaService, VerificarCambiosMarca verificarCambiosMarca) {
+    private final DetalleMarcaUseCase detalleMarcaUseCase;
+    public EdicionMarcaUseCase(MarcaService marcaService, VerificarCambiosMarca verificarCambiosMarca, DetalleMarcaUseCase detalleMarcaUseCase) {
         this.marcaService = marcaService;
         this.verificarCambiosMarca = verificarCambiosMarca;
+        this.detalleMarcaUseCase = detalleMarcaUseCase;
     }
 
     public ResponseEditarAllMarca EdicionAllMarca(RequestEditarAllMarca request) {
         try {
-            //assadsasa
-            RequestDetalleMarca requestDetalle = new RequestDetalleMarca();
-            requestDetalle.setIdMarca(request.getIdMarca());
+            //marca
+            ResponseDetalleMarca detalleBDMarca= detalleMarcaUseCase.detalleMarcas(request.getIdMarca());
 
-            ResponseDetalleMarca detalleBD= marcaService.DetalleMarca(requestDetalle);
-
-            if (!detalleBD.isExito() || detalleBD.getMarca() == null) {
+            if (!detalleBDMarca.isExito() || detalleBDMarca.getMarca() == null) {
                 throw new IllegalArgumentException("La marca no existe.");
             }
 
-            if (!verificarCambiosMarca.verificarCambios(detalleBD.getMarca(), request)) {
+            if (!verificarCambiosMarca.verificarCambios(detalleBDMarca.getMarca(), request)) {
                 throw new IllegalArgumentException("No se detectaron cambios para actualizar.");
             }
 

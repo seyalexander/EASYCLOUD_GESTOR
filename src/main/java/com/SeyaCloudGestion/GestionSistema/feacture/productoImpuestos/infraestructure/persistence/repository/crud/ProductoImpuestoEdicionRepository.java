@@ -33,12 +33,13 @@ public class ProductoImpuestoEdicionRepository implements IProductoImpuestoEdici
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
             pstmt.setLong(1,request.getIdProductoImpuesto());
-            pstmt.setLong(2,request.getIdArticulo());
-            pstmt.setDouble(3,request.getPorcentaje());
-            pstmt.setInt(1,request.getEstado());
+            pstmt.setDouble(2,request.getPorcentaje());
+            pstmt.setInt(3,request.getEstado());
 
             Long userId = 1L;
-            pstmt.setLong(5, userId);
+            pstmt.setLong(4, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(5, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -50,7 +51,11 @@ public class ProductoImpuestoEdicionRepository implements IProductoImpuestoEdici
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un impuesto en este articulo.");
+            } else {
+                rpt.setMessage("Error al actualizar impuesto del articulo.");
+            }
             log.error("Error en PRODUCTOS.sp_EditarProductoImpuesto", e);
         }
         return rpt;
@@ -59,7 +64,7 @@ public class ProductoImpuestoEdicionRepository implements IProductoImpuestoEdici
     @Override
     public ResponseEditarEstadoProductoImpuesto EditarEstadoProductoImpuesto(RequestEditarEstadoProductoImpuesto request, int estado) {
         ResponseEditarEstadoProductoImpuesto rpt = new ResponseEditarEstadoProductoImpuesto();
-        String SQL = "{ call PRODUCTOS.sp_EditarProductoImpuesto_Estado(?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarProductoImpuesto_Estado(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -67,6 +72,8 @@ public class ProductoImpuestoEdicionRepository implements IProductoImpuestoEdici
             pstmt.setInt(2, estado);
             Long userId = 1L;
             pstmt.setLong(3, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

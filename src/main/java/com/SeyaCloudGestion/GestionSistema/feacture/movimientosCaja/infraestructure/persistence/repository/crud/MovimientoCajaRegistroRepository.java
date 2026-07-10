@@ -26,23 +26,30 @@ public class MovimientoCajaRegistroRepository implements IMovimientoCajaRegistro
     @Override
     public ResponseRegistroMovimientoCaja RegistroMovimientoCaja(RequestRegistroMovimientoCaja request) {
         ResponseRegistroMovimientoCaja rpt = new ResponseRegistroMovimientoCaja();
-        String SQL = "{ call CAJA.sp_RegistroMovimientoCaja(?,?,?,?,?) }";
+        String SQL = "{ call CAJA.sp_RegistrarMovimientoCaja(?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdAperturaCaja());
-            setParameter(pstmt, 2, request.getMovimiento());
-            setParameter(pstmt, 3, request.getConcepto());
-            setParameter(pstmt, 4, request.getMonto());
+            setParameter(pstmt, 1, request.getIdTurnoCaja());
+            String tipoMovimiento = (request.getMovimiento() != null) ? request.getMovimiento().name() : null;
+            setParameter(pstmt, 2, tipoMovimiento);
+            setParameter(pstmt, 3, request.getIdTipoPago());
+            setParameter(pstmt, 4, request.getConcepto());
+            setParameter(pstmt, 5, request.getMonto());
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
             Long userId = 1L;
-            pstmt.setLong(5, userId);
+
+            pstmt.setLong(6, userId);
+            pstmt.setLong(7, empresaId);
+            pstmt.setLong(8, sucursalId);
 
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
                 rpt.setExito(true);
-                rpt.setMessage("MovimientoCaja insertado correctamente.");
+                rpt.setMessage("Movimiento insertado correctamente.");
             } else {
                 rpt.setExito(false);
                 rpt.setMessage("No se insertó MovimientoCaja.");
@@ -50,7 +57,7 @@ public class MovimientoCajaRegistroRepository implements IMovimientoCajaRegistro
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en CAJA.sp_RegistroMovimientoCaja", e);
+            log.error("Error en CAJA.sp_RegistrarMovimientoCaja", e);
         }
         return rpt;
     }

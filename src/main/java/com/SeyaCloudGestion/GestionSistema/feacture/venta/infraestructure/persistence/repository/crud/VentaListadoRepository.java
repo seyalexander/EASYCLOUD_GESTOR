@@ -31,14 +31,19 @@ public class VentaListadoRepository implements IVentaListado {
     public ResponseListaVenta listaVenta(RequestListaVenta request) {
         ResponseListaVenta rpt = new ResponseListaVenta();
         List<VentaModel> registros = new ArrayList<>();
-        String SQL = "{ call VENTAS.sp_ListarVenta(?) }";
+        String SQL = "{ call VENTAS.sp_ListarVenta(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
 
             setParameter(pstmt, 1, request.getEstado());
+            pstmt.setLong(2, sucursalId);
+            pstmt.setLong(3, empresaId);
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     VentaModel item = new VentaModel();
                 item.setIdVenta(rs.getLong("idVenta"));
@@ -46,15 +51,23 @@ public class VentaListadoRepository implements IVentaListado {
                 item.setIdUsuario(rs.getLong("idUsuario"));
                 item.setIdSucursal(rs.getLong("idSucursal"));
                 item.setIdTurnoCaja(rs.getLong("idTurnoCaja"));
-                item.setFechaVenta(rs.getString("fechaVenta"));
+                    item.setFechaVenta(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
                 item.setSubTotal(rs.getDouble("subTotal"));
                 item.setImpuesto(rs.getDouble("impuesto"));
                 item.setTotal(rs.getDouble("total"));
                 item.setEstado(rs.getInt("estado"));
-                item.setFechaIngreso(rs.getString("fechaIngreso"));
+                    item.setFechaIngreso(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
                     registros.add(item);
                 }
-            }
 
             rpt.setExito(true);
             rpt.setVentas(registros);

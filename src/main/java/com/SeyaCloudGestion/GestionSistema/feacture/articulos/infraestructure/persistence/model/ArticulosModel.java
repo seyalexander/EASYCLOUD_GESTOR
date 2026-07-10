@@ -17,7 +17,7 @@ public class ArticulosModel implements Serializable {
     private String codigoBarras;
     private float precioVenta;
     private int estado;
-    private long isFamilia;
+    private long idFamilia;
     private String descripcionFamilia;
     private long idSubFamilia;
     private String descripcionSubFamilia;
@@ -26,6 +26,7 @@ public class ArticulosModel implements Serializable {
     private float costoCompra;
     private float stockMinimo;
     private long idMarca;
+    private String descripcionMarca;
     private LocalDateTime fechaIngreso;
 
     // Auditoría

@@ -49,7 +49,11 @@ public class TipoPagosEdicionRepository implements ITipoPagosEdicion {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un tipo de pago con esa descripción.");
+            } else {
+                rpt.setMessage("Error al actualizar el tipo de pago.");
+            }
             log.error("Error en CONFIGURACION.sp_EditarTipoPagos", e);
         }
         return rpt;

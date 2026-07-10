@@ -11,15 +11,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class ProductoPrecioService implements IProductoPrecioListado, IProductoPrecioEdicion, IProductoPrecioRegistro {
+public class ProductoPrecioService implements IProductoPrecioListado, IProductoPrecioEdicion, IProductoPrecioRegistro ,IProductoPrecioDetalle{
     private final ProductoPrecioEdicionRepository  productoPrecioEdicionRepository;
     private final ProductoPrecioRegistroRepository  productoPrecioRegistroRepository;
     private final ProductoPrecioListadoRepository  productoPrecioListadoRepository;
+    private final ProductoPrecioDetalleRepository  productoPrecioDetalleRepository;
 
-    public ProductoPrecioService(ProductoPrecioEdicionRepository productoPrecioEdicionRepository, ProductoPrecioRegistroRepository productoPrecioRegistroRepository, ProductoPrecioListadoRepository productoPrecioListadoRepository) {
+    public ProductoPrecioService(ProductoPrecioEdicionRepository productoPrecioEdicionRepository, ProductoPrecioRegistroRepository productoPrecioRegistroRepository, ProductoPrecioListadoRepository productoPrecioListadoRepository, ProductoPrecioDetalleRepository productoPrecioDetalleRepository) {
         this.productoPrecioEdicionRepository = productoPrecioEdicionRepository;
         this.productoPrecioRegistroRepository = productoPrecioRegistroRepository;
         this.productoPrecioListadoRepository = productoPrecioListadoRepository;
+        this.productoPrecioDetalleRepository = productoPrecioDetalleRepository;
     }
 
     @Override
@@ -44,5 +46,10 @@ public class ProductoPrecioService implements IProductoPrecioListado, IProductoP
     @CacheEvict(value = {"productoPrecios_lista"}, allEntries = true)
     public ResponseEditarEstadoProductoPrecio EditarEstadoProductoPrecio(RequestEditarEstadoProductoPrecio request, int estado) {
         return productoPrecioEdicionRepository.EditarEstadoProductoPrecio(request, estado);
+    }
+
+    @Override
+    public ResponseDetalleProductoPrecio DetalleProductoPrecio(RequestDetalleProductoPrecio request) {
+        return productoPrecioDetalleRepository.DetalleProductoPrecio(request);
     }
 }

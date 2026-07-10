@@ -26,7 +26,7 @@ public class ProductoImpuestoRegistroRepository implements IProductoImpuestoRegi
     @Override
     public ResponseRegistroProductoImpuesto RegistroProductoImpuesto(RequestRegistroProductoImpuesto request) {
         ResponseRegistroProductoImpuesto rpt = new ResponseRegistroProductoImpuesto();
-        String SQL = "{ call PRODUCTOS.sp_RegistroProductoImpuesto(?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_RegistroProductoImpuesto(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -35,6 +35,8 @@ public class ProductoImpuestoRegistroRepository implements IProductoImpuestoRegi
             setParameter(pstmt, 2, request.getPorcentaje());
             Long userId = 1L;
             pstmt.setLong(3, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -47,7 +49,11 @@ public class ProductoImpuestoRegistroRepository implements IProductoImpuestoRegi
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un impuesto en este articulo.");
+            } else {
+                rpt.setMessage("Error al registrar el impuesto del articulo.");
+            }
             log.error("Error en PRODUCTOS.sp_RegistroProductoImpuesto", e);
         }
         return rpt;

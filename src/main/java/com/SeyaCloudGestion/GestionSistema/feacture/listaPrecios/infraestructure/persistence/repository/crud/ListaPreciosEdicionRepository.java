@@ -28,7 +28,7 @@ public class ListaPreciosEdicionRepository implements IListaPreciosEdicion {
     @Override
     public ResponseEditarAllListaPrecios EditarAllListaPrecios(RequestEditarAllListaPrecios request) {
         ResponseEditarAllListaPrecios rpt = new ResponseEditarAllListaPrecios();
-        String SQL = "{ call PRODUCTOS.sp_EditarListaPrecio(?,?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarListaPrecio(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -37,6 +37,8 @@ public class ListaPreciosEdicionRepository implements IListaPreciosEdicion {
             pstmt.setInt(3,request.getEstado());
             Long userId = 1L;
             pstmt.setLong(4, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(5, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -48,7 +50,11 @@ public class ListaPreciosEdicionRepository implements IListaPreciosEdicion {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe una lista precio con esa descripción.");
+            } else {
+                rpt.setMessage("Error al actualizar la unidad de medida.");
+            }
             log.error("Error en PRODUCTOS.sp_EditarListaPrecios", e);
         }
         return rpt;
@@ -57,7 +63,7 @@ public class ListaPreciosEdicionRepository implements IListaPreciosEdicion {
     @Override
     public ResponseEditarEstadoListaPrecios EditarEstadoListaPrecios(RequestEditarEstadoListaPrecios request, int estado) {
         ResponseEditarEstadoListaPrecios rpt = new ResponseEditarEstadoListaPrecios();
-        String SQL = "{ call PRODUCTOS.sp_EditarListaPrecio_Estado(?,?,?) }";
+        String SQL = "{ call PRODUCTOS.sp_EditarListaPrecio_Estado(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -66,6 +72,8 @@ public class ListaPreciosEdicionRepository implements IListaPreciosEdicion {
             pstmt.setInt(2, estado);
             Long userId = 1L;
             pstmt.setLong(3, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(4, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

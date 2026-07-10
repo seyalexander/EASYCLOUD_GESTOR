@@ -6,6 +6,5 @@ import lombok.Data;
 
 @Data
 public class ResponseDetalleProductoPrecio extends ResponseGeneral {
-
     private ProductoPrecioModel productoPrecio;
 }

@@ -3,6 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.infraestruct
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.request.RequestDetalleTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.application.dto.response.ResponseDetalleTipoDocumento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.domain.interfaces.ITipoDocumentoDetalle;
+import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.infraestructure.persistence.model.TipoCaracter;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoDocumentos.infraestructure.persistence.model.TipoDocumentoModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class TipoDocumentoDetalleRepository implements ITipoDocumentoDetalle {
         ResponseDetalleTipoDocumento response = new ResponseDetalleTipoDocumento();
         TipoDocumentoModel tipoDocumento = null;
 
-        String SQL = "{ call CONFIGURACION.sp_ObtenerTipoDocumentoPorId(?) }";
+        String SQL = "{ call CONFIGURACION.sp_ObtenerTipoDocumentoIdentidadPorId(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -41,7 +42,7 @@ public class TipoDocumentoDetalleRepository implements ITipoDocumentoDetalle {
 
                 if (rs.next()) {
                     tipoDocumento = new TipoDocumentoModel();
-                    tipoDocumento.setIdTipoDocumentos(rs.getLong("idTipoDocumentos"));
+                    tipoDocumento.setIdTipoDocumentos(rs.getLong("idTipoDocumentoIdentidad"));
                     tipoDocumento.setDescripcion(rs.getString("descripcion"));
                     tipoDocumento.setEstado(rs.getInt("estado"));
                     tipoDocumento.setFechaCreacion(
@@ -67,9 +68,9 @@ public class TipoDocumentoDetalleRepository implements ITipoDocumentoDetalle {
                     tipoDocumento.setLongitudMin(rs.getInt("longitudMin"));
                     tipoDocumento.setLongitudMax(rs.getInt("longitudMax"));
                     tipoDocumento.setCodigoSunat(rs.getString("codigoSunat"));
-                    tipoDocumento.setTipoCaracter(rs.getInt("tipoCaracter"));
-                    tipoDocumento.setDescripcionTipoCaracter(rs.getString("descripcionTipoCaracter"));
-
+                    tipoDocumento.setTipoCaracter(
+                            TipoCaracter.fromCodigo(rs.getInt("tipoCaracter"))
+                    );
                     response.setExito(true);
                     response.setMessage("Tipo Documento obtenido correctamente");
                     response.setTipoDocumento(tipoDocumento);

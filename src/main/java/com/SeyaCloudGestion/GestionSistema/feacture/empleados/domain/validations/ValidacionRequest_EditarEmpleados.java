@@ -57,7 +57,9 @@ public class ValidacionRequest_EditarEmpleados {
         }
 
         // VALIDACIÓN TIPO CARÁCTER
-        switch (responseTipoDocumento.getTipoDocumento().getTipoCaracter()) {
+        //switch (responseTipoDocumento.getTipoDocumento().getTipoCaracter()) {
+            switch (1) {
+
             case 1 -> {
                 if (!EmpleadoValidator.esNumero(request.getDocumento().trim())) {
                     throw new IllegalArgumentException("El documento debe contener solo números.");

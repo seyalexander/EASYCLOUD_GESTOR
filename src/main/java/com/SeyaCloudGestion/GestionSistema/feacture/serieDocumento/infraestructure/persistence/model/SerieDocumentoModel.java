@@ -9,7 +9,6 @@ import java.io.Serializable;
 public class SerieDocumentoModel extends AuditableModel implements Serializable {
     private long idSerieDocumento;
     private long idTipoDocumento;
-    private long idEmpresa;
     private String serie;
     private long correlativoActual;
     private int esElectronico;

@@ -26,7 +26,7 @@ public class ClienteRegistroRepository implements IClienteRegistro {
     @Override
     public ResponseRegistroCliente RegistroCliente(RequestRegistroCliente request) {
         ResponseRegistroCliente rpt = new ResponseRegistroCliente();
-        String SQL = "{ call CLIENTES.sp_RegistroCliente(?,?,?,?,?,?,?,?,?) }";
+        String SQL = "{ call CLIENTES.sp_RegistroCliente(?,?,?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -41,6 +41,8 @@ public class ClienteRegistroRepository implements IClienteRegistro {
             setParameter(pstmt, 8, request.getEmail());
             Long userId = 1L;
             pstmt.setLong(9, userId);
+            Long empresaId = 1L;
+            pstmt.setLong(10, empresaId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -53,8 +55,18 @@ public class ClienteRegistroRepository implements IClienteRegistro {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
-            log.error("Error en CLIENTES.sp_RegistroCliente", e);
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un cliente con ese numero de documento.");
+            } else {
+                rpt.setMessage("Error al registrar el cliente.");
+            }
+            log.error(
+                    "ErrorCode: {}, SQLState: {}, Message: {}",
+                    e.getErrorCode(),
+                    e.getSQLState(),
+                    e.getMessage(),
+                    e
+            );
         }
         return rpt;
     }

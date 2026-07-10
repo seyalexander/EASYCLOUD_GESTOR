@@ -31,25 +31,35 @@ public class CompraListadoRepository implements ICompraListado {
     public ResponseListaCompra listaCompra(RequestListaCompra request) {
         ResponseListaCompra rpt = new ResponseListaCompra();
         List<CompraModel> registros = new ArrayList<>();
-        String SQL = "{ call COMPRAS.sp_ListarCompra() }";
+        String SQL = "{ call COMPRAS.sp_ListarCompra(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetros de filtro definidos en el request.
+            pstmt.setLong(1, request.getEstado());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(3, sucursalId);
+            Long almacenId = 1L;
+            pstmt.setLong(4, almacenId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     CompraModel item = new CompraModel();
-                item.setIdCompra(rs.getLong("idCompra"));
-                item.setIdProveedor(rs.getLong("idProveedor"));
-                item.setIdSucursal(rs.getLong("idSucursal"));
-                item.setFechaCompra(rs.getString("fechaCompra"));
-                item.setSubTotal(rs.getDouble("subTotal"));
-                item.setImpuesto(rs.getDouble("impuesto"));
-                item.setTotal(rs.getDouble("total"));
-                item.setEstado(rs.getInt("estado"));
-                item.setFechaIngreso(rs.getString("fechaIngreso"));
+                    item.setIdCompra(rs.getLong("idCompra"));
+                    item.setIdProveedor(rs.getLong("idProveedor"));
+                    item.setIdSucursal(rs.getLong("idSucursal"));
+                    item.setIdAlmacen(rs.getLong("idAlmacen"));
+                    item.setIdTipoComprobante(rs.getLong("idTipoComprobante"));
+                    item.setSerie(rs.getString("serieComprobante"));
+                    item.setNumero(rs.getString("numeroComprobante"));
+                    item.setFechaCompra(rs.getString("fechaCompra"));
+                    item.setSubTotal(rs.getDouble("subTotal"));
+                    item.setImpuesto(rs.getDouble("impuesto"));
+                    item.setTotal(rs.getDouble("total"));
+                    item.setEstado(rs.getInt("estado"));
+
                     registros.add(item);
                 }
             }

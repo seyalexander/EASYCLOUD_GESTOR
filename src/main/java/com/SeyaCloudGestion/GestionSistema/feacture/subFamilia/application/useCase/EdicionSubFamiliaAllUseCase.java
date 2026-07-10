@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.dto.response.ResponseDetalleFamilia;
+import com.SeyaCloudGestion.GestionSistema.feacture.familia.application.useCase.DetalleFamiliaUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestDetalleSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.request.RequestEditarAllSubFamilia;
 import com.SeyaCloudGestion.GestionSistema.feacture.subFamilia.application.dto.response.ResponseDetalleSubFamilia;
@@ -12,33 +14,31 @@ import org.springframework.stereotype.Component;
 public class EdicionSubFamiliaAllUseCase {
     private final SubFamiliaService subFamiliaService;
     private final VerificarCambiosSubFamilia verificarCambiosSubFamilia;
+    private final DetalleFamiliaUseCase detalleFamiliaUseCase;
+    private final DetalleSubFamiliaUseCase detalleSubFamiliaUseCase;
 
     public EdicionSubFamiliaAllUseCase(
-            SubFamiliaService subFamiliaService, VerificarCambiosSubFamilia verificarCambiosSubFamilia
+            SubFamiliaService subFamiliaService, VerificarCambiosSubFamilia verificarCambiosSubFamilia, DetalleFamiliaUseCase detalleFamiliaUseCase, DetalleSubFamiliaUseCase detalleSubFamiliaUseCase
     ){
         this.subFamiliaService = subFamiliaService;
         this.verificarCambiosSubFamilia = verificarCambiosSubFamilia;
+        this.detalleFamiliaUseCase = detalleFamiliaUseCase;
+        this.detalleSubFamiliaUseCase = detalleSubFamiliaUseCase;
     }
 
     public ResponseEditarAllSubFamilia EdicionAllFamilia(RequestEditarAllSubFamilia request) {
         try {
             //sub familia
-            RequestDetalleSubFamilia requestDetalle = new RequestDetalleSubFamilia();
-            requestDetalle.setIdSubFamilia(request.getIdSubFamilia());
-
-            ResponseDetalleSubFamilia detalleBD= subFamiliaService.DetalleSubFamilia(requestDetalle);
+            ResponseDetalleSubFamilia detalleBD= detalleSubFamiliaUseCase.DetalleSubFamilia(request.getIdSubFamilia());
 
             if (!detalleBD.isExito() || detalleBD.getSubFamilia() == null) {
                 throw new IllegalArgumentException("La subfamilia no existe.");
             }
-            //id familia
-            RequestDetalleSubFamilia requestDetalleFamilia = new RequestDetalleSubFamilia();
-            requestDetalleFamilia.setIdSubFamilia(request.getIdSubFamilia());
+            //verificamos el id familia
+            ResponseDetalleFamilia detalleBDFamilia= detalleFamiliaUseCase.DetalleFamilia(request.getIdFamilia());
 
-            ResponseDetalleSubFamilia detalleBDFamilia= subFamiliaService.DetalleSubFamilia(requestDetalleFamilia);
-
-            if (!detalleBDFamilia.isExito() || detalleBDFamilia.getSubFamilia() == null) {
-                    throw new IllegalArgumentException("El id familia no existe.");
+            if (!detalleBDFamilia.isExito() || detalleBDFamilia.getFamilia() == null) {
+                throw new IllegalArgumentException("El id familia no existe.");
             }
 
             //verificar cambios

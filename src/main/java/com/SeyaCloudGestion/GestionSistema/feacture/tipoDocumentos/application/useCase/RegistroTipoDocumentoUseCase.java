@@ -29,11 +29,6 @@ public class RegistroTipoDocumentoUseCase {
                 throw new IllegalArgumentException(mensajeError);
             }
 
-            if (request.getTipoCaracter() == 0) {
-                String mensajeError = "El tipo carácter no se está enviando correctamente";
-                throw new IllegalArgumentException(mensajeError);
-            }
-
             if (request.getCodigoSunat() == null || request.getCodigoSunat().isEmpty()) {
                 String mensajeError = "El Código SUNAT del documento no puede enviarse en vacío";
                 throw new IllegalArgumentException(mensajeError);

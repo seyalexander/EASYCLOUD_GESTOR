@@ -31,12 +31,15 @@ public class TipoMovimientoListadoRepository implements ITipoMovimientoListado {
     public ResponseListaTipoMovimiento ListaTipoMovimiento(RequestListaTipoMovimiento request) {
         ResponseListaTipoMovimiento rpt = new ResponseListaTipoMovimiento();
         List<TipoMovimientoModel> registros = new ArrayList<>();
-        String SQL = "{ call INVENTARIO.sp_ListarTipoMovimiento(?) }";
+        String SQL = "{ call INVENTARIO.sp_ListarTipoMovimiento(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setInt(1, request.getEstado());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
+
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     TipoMovimientoModel item = new TipoMovimientoModel();
@@ -75,7 +78,7 @@ public class TipoMovimientoListadoRepository implements ITipoMovimientoListado {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_ListarTipoMovimiento", e);
+            log.error("Error en INVENTARIO.sp_ListarTipoMovimiento", e);
         }
         return rpt;
     }

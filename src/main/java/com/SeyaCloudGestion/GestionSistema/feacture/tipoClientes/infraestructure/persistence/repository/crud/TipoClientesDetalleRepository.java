@@ -28,12 +28,14 @@ public class TipoClientesDetalleRepository implements ITipoClientesDetalle {
     @Override
     public ResponseDetalleTipoClientes DetalleTipoClientes(RequestDetalleTipoClientes request) {
         ResponseDetalleTipoClientes response = new ResponseDetalleTipoClientes();
-        String SQL = "{ call CLIENTES.sp_ObtenerTipoClientePorId(?) }";
+        String SQL = "{ call CLIENTES.sp_ObtenerTipoClientePorId(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            pstmt.setLong(1, request.getIdTipoClientes());
+            pstmt.setLong(1, request.getIdTipoCliente());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {

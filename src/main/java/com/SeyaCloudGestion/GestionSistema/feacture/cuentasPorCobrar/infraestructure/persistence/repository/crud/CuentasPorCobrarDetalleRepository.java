@@ -4,6 +4,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application.dto.response.ResponseDetalleCuentasPorCobrar;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.domain.interfaces.ICuentasPorCobrarDetalle;
 import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.infraestructure.persistence.model.CuentasPorCobrarModel;
+import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.infraestructure.persistence.model.EstadoCuenta;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,12 +29,16 @@ public class CuentasPorCobrarDetalleRepository implements ICuentasPorCobrarDetal
     @Override
     public ResponseDetalleCuentasPorCobrar DetalleCuentasPorCobrar(RequestDetalleCuentasPorCobrar request) {
         ResponseDetalleCuentasPorCobrar response = new ResponseDetalleCuentasPorCobrar();
-        String SQL = "{ call VENTAS.sp_ObtenerCuentaPorCobrarPorId(?) }";
+        String SQL = "{ call VENTAS.sp_ObtenerCuentaPorCobrarPorId(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdCuentasPorCobrar());
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+            pstmt.setLong(2, empresaId);
+            pstmt.setLong(3, sucursalId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -42,7 +47,12 @@ public class CuentasPorCobrarDetalleRepository implements ICuentasPorCobrarDetal
                     item.setIdVenta(rs.getLong("idVenta"));
                     item.setMontoPendiente(rs.getDouble("montoPendiente"));
                     item.setFechaVencimiento((rs.getTimestamp("fechaVencimiento") != null ? rs.getTimestamp("fechaVencimiento").toLocalDateTime() : null));
-                    item.setEstado(rs.getString("estado"));
+                    String estadoBD = rs.getString("estado");
+                    if (estadoBD != null) {
+                        item.setEstado(EstadoCuenta.valueOf(estadoBD.toUpperCase().trim()));
+                    } else {
+                        item.setEstado(null);
+                    }
 
                     response.setExito(true);
                     response.setMessage("CuentasPorCobrar obtenido correctamente.");

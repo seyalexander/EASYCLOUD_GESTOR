@@ -3,7 +3,6 @@ package com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.useCas
 import com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.dto.request.RequestDetalleCliente;
 import com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.dto.response.ResponseDetalleCliente;
 import com.SeyaCloudGestion.GestionSistema.feacture.clientes.domain.services.ClienteService;
-import org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfoRuntimeHints;
 import org.springframework.stereotype.Component;
 
 @Component

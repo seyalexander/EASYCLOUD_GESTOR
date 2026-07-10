@@ -26,14 +26,17 @@ public class TipoClientesRegistroRepository implements ITipoClientesRegistro {
     @Override
     public ResponseRegistroTipoClientes RegistroTipoClientes(RequestRegistroTipoClientes request) {
         ResponseRegistroTipoClientes rpt = new ResponseRegistroTipoClientes();
-        String SQL = "{ call CLIENTES.sp_RegistroTipoCliente(?) }";
+        String SQL = "{ call CLIENTES.sp_RegistroTipoCliente(?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            //Long userId = 1L;
-            //pstmt.setLong(2, userId);
+
+
             pstmt.setString(1, request.getDescripcion());
+            Long empresaId = 1L;
+            pstmt.setLong(2, empresaId);
+
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
@@ -45,8 +48,12 @@ public class TipoClientesRegistroRepository implements ITipoClientesRegistro {
             }
         } catch (SQLException e) {
             rpt.setExito(false);
-            rpt.setMessage(e.getMessage());
-            log.error("Error en CONFIGURACION.sp_RegistroTipoClientes", e);
+            if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
+                rpt.setMessage("Ya existe un tipo cliente con esa descripción.");
+            } else {
+                rpt.setMessage("Error al registrar el tipo cliente.");
+            }
+            log.error("Error en CLIENTES.sp_RegistroTipoCliente", e);
         }
         return rpt;
     }

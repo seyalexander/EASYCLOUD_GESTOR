@@ -3,5 +3,4 @@ package com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.resp
 import com.SeyaCloudGestion.GestionSistema.common.response.ResponseGeneral;
 
 public class ResponseRegistroKardex extends ResponseGeneral {
-
 }
