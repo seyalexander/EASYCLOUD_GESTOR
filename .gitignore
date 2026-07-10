@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+### Carpetas de Pruebas Personales ###
+frontend/
