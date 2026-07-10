@@ -18,7 +18,7 @@ public class RequestRegistroVenta  {
     private long idCliente;
 
     @Min(value = 1, message = "El id debe ser mayor a 0")
-    private long idTurnoCaja;
+    private long idCaja;
 
     @NotNull(message = "El ID del tipo de comprobante es obligatorio.")
     private Long idTipoComprobante;

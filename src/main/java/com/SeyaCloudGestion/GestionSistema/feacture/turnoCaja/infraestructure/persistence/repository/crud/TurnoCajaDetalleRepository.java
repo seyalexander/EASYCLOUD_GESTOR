@@ -29,7 +29,7 @@ public class TurnoCajaDetalleRepository implements ITurnoCajaDetalle {
     @Override
     public ResponseDetalleTurnoCaja DetalleTurnoCaja(RequestDetalleTurnoCaja request,EstadoCaja estado) {
         ResponseDetalleTurnoCaja response = new ResponseDetalleTurnoCaja();
-        String SQL = "{ call VENTAS.sp_ObtenerTurnoCajaAbiertoPorId(?,?,?,?) }";
+        String SQL = "{ call VENTAS.sp_ObtenerTurnoCajaPorId(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -45,6 +45,7 @@ public class TurnoCajaDetalleRepository implements ITurnoCajaDetalle {
                 if (rs.next()) {
                     TurnoCajaModel item = new TurnoCajaModel();
                     item.setIdTurnoCaja(rs.getLong("idTurnoCaja"));
+                    item.setIdCaja(rs.getLong("idCaja"));
                     item.setIdUsuario(rs.getLong("idUsuario"));
                     item.setIdSucursal(rs.getLong("idSucursal"));
                     item.setFechaApertura((rs.getTimestamp("fechaApertura") != null ? rs.getTimestamp("fechaApertura").toLocalDateTime() : null));

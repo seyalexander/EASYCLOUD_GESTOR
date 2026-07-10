@@ -47,7 +47,7 @@ public class RegistroPagoUseCase {
             //get turno abierto
             ResponseDetalleTurnoCaja responseBDCaja = detalleTurnoCajaUseCase.DetalleTurnoCaja(request.getIdCaja(), EstadoCaja.ABIERTO);
             if (!responseBDCaja.isExito() || responseBDCaja.getTurnoCaja() == null) {
-                throw new IllegalArgumentException("La caja no se encuentra abierta.");
+                throw new IllegalArgumentException("La caja no se encuentra abierta");
             }
             long idTurnoCaja = responseBDCaja.getTurnoCaja().getIdTurnoCaja();
 
@@ -84,19 +84,18 @@ public class RegistroPagoUseCase {
                 if (!responseDetalle.isExito()) {
                     throw new RuntimeException("No se logro registar en el componente de detalle: " + responseDetalle.getMessage());
                 }
-
-            }
-
                 //set movimviiemto
-            RequestRegistroMovimientoCaja movCaja = new RequestRegistroMovimientoCaja();
-            movCaja.setIdTurnoCaja(idTurnoCaja);
-            movCaja.setMonto(totalAbonado);
-            movCaja.setMovimiento(Movimiento.INGRESO);
-            movCaja.setConcepto("Pago de venta");
+                RequestRegistroMovimientoCaja movCaja = new RequestRegistroMovimientoCaja();
+                movCaja.setIdTurnoCaja(idTurnoCaja);
+                movCaja.setIdTipoPago(item.getIdTipoPago());
+                movCaja.setMonto(item.getMonto());
+                movCaja.setMovimiento(Movimiento.INGRESO);
+                movCaja.setConcepto("Pago de venta");
 
-            ResponseRegistroMovimientoCaja responseMov = registroMovimientoCajaUseCase.registroMovimientoCaja(movCaja);
-            if (!responseMov.isExito()) {
-                throw new RuntimeException("No se pudo registrar el ingreso en la caja: " + responseMov.getMessage());
+                ResponseRegistroMovimientoCaja responseMov = registroMovimientoCajaUseCase.registroMovimientoCaja(movCaja);
+                if (!responseMov.isExito()) {
+                    throw new RuntimeException("No se pudo registrar el ingreso en la caja: " + responseMov.getMessage());
+                }
             }
 
             ResponseRegistroPago response = new ResponseRegistroPago();

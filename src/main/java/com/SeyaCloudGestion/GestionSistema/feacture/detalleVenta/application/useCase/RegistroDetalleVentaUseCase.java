@@ -9,6 +9,8 @@ import com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.application.dto
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.domain.services.DetalleVentaService;
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.response.ResponseDetalleKardex;
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.useCase.DetalleKardexUseCase;
+import com.SeyaCloudGestion.GestionSistema.feacture.stocks.application.dto.response.ResponseDetalleSotck;
+import com.SeyaCloudGestion.GestionSistema.feacture.stocks.application.useCase.DetalleSotckUseCase;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,27 +19,37 @@ public class RegistroDetalleVentaUseCase {
     private final DetalleArticuloUseCase detalleArticuloUseCase;
     private final DetalleAlmacenUseCase detalleAlmacenUseCase;
     private final DetalleKardexUseCase detalleKardexUseCase;
+    private final DetalleSotckUseCase detalleSotckUseCase;
     public RegistroDetalleVentaUseCase(
-            DetalleVentaService detalleVentaService, DetalleArticuloUseCase detalleArticuloUseCase, DetalleAlmacenUseCase detalleAlmacenUseCase, DetalleKardexUseCase detalleKardexUseCase
+            DetalleVentaService detalleVentaService, DetalleArticuloUseCase detalleArticuloUseCase, DetalleAlmacenUseCase detalleAlmacenUseCase, DetalleKardexUseCase detalleKardexUseCase, DetalleSotckUseCase detalleSotckUseCase
     ) {
         this.detalleVentaService = detalleVentaService;
         this.detalleArticuloUseCase = detalleArticuloUseCase;
         this.detalleAlmacenUseCase = detalleAlmacenUseCase;
         this.detalleKardexUseCase = detalleKardexUseCase;
+        this.detalleSotckUseCase = detalleSotckUseCase;
     }
 
-    public ResponseRegistroDetalleVenta registrarDetalleVenta(RequestRegistroDetalleVenta request) {
+    public ResponseRegistroDetalleVenta registrarDetalleVenta(long idVenta,RequestRegistroDetalleVenta request) {
         try {
+            //detalle stock
+            ResponseDetalleSotck responseDetalleSotck = detalleSotckUseCase.DetalleSotck(request.getIdArticulo(),request.getIdAlmacen());
+            if (!responseDetalleSotck.isExito() || responseDetalleSotck.getSotck() == null) {
+                throw new IllegalArgumentException("El stock no existe.");
+            }
+            //validar stock
+            double stockActual = responseDetalleSotck.getSotck().getStock();
+            if (stockActual <= 0 || stockActual < request.getCantidad()) {
+                throw new IllegalArgumentException("Stock insuficiente en almacén. Disponible: " + stockActual + ", Solicitado: " + request.getCantidad());
+            }
+
             //get kardex
             ResponseDetalleKardex responseKardex =detalleKardexUseCase.detalleKardex(request.getIdArticulo(),request.getIdAlmacen());
             if (!responseKardex.isExito() || responseKardex.getKardex() == null) {
                 throw new IllegalArgumentException("El kardex no existe.");
             }
-            //validar stock
-            double stockKardex = responseKardex.getKardex().getSaldoCantidad();
-            if (stockKardex <= 0 || stockKardex < request.getCantidad()) {
-                throw new IllegalArgumentException("Stock insuficiente. Disponible: " + stockKardex + ", Solicitado: " + request.getCantidad());
-            }
+
+
             //get articulo
             ResponseDetalleArticulo detalleBDArt = detalleArticuloUseCase.DetalleArticulo(request.getIdArticulo());
 
@@ -54,15 +66,16 @@ public class RegistroDetalleVentaUseCase {
             double descuento =subTotal* request.getDescuento();
             double total = subTotal-descuento;
             //costoUnitario
+            double saldoCantidadKardex = responseKardex.getKardex().getSaldoCantidad();
             double costoUnitario;
 
-            if (stockKardex > 0) {
-                costoUnitario = responseKardex.getKardex().getSaldoCosto() / stockKardex;
+            if (saldoCantidadKardex > 0) {
+                costoUnitario = responseKardex.getKardex().getSaldoCosto() / saldoCantidadKardex;
             } else {
                 costoUnitario = detalleBDArt.getArticulos().getCostoCompra();
             }
 
-            ResponseRegistroDetalleVenta response = detalleVentaService.registrarDetalleVenta(request,total,costoUnitario);
+            ResponseRegistroDetalleVenta response = detalleVentaService.registrarDetalleVenta(idVenta,request,total,costoUnitario);
             if (response.isExito()) {
                 response.setTotal(total);
             }

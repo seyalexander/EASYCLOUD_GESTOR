@@ -38,8 +38,8 @@ public class VentaService implements IVentaListado, IVentaRegistro, IVentaEdicio
 
     @Override
     @CacheEvict(value = {"ventas_lista", "venta_detalle"}, allEntries = true)
-    public ResponseRegistroVenta RegistroVenta(RequestRegistroVenta request, double subTotal, double impuesto, double total) {
-        return ventaRegistroRepository.RegistroVenta(request,  subTotal,  impuesto,  total);
+    public ResponseRegistroVenta RegistroVenta(long idCaja,RequestRegistroVenta request, double subTotal, double impuesto, double total) {
+        return ventaRegistroRepository.RegistroVenta(idCaja, request, subTotal, impuesto, total);
     }
 
     @Override

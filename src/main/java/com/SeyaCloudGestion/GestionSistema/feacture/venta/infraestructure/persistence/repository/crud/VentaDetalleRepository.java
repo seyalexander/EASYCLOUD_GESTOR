@@ -3,6 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.venta.infraestructure.persi
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.request.RequestDetalleVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.response.ResponseDetalleVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.domain.interfaces.IVentaDetalle;
+import com.SeyaCloudGestion.GestionSistema.feacture.venta.infraestructure.persistence.model.CondicionPago;
 import com.SeyaCloudGestion.GestionSistema.feacture.venta.infraestructure.persistence.model.VentaModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,9 @@ public class VentaDetalleRepository implements IVentaDetalle {
                     item.setIdUsuario(rs.getLong("idUsuario"));
                     item.setIdSucursal(rs.getLong("idSucursal"));
                     item.setIdTurnoCaja(rs.getLong("idTurnoCaja"));
+                    item.setCondicionPago(
+                            CondicionPago.valueOf(rs.getString("condicionPago"))
+                    );
                     item.setFechaVenta(
                             rs.getTimestamp("fechaCreacion") != null
                                     ? rs.getTimestamp("fechaCreacion").toLocalDateTime()

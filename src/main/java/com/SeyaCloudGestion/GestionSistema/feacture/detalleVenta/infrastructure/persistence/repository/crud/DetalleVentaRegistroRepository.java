@@ -23,7 +23,7 @@ public class DetalleVentaRegistroRepository implements IDetalleVentaRegistro {
     @Qualifier("SQLSERVER")
     private DataSource con;
 
-    public ResponseRegistroDetalleVenta registrarDetalleVenta(RequestRegistroDetalleVenta request,double total,double costoUnitario) {
+    public ResponseRegistroDetalleVenta registrarDetalleVenta(long idVenta,RequestRegistroDetalleVenta request,double total,double costoUnitario) {
         ResponseRegistroDetalleVenta rpt = new ResponseRegistroDetalleVenta();
 
         String SQL = "{ call VENTAS.sp_RegistroVentaDetalle(?,?,?,?,?,?,?,?,?) }";
@@ -31,7 +31,7 @@ public class DetalleVentaRegistroRepository implements IDetalleVentaRegistro {
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            pstmt.setLong(1, request.getIdVenta());
+            pstmt.setLong(1, idVenta);
             pstmt.setLong(2, request.getIdArticulo());
             pstmt.setLong(3, request.getIdAlmacen());
             pstmt.setDouble(4, request.getCantidad());

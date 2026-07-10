@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyCloud Gestor</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <i class="fa-solid fa-cloud-bolt brand-icon"></i>
+                    <span>EasyCloud</span>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+
+                <div class="menu-label">Administración</div>
+                <div class="menu-item" data-route="almacenes">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <span class="menu-text">Almacenes</span>
+                </div>
+
+                <div class="menu-label">Transacciones</div>
+                <div class="menu-item" data-route="ventas">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="menu-text">Ventas (POS)</span>
+                </div>
+                <div class="menu-item" data-route="compras">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <span class="menu-text">Compras</span>
+                </div>
+
+                <!-- <div class="menu-label">Administración</div>
+                <div class="menu-item" data-route="usuarios">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <span class="menu-text">Usuarios</span>
+                </div> -->
+
+                <div class="menu-label">Principal</div>
+                <div class="menu-item active" data-route="dashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span class="menu-text">Dashboard</span>
+                </div>
+
+                <div class="menu-label">Catálogos</div>
+                <div class="menu-item" data-route="articulos">
+                    <i class="fa-solid fa-box-open"></i>
+                    <span class="menu-text">Artículos</span>
+                </div>
+                <div class="menu-item" data-route="subfamilia">
+                    <i class="fa-solid fa-tags"></i>
+                    <span class="menu-text">Sub Familias</span>
+                </div>
+                <!-- 
+                <div class="menu-item" data-route="productoPrecios">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <span class="menu-text">Precios</span>
+                </div>
+            -->
+                <div class="menu-item" data-route="productoImpuestos">
+                    <i class="fa-solid fa-percent"></i>
+                    <span class="menu-text">Impuestos</span>
+                </div>
+                <div class="menu-item" data-route="caja">
+                    <i class="fa-solid fa-cash-register"></i>
+                    <span class="menu-text">Caja</span>
+                </div>
+                <div class="menu-item" data-route="clientes">
+                    <i class="fa-solid fa-users"></i>
+                    <span class="menu-text">Clientes</span>
+                </div>
+                <div class="menu-item" data-route="proveedores">
+                    <i class="fa-solid fa-truck-field"></i>
+                    <span class="menu-text">Proveedores</span>
+                </div>
+
+                <div class="menu-label">Transacciones</div>
+                <div class="menu-item" data-route="ventas">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="menu-text">Ventas</span>
+                </div>
+                <div class="menu-item" data-route="compras">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <span class="menu-text">Compras</span>
+                </div>
+
+                <div class="menu-label">Configuración</div>
+                <div class="menu-item" data-route="tipoDocumento">
+                    <i class="fa-regular fa-id-card"></i>
+                    <span class="menu-text">Tipo Documento</span>
+                </div>
+                <div class="menu-item" data-route="tipocomprobante">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span class="menu-text">Tipo Comprobante</span>
+                </div>
+                <div class="menu-item" data-route="tipoMovimiento">
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                    <span class="menu-text">Tipo Movimiento</span>
+                </div>
+                <!-- 
+                <div class="menu-item" data-route="rol">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span class="menu-text">Roles</span>
+                </div>
+            -->
+                <!-- 
+                <div class="menu-item" data-route="parametros">
+                    <i class="fa-solid fa-gears"></i>
+                    <span class="menu-text">Parámetros</span>
+                </div>-->
+                <div class="menu-item" data-route="unidadMedida">
+                    <i class="fa-solid fa-ruler"></i>
+                    <span class="menu-text">Unidad Medida</span>
+                </div>
+                <!-- 
+                <div class="menu-item" data-route="moneda">
+                    <i class="fa-solid fa-coins"></i>
+                    <span class="menu-text">Monedas</span>
+                </div>
+                -->
+            </div>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <main class="main-wrapper">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="icon-btn" id="toggleSidebar">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="search-bar">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" placeholder="Buscar en cualquier lugar...">
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="icon-btn">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="notification-badge"></span>
+                    </button>
+
+                    <div class="user-profile">
+                        <div class="avatar" id="userAvatar">A</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userNameDisplay">Admin User</span>
+                            <span class="user-role">Administrador</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-muted" style="font-size: 0.75rem;"></i>
+                    </div>
+                    <button class="icon-btn" id="btnLogout" title="Cerrar Sesión">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dynamic Content Area -->
+            <div class="content-area" id="app-content">
+                <!-- Content will be loaded here dynamically -->
+                <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                    <div class="loader"
+                        style="display: block; border-color: var(--primary); border-top-color: transparent; width: 40px; height: 40px;">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JS Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/modules/articulos.js"></script>
+    <script src="js/modules/unidadMedida.js"></script>
+    <script src="js/modules/rol.js"></script>
+    <script src="js/modules/moneda.js"></script>
+    <script src="js/modules/parametros.js"></script>
+    <script src="js/modules/usuarios.js"></script>
+    <script src="js/modules/subfamilia.js"></script>
+    <script src="js/modules/tipoDocumento.js"></script>
+    <script src="js/modules/tipocomprobante.js"></script>
+    <script src="js/modules/tipoMovimiento.js"></script>
+    <script src="js/modules/productoPrecios.js"></script>
+    <script src="js/modules/productoImpuestos.js"></script>
+    <script src="js/modules/caja.js"></script>
+    <script src="js/modules/clientes.js"></script>
+    <script src="js/modules/proveedores.js"></script>
+    <script src="js/modules/almacenes.js"></script>
+    <script src="js/modules/compras.js"></script>
+    <script src="js/modules/ventas.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

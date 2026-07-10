@@ -22,10 +22,11 @@ public class EdicionSotckUseCase {
         this.verificarCambiosSotck = verificarCambiosSotck;
     }
 
-    public ResponseEditarAllSotck EdicionAllSotck(RequestEditarAllSotck request) {
+    public ResponseEditarAllSotck EdicionAllSotck(RequestEditarAllSotck request,long idArticulo) {
         try {
             RequestDetalleSotck requestDetalle = new RequestDetalleSotck();
-            requestDetalle.setIdProducto(request.getIdStockProducto());
+            requestDetalle.setIdProducto(idArticulo);
+            requestDetalle.setIdAlmacen(request.getIdAlmacen());
 
             ResponseDetalleSotck detalleBD = sotckService.DetalleSotck(requestDetalle);
 

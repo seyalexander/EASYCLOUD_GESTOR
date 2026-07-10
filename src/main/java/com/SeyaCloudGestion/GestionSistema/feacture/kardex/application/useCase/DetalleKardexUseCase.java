@@ -38,6 +38,7 @@ public class DetalleKardexUseCase {
 
             RequestDetalleKardex request = new RequestDetalleKardex();
             request.setIdArticulo(idArticulo);
+            request.setIdAlmacen(idAlmacen);
 
             ResponseDetalleKardex response = kardexService.DetalleKardex(request);
             if (response.isExito()) {}

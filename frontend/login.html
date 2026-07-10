@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EasyCloud Gestor</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fa-solid fa-cloud-bolt"></i>
+                </div>
+                <h1 class="auth-title">EasyCloud Gestor</h1>
+                <p class="auth-subtitle">Ingresa tus credenciales para acceder</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username" class="form-label">Usuario</label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="admin" required>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <div id="loginError" class="text-danger mb-3" style="display: none; font-size: 0.85rem; text-align: center;">
+                    Credenciales incorrectas
+                </div>
+                <button type="submit" class="btn btn-primary auth-btn" id="btnLogin">
+                    <span>Iniciar Sesión</span>
+                    <div class="loader"></div>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="js/api.js"></script>
+    <script src="js/modules/auth.js"></script>
+</body>
+</html>

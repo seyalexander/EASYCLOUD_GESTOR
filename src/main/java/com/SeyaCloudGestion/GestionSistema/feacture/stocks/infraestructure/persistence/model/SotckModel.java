@@ -10,9 +10,9 @@ public class SotckModel extends AuditableModel implements Serializable {
     private long idStock;
     private double stock;
     private long idProducto;
-    private String descripcionProducto;
+    //private String descripcionProducto;
     private long idAlmacen;
-    private String descripcionAlmacen;
+   // private String descripcionAlmacen;
     private long idSucursal;
-    private String descripcionSucursal;
+    //private String descripcionSucursal;
 }

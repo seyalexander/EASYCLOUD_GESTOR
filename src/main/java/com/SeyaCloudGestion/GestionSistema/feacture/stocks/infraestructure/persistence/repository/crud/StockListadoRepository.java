@@ -51,13 +51,13 @@ public class StockListadoRepository implements ISotckListado {
                     item.setStock(rs.getDouble("stock"));
 
                     item.setIdProducto(rs.getLong("idProducto"));
-                    item.setDescripcionProducto(rs.getString("descripcionProducto"));
+                    //item.setDescripcionProducto(rs.getString("descripcionProducto"));
 
                     item.setIdAlmacen(rs.getLong("idAlmacen"));
-                    item.setDescripcionAlmacen(rs.getString("descripcionAlmacen"));
+                    //item.setDescripcionAlmacen(rs.getString("descripcionAlmacen"));
 
                     item.setIdSucursal(rs.getLong("idSucursal"));
-                    item.setDescripcionSucursal(rs.getString("descripcionSucursal"));
+                    //item.setDescripcionSucursal(rs.getString("descripcionSucursal"));
 
                     registros.add(item);
                 }

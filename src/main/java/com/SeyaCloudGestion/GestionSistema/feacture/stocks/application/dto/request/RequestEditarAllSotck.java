@@ -8,7 +8,7 @@ import lombok.Data;
 public class RequestEditarAllSotck {
 
     @Min(value = 1, message = "El id debe ser mayor a 0")
-    private long idStockProducto;
+    private long idStockArticulo;
 
     @Positive(message = "El precio debe ser mayor a 0")
     private double stock;

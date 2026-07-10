@@ -28,7 +28,7 @@ public class CompraDetalleRepository implements ICompraDetalle {
     @Override
     public ResponseDetalleCompra DetalleCompra(RequestDetalleCompra request) {
         ResponseDetalleCompra response = new ResponseDetalleCompra();
-        String SQL = "{ call COMPRAS.sp_ObtenerCompraPorId(?) }";
+        String SQL = "{ call COMPRAS.sp_ObtenerCompraPorId(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {

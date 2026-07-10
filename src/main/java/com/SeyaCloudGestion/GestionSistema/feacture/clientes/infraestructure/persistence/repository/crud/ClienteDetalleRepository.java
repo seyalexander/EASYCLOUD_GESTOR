@@ -45,7 +45,7 @@ public class ClienteDetalleRepository implements IClienteDetalle {
                     item.setApellidos(rs.getString("apellidos"));
                     item.setRazonSocial(rs.getString("razonSocial"));
                     item.setNumeroDocumento(rs.getString("numeroDocumento"));
-                    item.setIdTipoDocumento(rs.getLong("idTipoDocumento"));
+                    item.setIdTipoDocumento(rs.getLong("idTipoDocumentoIdentidad"));
                     item.setIdTipoCliente(rs.getLong("idTipoCliente"));
                     item.setTelefono(rs.getString("telefono"));
                     item.setEmail(rs.getString("email"));

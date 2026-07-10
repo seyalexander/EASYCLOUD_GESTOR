@@ -107,10 +107,11 @@ public class RegistroCompraUseCase {
                 stockRequest.setObservacion("Entrada - Compra Nro: " + idCompraGenerado);
 
                 ResponseProcesarFullStock stockResponse = procesarFullMovimientoStockUseCase.procesar(stockRequest);
-
+                        
                 if (!stockResponse.isExito()) {
                     throw new IllegalArgumentException("Error de inventario en artículo ID [" + detalle.getIdArticulo() + "]: " + stockResponse.getMessage());
                 }
+
             }
             //pago
             RequestRegistroCuentasPorPagar requestCuentaPorPagar = new RequestRegistroCuentasPorPagar();

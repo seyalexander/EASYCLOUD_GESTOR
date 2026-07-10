@@ -70,7 +70,7 @@ public class RegistroVentaUseCase {
                 throw new IllegalArgumentException("El cliente no existe.");
             }
             //turno caja
-            ResponseDetalleTurnoCaja detalleBDturnoCaja = detalleTurnoCajaUseCase.DetalleTurnoCaja(request.getIdTurnoCaja(), EstadoCaja.ABIERTO);
+            ResponseDetalleTurnoCaja detalleBDturnoCaja = detalleTurnoCajaUseCase.DetalleTurnoCaja(request.getIdCaja(), EstadoCaja.ABIERTO);
 
             if (!detalleBDturnoCaja.isExito() || detalleBDturnoCaja.getTurnoCaja() == null) {
                 throw new IllegalArgumentException("El turno caja no existe.");
@@ -104,7 +104,7 @@ public class RegistroVentaUseCase {
             double calculoSubTotal = sumaTotalVenta / 1.18;
             double calculoImpuesto = sumaTotalVenta - calculoSubTotal;
 
-            ResponseRegistroVenta response = ventaService.RegistroVenta(request,calculoSubTotal,calculoImpuesto,sumaTotalVenta);
+            ResponseRegistroVenta response = ventaService.RegistroVenta(detalleBDturnoCaja.getTurnoCaja().getIdTurnoCaja(),request,calculoSubTotal,calculoImpuesto,sumaTotalVenta);
 
             if (!response.isExito()) {
                 throw new IllegalArgumentException("Error al registrar la cabecera de la venta ");
@@ -114,9 +114,8 @@ public class RegistroVentaUseCase {
 
             // full detalles
             for (RequestRegistroDetalleVenta detalle : request.getDetalles()) {
-                detalle.setIdVenta(idVentaGenerado);
                 //setDetalle
-                ResponseRegistroDetalleVenta detalleResponse = registroDetalleVentaUseCase.registrarDetalleVenta(detalle);
+                ResponseRegistroDetalleVenta detalleResponse = registroDetalleVentaUseCase.registrarDetalleVenta(idVentaGenerado,detalle);
                 if (!detalleResponse.isExito()) {
                     throw new IllegalArgumentException("Error al registrar la línea de detalle para el artículo ID [" + detalle.getIdArticulo() + "]: " + detalleResponse.getMessage());
                 }
@@ -197,6 +196,7 @@ public class RegistroVentaUseCase {
             requestRegistroComprobante.setRazonSocialCliente(nombreFinalCliente);
 
             ResponseProcesarRegistroComprobante responseRegistroComprobante = procesarRegistroComprobanteUseCase.procesarRegistro(requestRegistroComprobante);
+
             if (!responseRegistroComprobante.isExito()) {
                 throw new IllegalArgumentException("Error al registrar el comprovante");
             }

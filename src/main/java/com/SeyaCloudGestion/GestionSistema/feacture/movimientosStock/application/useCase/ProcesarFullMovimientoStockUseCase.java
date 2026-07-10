@@ -57,9 +57,6 @@ public class ProcesarFullMovimientoStockUseCase {
     public ResponseProcesarFullStock procesar(RequestProcesarFullStock request) {
 
         try {
-            System.out.println("--- DEBUG PROCESAR FULL STOCK ---");
-            System.out.println("Cantidad: " + request.getCantidad());
-            System.out.println("Costo Unitario: " + request.getCostoUnitario());
             //traerl el tipo movimiento
             ResponseDetalleTipoMovimiento detalleBDTiMov =   detalleTipoMovimientoUseCase.DetalleTipoMovimiento(request.getIdTipoMovimiento());
             if (!detalleBDTiMov.isExito() || detalleBDTiMov.getTipoMovimiento() == null) {
@@ -113,7 +110,6 @@ public class ProcesarFullMovimientoStockUseCase {
             }
             //stock
             ResponseDetalleSotck detalleBDStock = detalleSotckUseCase.DetalleSotck(request.getIdArticulo(),request.getIdAlmacen());
-            System.out.println("detalleBDStock: " + detalleBDStock);
             //si no existe el detalle = que no hay registro (compra inventario o registro invetnario)
             if (!detalleBDStock.isExito() || detalleBDStock.getSotck() == null) {
                 //preparamos el Request
@@ -130,7 +126,7 @@ public class ProcesarFullMovimientoStockUseCase {
             else {
                 //ya me trae los datos
                 RequestEditarAllSotck requestEditStock = new RequestEditarAllSotck();
-                requestEditStock.setIdStockProducto(detalleBDStock.getSotck().getIdStock());
+                requestEditStock.setIdStockArticulo(detalleBDStock.getSotck().getIdStock());
                 requestEditStock.setIdAlmacen(detalleBDStock.getSotck().getIdAlmacen());
                 //es ingreso
                 if (detalleBDTiMov.getTipoMovimiento().getEsEntrada()==1){
@@ -138,9 +134,9 @@ public class ProcesarFullMovimientoStockUseCase {
                     double stockActual= detalleBDStock.getSotck().getStock()+request.getCantidad();
                     requestEditStock.setStock(stockActual);
 
-                    ResponseEditarAllSotck responseEditStock = edicionSotckUseCase.EdicionAllSotck(requestEditStock);
+                    ResponseEditarAllSotck responseEditStock = edicionSotckUseCase.EdicionAllSotck(requestEditStock,request.getIdArticulo());
                     if (!responseEditStock.isExito()) {
-                        throw new IllegalArgumentException("Error en (fullMovmimiento) edit registro stock ingreso.");
+                        throw new IllegalArgumentException("Error en (fullMovmimiento) edit registro stock ingreso."+responseEditStock.getMessage());
                     }
                 }
                 else{
@@ -151,7 +147,7 @@ public class ProcesarFullMovimientoStockUseCase {
                     double stockActual= detalleBDStock.getSotck().getStock()-request.getCantidad();
                     requestEditStock.setStock(stockActual);
 
-                    ResponseEditarAllSotck responseEditStock = edicionSotckUseCase.EdicionAllSotck(requestEditStock);
+                    ResponseEditarAllSotck responseEditStock = edicionSotckUseCase.EdicionAllSotck(requestEditStock,request.getIdArticulo());
                     if (!responseEditStock.isExito()) {
                         throw new IllegalArgumentException("Error en (fullMovmimiento) edit registro stock esgreso.");
                     }

@@ -5,5 +5,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.venta.application.dto.respon
 import jakarta.validation.constraints.PositiveOrZero;
 
 public interface IVentaRegistro {
-    ResponseRegistroVenta RegistroVenta(RequestRegistroVenta request, double subTotal, double impuesto, double total);
+    ResponseRegistroVenta RegistroVenta(long idCaja,RequestRegistroVenta request, double subTotal, double impuesto, double total);
 }

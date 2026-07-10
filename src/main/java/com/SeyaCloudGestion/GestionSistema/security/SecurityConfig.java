@@ -41,8 +41,16 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        /*
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost",
+                "http://localhost:4200"));
+         */
+
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost",
+                "http://127.0.0.1:5500",
+                "http://localhost:5500",
                 "http://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
@@ -82,6 +90,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        /*
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/api/v1/**")
                 .excludePathPatterns(
@@ -90,6 +99,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/swagger-ui.html");
+         */
     }
 
 }

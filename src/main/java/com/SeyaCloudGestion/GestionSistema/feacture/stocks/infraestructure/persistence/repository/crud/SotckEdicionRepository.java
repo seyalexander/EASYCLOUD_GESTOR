@@ -35,7 +35,7 @@ public class SotckEdicionRepository implements ISotckEdicion {
             Long userId = 1L;
             Long empresaId = 1L;
             Long sucursalId = 1L;
-            pstmt.setLong(1, request.getIdStockProducto());
+            pstmt.setLong(1, request.getIdStockArticulo());
             pstmt.setDouble(2, request.getStock());
             pstmt.setLong(3, sucursalId);
             pstmt.setLong(4, empresaId);

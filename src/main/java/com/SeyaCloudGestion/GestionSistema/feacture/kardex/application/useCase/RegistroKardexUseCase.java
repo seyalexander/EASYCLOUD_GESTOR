@@ -29,10 +29,6 @@ public class RegistroKardexUseCase {
 
     public ResponseRegistroKardex registroKardex(RequestRegistroKardexRecortado request) {
         try {
-            System.out.println("--- DEBUG KARDEX ---");
-            System.out.println("Cantidad: " + request.getCantidad());
-            System.out.println("Costo Unitario: " + request.getCostoUnitario());
-            System.out.println("Cálculo Resultado: " + (request.getCantidad() * request.getCostoUnitario()));
             //verificar los id antes de que truene todo
             //get articulo
             ResponseDetalleArticulo detalleBDArt = detalleArticuloUseCase.DetalleArticulo(request.getIdArticulo());
@@ -47,10 +43,8 @@ public class RegistroKardexUseCase {
             }
 
             TipoMovimientoKardex tipoMov = request.getTipoMovimiento();
-
             //traemos el ultimo kardex del producto en este alamcen
             ResponseDetalleKardex detalleBDKardex =detalleKardexUseCase.detalleKardex(request.getIdArticulo(),request.getIdAlmacen());
-
             //generar cardedx full
 
             RequestRegistroKardex requestFull = new RequestRegistroKardex();
@@ -65,7 +59,6 @@ public class RegistroKardexUseCase {
                 //datos de la BD
                 double saldoCantidadBD = detalleBDKardex.getKardex().getSaldoCantidad();
                 double saldoCostoBD = detalleBDKardex.getKardex().getSaldoCosto();
-
                 //ingreso
                 if (tipoMov.esIngreso()){
 
@@ -76,7 +69,6 @@ public class RegistroKardexUseCase {
                     //new saldo cantidad and saldo costo
                     double saldoCantidadNew=saldoCantidadBD+requestFull.getCantidadEntrada();
                     double saldoCostoNew=saldoCostoBD+requestFull.getCostoEntrada();
-
                     ResponseRegistroKardex response = kardexService.RegistroKardex(requestFull,saldoCantidadNew,saldoCostoNew);
                     if (response.isExito()) {
 

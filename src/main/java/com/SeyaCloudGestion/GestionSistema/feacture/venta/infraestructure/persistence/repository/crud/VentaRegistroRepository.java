@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.sql.CallableStatement;
 import javax.sql.DataSource;
 import java.sql.*;
 
@@ -22,12 +22,12 @@ public class VentaRegistroRepository implements IVentaRegistro {
     private DataSource con;
 
     @Override
-    public ResponseRegistroVenta RegistroVenta(RequestRegistroVenta request, double subTotal, double impuesto, double total) {
+    public ResponseRegistroVenta RegistroVenta(long idCaja,RequestRegistroVenta request, double subTotal, double impuesto, double total) {
         ResponseRegistroVenta rpt = new ResponseRegistroVenta();
         String SQL = "{ call VENTAS.sp_RegistroVenta(?,?,?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS)) {
+             CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             Long userId = 1L;
             Long empresaId = 1L;
@@ -37,7 +37,7 @@ public class VentaRegistroRepository implements IVentaRegistro {
             pstmt.setLong(2, userId);
             pstmt.setLong(3, sucursalId);
             pstmt.setLong(4, empresaId);
-            pstmt.setLong(5, request.getIdTurnoCaja());
+            pstmt.setLong(5, idCaja);
 
             pstmt.setString(6, request.getCondicionPago().name());
 
@@ -50,20 +50,15 @@ public class VentaRegistroRepository implements IVentaRegistro {
 
             int rowsAffected = pstmt.executeUpdate();
 
-            if (rowsAffected > 0) {
-                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        rpt.setExito(true);
-                        rpt.setIdVenta(generatedKeys.getLong(1));
-                        rpt.setMessage("Venta insertada correctamente.");
-                    } else {
-                        rpt.setExito(false);
-                        rpt.setMessage("Venta insertada, pero no se pudo recuperar el ID generado.");
-                    }
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    rpt.setIdVenta(rs.getLong("idVenta"));
+                    rpt.setExito(true);
+                    rpt.setMessage("Venta registrada correctamente.");
+                } else {
+                    rpt.setExito(false);
+                    rpt.setMessage("No se pudo obtener el ID de la venta.");
                 }
-            } else {
-                rpt.setExito(false);
-                rpt.setMessage("No se insertó Venta.");
             }
         } catch (SQLException e) {
             rpt.setExito(false);

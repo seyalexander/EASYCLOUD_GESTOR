@@ -46,7 +46,7 @@ public class TurnoCajaService implements ITurnoCajaListado, ITurnoCajaAbrir, ITu
     }
 
     @Override
-    @Cacheable(value = "turnoCaja_detalle", key = "#request.idTurnoCaja")
+    @Cacheable(value = "turnoCaja_detalle", key = "#request.idCaja")
     public ResponseDetalleTurnoCaja DetalleTurnoCaja(RequestDetalleTurnoCaja request, EstadoCaja estado) {
         return turnoCajaDetalleRepository.DetalleTurnoCaja(request,estado);
     }
