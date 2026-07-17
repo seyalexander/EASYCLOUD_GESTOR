@@ -11,7 +11,7 @@ public class RequestEditarAllTipoMovimiento {
     @NotBlank(message = "La descripción es obligatoria")
     @Size(max = 50, message = "La descripción no debe superar los 50 caracteres")
     private String descripcion;
-
+    /*
     @Min(value = 0, message = "El tipo de movimiento no puede ser negativo")
     @Max(value = 1, message = "El tipo de movimiento solo puede ser 0 o 1")
     private int esEntrada;
@@ -19,4 +19,5 @@ public class RequestEditarAllTipoMovimiento {
     @Min(value = 0, message = "El estado no puede ser negativo")
     @Max(value = 1, message = "El estado solo puede ser 0 o 1")
     private int estado;
+     */
 }

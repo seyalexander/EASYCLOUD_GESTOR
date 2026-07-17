@@ -27,4 +27,7 @@ public class RequestListaKardex {
     @NotNull(message = "La fecha fin es obligatoria")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate fechaFin;
+
+    @Min(value = 1, message = "El id debe ser mayor a 0")
+    private long idAlmacen;
 }

@@ -40,22 +40,20 @@ public class KardexListadoRepository implements IKardexListado {
 
             pstmt.setLong(1, empresaId);
             pstmt.setLong(2, sucursalId);
-            pstmt.setLong(3, almacenId);
+            pstmt.setLong(3, request.getIdAlmacen());
+            //pstmt.setLong(3, almacenId);
             setParameter(pstmt, 4, request.getIdArticulo());
+            //pstmt.setObject(5, request.getFechaInicio(), Types.TIMESTAMP);
+            //pstmt.setObject(6, request.getFechaFin(), Types.TIMESTAMP);
             pstmt.setTimestamp(
                     5,
-                    request.getFechaInicio() != null
-                            ? Timestamp.valueOf(request.getFechaInicio().atStartOfDay())
-                            : null
+                    Timestamp.valueOf(request.getFechaInicio().atStartOfDay())
             );
 
             pstmt.setTimestamp(
                     6,
-                    request.getFechaFin() != null
-                            ? Timestamp.valueOf(request.getFechaFin().plusDays(1).atStartOfDay())
-                            : null
+                    Timestamp.valueOf(request.getFechaFin().plusDays(1).atStartOfDay().minusSeconds(1))
             );
-
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     KardexModel item = new KardexModel();

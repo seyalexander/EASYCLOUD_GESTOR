@@ -33,7 +33,7 @@ public class SerieCajaRegistroRepository implements ISerieCajaRegistro {
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             Long cajaId = 1L;
-            pstmt.setLong(1, cajaId);
+            pstmt.setLong(1, request.getIdCaja());
             setParameter(pstmt, 2, request.getIdSerieDocumento());
             Long userId = 1L;
             pstmt.setLong(3, userId);

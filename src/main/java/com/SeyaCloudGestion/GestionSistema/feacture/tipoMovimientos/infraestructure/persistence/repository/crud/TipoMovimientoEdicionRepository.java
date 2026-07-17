@@ -28,18 +28,22 @@ public class TipoMovimientoEdicionRepository implements ITipoMovimientoEdicion {
     @Override
     public ResponseEditarAllTipoMovimiento EditarAllTipoMovimiento(RequestEditarAllTipoMovimiento request) {
         ResponseEditarAllTipoMovimiento rpt = new ResponseEditarAllTipoMovimiento();
-        String SQL = "{ call INVENTARIO.sp_EditarTipoMovimiento(?,?,?,?,?,?) }";
+        String SQL = "{ call INVENTARIO.sp_EditarTipoMovimiento(,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
             pstmt.setLong(1, request.getIdTipoMovimiento());
             setParameter(pstmt, 2, request.getDescripcion());
+            /*
             setParameter(pstmt, 3, request.getEsEntrada());
             setParameter(pstmt, 4, request.getEstado());
-            Long userId = 1L;
-            pstmt.setLong(5, userId);
-            Long empresaId = 1L;
+                        Long empresaId = 1L;
             pstmt.setLong(6, empresaId);
+             */
+            Long userId = 1L;
+
+            pstmt.setLong(3, userId);
+
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

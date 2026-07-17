@@ -1,5 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.infraestructure.persistence.repository.crud;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.kardex.infraestructure.persistence.model.TipoMovimientoKardex;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.request.RequestListaTipoMovimiento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.response.ResponseListaTipoMovimiento;
 import com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.domain.interfaces.ITipoMovimientoListado;
@@ -31,14 +32,14 @@ public class TipoMovimientoListadoRepository implements ITipoMovimientoListado {
     public ResponseListaTipoMovimiento ListaTipoMovimiento(RequestListaTipoMovimiento request) {
         ResponseListaTipoMovimiento rpt = new ResponseListaTipoMovimiento();
         List<TipoMovimientoModel> registros = new ArrayList<>();
-        String SQL = "{ call INVENTARIO.sp_ListarTipoMovimiento(?,?) }";
+        String SQL = "{ call INVENTARIO.sp_ListarTipoMovimiento(?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setInt(1, request.getEstado());
             Long empresaId = 1L;
-            pstmt.setLong(2, empresaId);
+            //pstmt.setLong(2, empresaId);
 
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
@@ -47,6 +48,9 @@ public class TipoMovimientoListadoRepository implements ITipoMovimientoListado {
                 item.setDescripcion(rs.getString("descripcion"));
                 item.setEsEntrada(rs.getInt("esEntrada"));
                 item.setEstado(rs.getInt("estado"));
+                    item.setCodigoSistema(
+                            TipoMovimientoKardex.valueOf(rs.getString("codigoSistema"))
+                    );
                 item.setFechaIngreso((rs.getTimestamp("fechaIngreso") != null ? rs.getTimestamp("fechaIngreso").toLocalDateTime() : null));
                     item.setFechaCreacion(
                             rs.getTimestamp("fechaCreacion") != null

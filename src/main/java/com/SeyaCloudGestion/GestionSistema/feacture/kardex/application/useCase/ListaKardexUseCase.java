@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.dto.response.ResponseDetalleAlmacen;
+import com.SeyaCloudGestion.GestionSistema.feacture.almacenes.application.useCase.DetalleAlmacenUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseDetalleArticulo;
 import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.useCase.DetalleArticuloUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.kardex.application.dto.request.RequestListaKardex;
@@ -12,14 +14,21 @@ public class ListaKardexUseCase {
 
     private final KardexService kardexService;
     private final DetalleArticuloUseCase detalleArticuloUseCase;
-
-    public ListaKardexUseCase(KardexService kardexService, DetalleArticuloUseCase detalleArticuloUseCase) {
+    private final DetalleAlmacenUseCase detalleAlmacenUseCase;
+    public ListaKardexUseCase(KardexService kardexService, DetalleArticuloUseCase detalleArticuloUseCase, DetalleAlmacenUseCase detalleAlmacenUseCase) {
         this.kardexService = kardexService;
         this.detalleArticuloUseCase = detalleArticuloUseCase;
+        this.detalleAlmacenUseCase = detalleAlmacenUseCase;
     }
 
     public ResponseListaKardex listaKardex(RequestListaKardex request) {
         try {
+            //
+            // Almacén
+            ResponseDetalleAlmacen resAlmacen = detalleAlmacenUseCase.DetalleAlmacenes(request.getIdAlmacen());
+            if (!resAlmacen.isExito() || resAlmacen.getAlmacen() == null) {
+                throw new IllegalArgumentException("El almacén especificado no existe.");
+            }
             //get articulo
             ResponseDetalleArticulo detalleBDArt = detalleArticuloUseCase.DetalleArticulo(request.getIdArticulo());
 

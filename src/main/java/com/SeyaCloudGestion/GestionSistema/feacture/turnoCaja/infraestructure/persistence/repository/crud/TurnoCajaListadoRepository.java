@@ -32,7 +32,7 @@ public class TurnoCajaListadoRepository implements ITurnoCajaListado {
     public ResponseListaTurnoCaja ListaTurnoCaja(RequestListaTurnoCaja request) {
         ResponseListaTurnoCaja rpt = new ResponseListaTurnoCaja();
         List<TurnoCajaModel> registros = new ArrayList<>();
-        String SQL = "{ call VENTAS.sp_ListarTurnoCaja(?,?) }";
+        String SQL = "{ call VENTAS.sp_ListarTurnoCaja(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
@@ -40,6 +40,8 @@ public class TurnoCajaListadoRepository implements ITurnoCajaListado {
             setParameter(pstmt, 1, request.getEstado().name());
             Long empresaId = 1L;
             pstmt.setLong(2, empresaId);
+            Long sucursalId = 1L;
+            pstmt.setLong(3, sucursalId);
 
             ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {

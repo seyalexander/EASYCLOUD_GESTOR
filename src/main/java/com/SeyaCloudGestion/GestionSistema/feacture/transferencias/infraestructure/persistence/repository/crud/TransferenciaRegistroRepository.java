@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Slf4j
@@ -26,27 +27,36 @@ public class TransferenciaRegistroRepository implements ITransferenciaRegistro {
     @Override
     public ResponseRegistroTransferencia RegistroTransferencia(RequestRegistroTransferencia request) {
         ResponseRegistroTransferencia rpt = new ResponseRegistroTransferencia();
-        String SQL = "{ call ALMACEN.sp_RegistroTransferencia(?) }";
+        String SQL = "{ call INVENTARIO.sp_RegistrarTransferencia(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            Long sucursalId = 1L;
+            Long empresaId = 1L;
+            pstmt.setLong(1, request.getIdAlmacenOrigen());
+            pstmt.setLong(2, request.getIdAlmacenDestino());
+            pstmt.setLong(3, empresaId);
+            pstmt.setLong(4, sucursalId);
+            pstmt.setLong(5, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 
-            if (rowsAffected > 0) {
-                rpt.setExito(true);
-                rpt.setMessage("Transferencia insertado correctamente.");
-            } else {
-                rpt.setExito(false);
-                rpt.setMessage("No se insertó Transferencia.");
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    rpt.setIdTransferenciaCabecera(rs.getLong("idTransferencia"));
+                    rpt.setExito(true);
+                    rpt.setMessage("Transferencia insertado correctamente.");
+                } else {
+                    rpt.setExito(false);
+                    rpt.setMessage("No se pudo obtener el ID de la transferencia.");
+                }
             }
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_RegistroTransferencia", e);
+            log.error("Error en INVENTARIO.sp_RegistrarTransferencia", e);
         }
         return rpt;
     }

@@ -1,0 +1,10 @@
+package com.SeyaCloudGestion.GestionSistema.feacture.detalleInventario.domain.interfaces;
+
+import com.SeyaCloudGestion.GestionSistema.feacture.detalleInventario.application.dto.request.RequestEditarDetalleInventario;
+import com.SeyaCloudGestion.GestionSistema.feacture.detalleInventario.application.dto.request.RequestRegistroDetalleInventario;
+import com.SeyaCloudGestion.GestionSistema.feacture.detalleInventario.application.dto.response.ResponseEditarDetalleInventario;
+import com.SeyaCloudGestion.GestionSistema.feacture.detalleInventario.application.dto.response.ResponseRegistroDetalleInventario;
+
+public interface IDetalleInventarioEditar {
+    ResponseEditarDetalleInventario editarDetalleIventario(long idInventarioCabezera, RequestEditarDetalleInventario request );
+}

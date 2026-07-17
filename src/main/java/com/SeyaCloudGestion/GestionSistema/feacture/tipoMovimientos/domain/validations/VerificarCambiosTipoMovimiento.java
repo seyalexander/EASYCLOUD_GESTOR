@@ -16,9 +16,6 @@ public class VerificarCambiosTipoMovimiento  implements GlobalVerficarCambios<Ti
                         modelBD.getDescripcion(),
                         request.getDescripcion());
 
-        boolean cambioEstado =
-                modelBD.getEstado() != request.getEstado();
-
-        return cambioDescripcion || cambioEstado;
+        return cambioDescripcion ;
     }
 }

@@ -6,7 +6,9 @@ public enum TipoMovimientoKardex {
     INGRESO_COMPRA,
     INGRESO_AJUSTE,
     EGRESO_VENTA,
-    EGRESO_AJUSTE;
+    EGRESO_AJUSTE,
+    INGRESO_TRANSFERENCIA,
+    EGRESO_TRANSFERENCIA;
 
     public boolean esIngreso() {
         return this.name().startsWith("INGRESO_");

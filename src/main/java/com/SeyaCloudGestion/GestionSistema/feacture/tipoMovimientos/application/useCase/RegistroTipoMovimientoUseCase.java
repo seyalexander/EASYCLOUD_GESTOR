@@ -14,6 +14,22 @@ public class RegistroTipoMovimientoUseCase {
     }
     public ResponseRegistroTipoMovimiento RegistroTipoMovimiento(RequestRegistroTipoMovimiento request) {
         try {
+            //verifiaciones
+            if (request.getEsEntrada() == 1) {
+                if (!request.getCodigo().esIngreso()) {
+                    throw new IllegalArgumentException(
+                            "el movimiento es de entrada , el código seleccionado ("
+                                    + request.getCodigo() + ") debe comenzar con 'INGRESO_'."
+                    );
+                }
+            } else if (request.getEsEntrada() == 0) {
+                if (!request.getCodigo().esEgreso()) {
+                    throw new IllegalArgumentException(
+                            "el movimiento es de egreso , el código seleccionado ("
+                                    + request.getCodigo() + ") debe comenzar con 'EGRESO_'."
+                    );
+                }
+            }
             ResponseRegistroTipoMovimiento response = tipoMovimientoService.RegistroTipoMovimiento(request);
 
             if (response.isExito()) {

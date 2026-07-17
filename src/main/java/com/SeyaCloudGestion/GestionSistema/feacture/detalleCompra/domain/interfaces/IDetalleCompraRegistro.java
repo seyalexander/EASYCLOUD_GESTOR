@@ -4,5 +4,5 @@ import com.SeyaCloudGestion.GestionSistema.feacture.detalleCompra.application.dt
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleCompra.application.dto.response.ResponseRegistroDetalleCompra;
 
 public interface IDetalleCompraRegistro {
-    ResponseRegistroDetalleCompra registrarDetalleCompra(long idCompra,RequestRegistroDetalleCompra request, double total);
+    ResponseRegistroDetalleCompra registrarDetalleCompra(long idCompra, RequestRegistroDetalleCompra request, double total);
 }

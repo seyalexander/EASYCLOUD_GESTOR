@@ -26,27 +26,34 @@ public class InventarioRegistroRepository implements IInventarioRegistro {
     @Override
     public ResponseRegistroInventario RegistroInventario(RequestRegistroInventario request) {
         ResponseRegistroInventario rpt = new ResponseRegistroInventario();
-        String SQL = "{ call ALMACEN.sp_RegistroInventario(?) }";
+        String SQL = "{ call INVENTARIO.sp_RegistroInventarioCabecera(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+
+            pstmt.setLong(1, empresaId);
+            pstmt.setLong(2, sucursalId);
+            pstmt.setLong(3, request.getIdAlmacen());
+            pstmt.setString(4, request.getObservacion());
+            pstmt.setLong(5, userId);
 
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
                 rpt.setExito(true);
-                rpt.setMessage("Inventario insertado correctamente.");
+                rpt.setMessage(" Cabecera Inventario insertado correctamente.");
             } else {
                 rpt.setExito(false);
-                rpt.setMessage("No se insertó Inventario.");
+                rpt.setMessage("No se insertó la Cabecera Inventario.");
             }
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_RegistroInventario", e);
+            log.error("Error en INVENTARIO.sp_RegistroInventarioCabecera", e);
         }
         return rpt;
     }

@@ -66,20 +66,30 @@ public class ProcesarFullMovimientoStockUseCase {
             boolean esEntrada = detalleBDTiMov.getTipoMovimiento().getEsEntrada() == 1;
             //csoto unitario si es venta
             double costoUnitarioParaMovimiento = 0.0;
-            if (esEntrada) {
-                //compra alamcen o registro almacen
+
+            TipoMovimientoKardex tipoMov =request.getTipoPrimitivo();
+            //solo si es ingreso por compra
+            if (esEntrada && tipoMov.equals(TipoMovimientoKardex.INGRESO_COMPRA)) {
                 costoUnitarioParaMovimiento = request.getCostoUnitario();
             } else {
-                // egreso jalamos el ultimo kardex para calcular su costo promedio
+                //Aqui cae venta, ajuste salida y ajuste entrada
                 ResponseDetalleKardex detalleBDKardex = detalleKardexUseCase.detalleKardex(request.getIdArticulo(), request.getIdAlmacen());
+
                 if (detalleBDKardex.isExito() && detalleBDKardex.getKardex() != null) {
                     double saldoCantidadBD = detalleBDKardex.getKardex().getSaldoCantidad();
                     double saldoCostoBD = detalleBDKardex.getKardex().getSaldoCosto();
                     if (saldoCantidadBD > 0) {
                         costoUnitarioParaMovimiento = saldoCostoBD / saldoCantidadBD;
+                    } else {
+                        costoUnitarioParaMovimiento = request.getCostoUnitario();
                     }
                 } else {
-                    throw new IllegalArgumentException("No se puede registrar un egreso sin historial en el Kardex.");
+                    // si no hay historial asjuste de ingreso inicial
+                    if (esEntrada) {
+                        costoUnitarioParaMovimiento = request.getCostoUnitario();
+                    } else {
+                        throw new IllegalArgumentException("No se puede registrar un egreso sin historial en el Kardex.");
+                    }
                 }
             }
             //moviminetoStock
@@ -102,7 +112,7 @@ public class ProcesarFullMovimientoStockUseCase {
             requestKardex.setIdAlmacen(request.getIdAlmacen());
             requestKardex.setCantidad(request.getCantidad());
             requestKardex.setCostoUnitario(costoUnitarioParaMovimiento);
-            requestKardex.setTipoMovimiento(TipoMovimientoKardex.desdeModelo(detalleBDTiMov.getTipoMovimiento()));
+            requestKardex.setTipoMovimiento(request.getTipoPrimitivo());
 
             ResponseRegistroKardex responseKardex = registroKardexUseCase.registroKardex(requestKardex);
             if (!responseKardex.isExito()) {
@@ -111,48 +121,49 @@ public class ProcesarFullMovimientoStockUseCase {
             //stock
             ResponseDetalleSotck detalleBDStock = detalleSotckUseCase.DetalleSotck(request.getIdArticulo(),request.getIdAlmacen());
             //si no existe el detalle = que no hay registro (compra inventario o registro invetnario)
-            if (!detalleBDStock.isExito() || detalleBDStock.getSotck() == null) {
-                //preparamos el Request
-                RequestRegistroSotck requestStock= new RequestRegistroSotck();
-                requestStock.setIdProducto(request.getIdArticulo());
-                requestStock.setIdAlmacen(request.getIdAlmacen());
-                requestStock.setStock(request.getCantidad());
-                ResponseRegistroSotck responseSotck = registroSotckUseCase.RegistroSotck(requestStock);
-                if (!responseSotck.isExito()) {
-                    throw new IllegalArgumentException("Error en (fullMovmimiento) registro nuevo stok.");
-                }
-            }
 
-            else {
-                //ya me trae los datos
+            if (!detalleBDStock.isExito() || detalleBDStock.getSotck() == null) {
+                // si es entrada
+                if (esEntrada) {
+                    RequestRegistroSotck requestStock = new RequestRegistroSotck();
+                    requestStock.setIdProducto(request.getIdArticulo());
+                    requestStock.setIdAlmacen(request.getIdAlmacen());
+                    requestStock.setStock(request.getCantidad());
+
+                    ResponseRegistroSotck responseSotck = registroSotckUseCase.RegistroSotck(requestStock);
+                    if (!responseSotck.isExito()) {
+                        throw new IllegalArgumentException("Error al registrar el saldo de stock inicial.");
+                    }
+                } else {
+                    // es un egreso y no hay registro en la tabla de stocks
+                    throw new IllegalArgumentException("Stock insuficiente. El artículo no tiene existencias registradas en este almacén.");
+                }
+            } else {
+                // stock ya existe sumando o restando
                 RequestEditarAllSotck requestEditStock = new RequestEditarAllSotck();
                 requestEditStock.setIdStockArticulo(detalleBDStock.getSotck().getIdStock());
                 requestEditStock.setIdAlmacen(detalleBDStock.getSotck().getIdAlmacen());
-                //es ingreso
-                if (detalleBDTiMov.getTipoMovimiento().getEsEntrada()==1){
-                    //add
-                    double stockActual= detalleBDStock.getSotck().getStock()+request.getCantidad();
+
+                if (esEntrada) {
+                    double stockActual = detalleBDStock.getSotck().getStock() + request.getCantidad();
                     requestEditStock.setStock(stockActual);
 
-                    ResponseEditarAllSotck responseEditStock = edicionSotckUseCase.EdicionAllSotck(requestEditStock,request.getIdArticulo());
+                    ResponseEditarAllSotck responseEditStock = edicionSotckUseCase.EdicionAllSotck(requestEditStock, request.getIdArticulo());
                     if (!responseEditStock.isExito()) {
-                        throw new IllegalArgumentException("Error en (fullMovmimiento) edit registro stock ingreso."+responseEditStock.getMessage());
+                        throw new IllegalArgumentException("Error al editar el stock (Ingreso): " + responseEditStock.getMessage());
                     }
-                }
-                else{
-                    //resta
-                    if (!(detalleBDStock.getSotck().getStock()>=request.getCantidad())){
-                        throw new IllegalArgumentException("Stock insuficiente.");
+                } else {
+                    if (detalleBDStock.getSotck().getStock() < request.getCantidad()) {
+                        throw new IllegalArgumentException("Stock insuficiente en el almacén.");
                     }
-                    double stockActual= detalleBDStock.getSotck().getStock()-request.getCantidad();
+                    double stockActual = detalleBDStock.getSotck().getStock() - request.getCantidad();
                     requestEditStock.setStock(stockActual);
 
-                    ResponseEditarAllSotck responseEditStock = edicionSotckUseCase.EdicionAllSotck(requestEditStock,request.getIdArticulo());
+                    ResponseEditarAllSotck responseEditStock = edicionSotckUseCase.EdicionAllSotck(requestEditStock, request.getIdArticulo());
                     if (!responseEditStock.isExito()) {
-                        throw new IllegalArgumentException("Error en (fullMovmimiento) edit registro stock esgreso.");
+                        throw new IllegalArgumentException("Error al editar el stock (Egreso): " + responseEditStock.getMessage());
                     }
                 }
-
             }
 
             ResponseProcesarFullStock response = new ResponseProcesarFullStock();

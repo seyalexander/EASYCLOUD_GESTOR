@@ -11,11 +11,21 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Data
 public class RequestListaAjuste {
     @Schema(
-            description = "Estado de los ajustes",
-            example = "1",
-            allowableValues = {"0: Inactivo", "1: Activo", "2: Todos"}
+            description = "Identificador del artículo. Use 0 para consultar todos los artículos.",
+            example = "0",
+            minimum = "0",
+            requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @Min(value = 0, message = "El estado mínimo permitido es 0")
-    @Max(value = 2, message = "El estado máximo permitido es 2")
-    private int estado;
+    @Min(value = 0, message = "El id del artículo no puede ser menor a 0")
+    private long idArticulo;
+
+    @Schema(
+            description = "Identificador del almacén. Use 0 para consultar todos los almacenes.",
+            example = "0",
+            minimum = "0",
+            requiredMode = Schema.RequiredMode.REQUIRED
+    )
+    @Min(value = 0, message = "El id del almacén no puede ser menor a 0")
+    private long idAlmacen;
+
 }

@@ -1,8 +1,10 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.transferencias.infraestructure.persistence.repository.crud;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.infraestructure.persistence.model.EstadoInventario;
 import com.SeyaCloudGestion.GestionSistema.feacture.transferencias.application.dto.request.RequestDetalleTransferencia;
 import com.SeyaCloudGestion.GestionSistema.feacture.transferencias.application.dto.response.ResponseDetalleTransferencia;
 import com.SeyaCloudGestion.GestionSistema.feacture.transferencias.domain.interfaces.ITransferenciaDetalle;
+import com.SeyaCloudGestion.GestionSistema.feacture.transferencias.infraestructure.persistence.model.EstadoTransferencia;
 import com.SeyaCloudGestion.GestionSistema.feacture.transferencias.infraestructure.persistence.model.TransferenciaModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +30,16 @@ public class TransferenciaDetalleRepository implements ITransferenciaDetalle {
     @Override
     public ResponseDetalleTransferencia DetalleTransferencia(RequestDetalleTransferencia request) {
         ResponseDetalleTransferencia response = new ResponseDetalleTransferencia();
-        String SQL = "{ call ALMACEN.sp_ObtenerTransferenciaPorId() }";
+        String SQL = "{ call INVENTARIO.sp_ObtenerTransferenciaPorId(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            // Sin parámetro id definido en el request.
+            Long sucursalId = 1L;
+            Long empresaId = 1L;
+            pstmt.setLong(1, request.getIdTransferencia());
+            pstmt.setLong(2, empresaId);
+            pstmt.setLong(3, sucursalId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -41,8 +47,26 @@ public class TransferenciaDetalleRepository implements ITransferenciaDetalle {
                     item.setIdTransferencia(rs.getLong("idTransferencia"));
                     item.setIdAlmacenOrigen(rs.getLong("idAlmacenOrigen"));
                     item.setIdAlmacenDestino(rs.getLong("idAlmacenDestino"));
-                    item.setFecha(rs.getString("fecha"));
-                    item.setEstado(rs.getString("estado"));
+                    item.setFecha(
+                            rs.getTimestamp("fecha") != null
+                                    ? rs.getTimestamp("fecha").toLocalDateTime()
+                                    : null
+                    );
+                    item.setEstado(EstadoTransferencia.valueOf(rs.getString("estado")));
+                    item.setFechaCreacion(
+                            rs.getTimestamp("fechaCreacion") != null
+                                    ? rs.getTimestamp("fechaCreacion").toLocalDateTime()
+                                    : null
+                    );
+
+                    item.setFechaEdicion(
+                            rs.getTimestamp("fechaEdicion") != null
+                                    ? rs.getTimestamp("fechaEdicion").toLocalDateTime()
+                                    : null
+                    );
+                    item.setIdUsuarioCreacion(rs.getLong("idUsuarioCreacion"));
+                    item.setIdUsuarioEdicion(rs.getLong("idUsuarioEdicion"));
+
                     response.setExito(true);
                     response.setMessage("Transferencia obtenido correctamente.");
                     response.setTransferencia(item);
@@ -54,7 +78,7 @@ public class TransferenciaDetalleRepository implements ITransferenciaDetalle {
         } catch (SQLException e) {
             response.setExito(false);
             response.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_ObtenerTransferenciaPorId", e);
+            log.error("Error en INVENTARIO.sp_ObtenerTransferenciaPorId", e);
         }
         return response;
     }

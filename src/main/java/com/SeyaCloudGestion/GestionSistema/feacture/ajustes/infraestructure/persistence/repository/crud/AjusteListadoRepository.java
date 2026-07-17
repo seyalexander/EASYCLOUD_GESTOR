@@ -11,10 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,20 +28,36 @@ public class AjusteListadoRepository implements IAjustesListado {
     public ResponseListaAjuste listaAjustes(RequestListaAjuste request) {
         ResponseListaAjuste rpt = new ResponseListaAjuste();
         List<AjustesModel> registros = new ArrayList<>();
-        String SQL = "{ call ALMACEN.sp_ListarAjustes(?) }";
+        String SQL = "{ call INVENTARIO.sp_ListarAjusteStock(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+            setParameter(pstmt, 1, request.getIdArticulo());
+            setParameter(pstmt, 2, request.getIdAlmacen());
+            pstmt.setLong(3, empresaId);
+            pstmt.setLong(  4, sucursalId);
 
-            setParameter(pstmt, 1, request.getEstado());
-
-            try (ResultSet rs = pstmt.executeQuery()) {
+            ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     AjustesModel item = new AjustesModel();
+                    item.setIdAjusteStock(rs.getLong("idAjusteStock"));
+                    item.setIdArticulo(rs.getLong("idArticulo"));
+                    item.setIdSucursal(rs.getLong("idSucursal"));
+                    item.setIdAlmacen(rs.getLong("idAlmacen"));
+                    item.setCantidad(rs.getDouble("cantidad"));
+                    item.setMotivo(rs.getString("motivo"));
+
+                    Timestamp fechaAjuste = rs.getTimestamp("fechaAjuste");
+                    if (fechaAjuste != null) {
+                        item.setFechaAjuste(fechaAjuste.toLocalDateTime());
+                    }
+
+                    item.setIdUsuario(rs.getLong("idUsuario"));
 
                     registros.add(item);
                 }
-            }
 
             rpt.setExito(true);
             rpt.setAjustes(registros);
@@ -52,7 +65,7 @@ public class AjusteListadoRepository implements IAjustesListado {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_ListarAjustes", e);
+            log.error("Error en INVENTARIO.sp_ListarAjusteStocks", e);
         }
         return rpt;
     }

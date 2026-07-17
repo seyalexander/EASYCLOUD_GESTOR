@@ -3,6 +3,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.caja.application.useCase;
 import com.SeyaCloudGestion.GestionSistema.common.exceptions.ResourceNotFoundException;
 import com.SeyaCloudGestion.GestionSistema.feacture.caja.application.dto.request.RequestRegistroCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.caja.application.dto.request.RequestRegistroSerieCaja;
+import com.SeyaCloudGestion.GestionSistema.feacture.caja.application.dto.response.ResponseDetalleCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.caja.application.dto.response.ResponseRegistroCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.caja.application.dto.response.ResponseRegistroSerieCaja;
 import com.SeyaCloudGestion.GestionSistema.feacture.caja.domain.services.CajaService;
@@ -16,15 +17,22 @@ public class RegistroSerieCajaUseCase {
 
     private final CajaService cajaService;
     private final SerieDocumentoService serieDocumentoService;
-
-    public RegistroSerieCajaUseCase(CajaService cajaService, SerieDocumentoService serieDocumentoService) {
+    private final DetalleCajaUseCase detalleCajaUseCase;
+    public RegistroSerieCajaUseCase(CajaService cajaService, SerieDocumentoService serieDocumentoService, DetalleCajaUseCase detalleCajaUseCase) {
         this.cajaService = cajaService;
         this.serieDocumentoService = serieDocumentoService;
+        this.detalleCajaUseCase = detalleCajaUseCase;
     }
 
     public ResponseRegistroSerieCaja RegistroSerieCaja(RequestRegistroSerieCaja request) {
         try {
             //get id caja
+            ResponseDetalleCaja detalleBDCaja= detalleCajaUseCase.DetalleCaja(request.getIdCaja());
+
+            if (!detalleBDCaja.isExito() || detalleBDCaja.getCaja() == null) {
+                throw new ResourceNotFoundException("El Id de la caja no existe.");
+            }
+
             //get id serie
             RequestDetalleSeries requestDetalle = new RequestDetalleSeries();
             requestDetalle.setIdSeries(request.getIdSerieDocumento());

@@ -15,8 +15,10 @@ public class ListaDetalleVentaUseCase {
         this.detalleVentaService = detalleVentaService;
     }
 
-    public ResponseListaDetalleVenta listarDetalleVenta(RequestDetalleVenta request) {
+    public ResponseListaDetalleVenta listarDetalleVenta(long idVenta) {
         try {
+            RequestDetalleVenta request = new RequestDetalleVenta();
+            request.setIdVenta(idVenta);
             ResponseListaDetalleVenta response = detalleVentaService.listarDetalleVenta(request);
             if (response.isExito()) {}
 

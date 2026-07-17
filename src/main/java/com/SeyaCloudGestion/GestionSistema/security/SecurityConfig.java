@@ -22,84 +22,85 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig implements WebMvcConfigurer {
 
-    @Value("${encriptacion.bcrypt.strength:10}")
-    private int bcryptStrength;
+        @Value("${encriptacion.bcrypt.strength:10}")
+        private int bcryptStrength;
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final JwtInterceptor jwtInterceptor;
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final JwtInterceptor jwtInterceptor;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, JwtInterceptor jwtInterceptor) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.jwtInterceptor = jwtInterceptor;
-    }
+        public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, JwtInterceptor jwtInterceptor) {
+                this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+                this.jwtInterceptor = jwtInterceptor;
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(bcryptStrength);
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder(bcryptStrength);
+        }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        /*
-        configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost",
-                "http://localhost:4200"));
-         */
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+                CorsConfiguration configuration = new CorsConfiguration();
+                /*
+                 * configuration.setAllowedOrigins(Arrays.asList(
+                 * "http://localhost",
+                 * "http://localhost:4200"));
+                 */
 
-        configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost",
-                "http://127.0.0.1:5500",
-                "http://localhost:5500",
-                "http://localhost:4200"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
+                configuration.setAllowedOrigins(Arrays.asList(
+                                "http://localhost",
+                                "http://127.0.0.1:5500",
+                                "http://localhost:5500",
+                                "http://localhost:4200"));
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+                configuration.setAllowedHeaders(Arrays.asList("*"));
+                configuration.setAllowCredentials(true);
+                configuration.setMaxAge(3600L);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", configuration);
+                return source;
+        }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(
-                                "/api/v1/auth/**",
-                                "/api/v1/ws/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/swagger-ui.html",
-                                "/h2-console/**"
-                        ).permitAll()
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                http
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                .csrf(csrf -> csrf.disable())
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authorizeHttpRequests(authz -> authz
+                                                .requestMatchers(
+                                                                "/api/v1/auth/**",
+                                                                "/api/v1/ws/**",
+                                                                "/swagger-ui/**",
+                                                                "/v3/api-docs/**",
+                                                                "/swagger-ui.html",
+                                                                "/h2-console/**")
+                                                .permitAll()
 
-//                        .requestMatchers("/api/v1/**").authenticated()
-                                .requestMatchers("/api/v1/**").permitAll()
-                        .anyRequest().permitAll()
-                )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .headers(headers -> headers.frameOptions(frame -> frame.disable()));
+                                                // .requestMatchers("/api/v1/**").authenticated()
+                                                .requestMatchers("/api/v1/**").permitAll()
+                                                .anyRequest().permitAll())
+                                // .addFilterBefore(jwtAuthenticationFilter,
+                                // UsernamePasswordAuthenticationFilter.class)
+                                .headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
-        return http.build();
-    }
+                return http.build();
+        }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        /*
-        registry.addInterceptor(jwtInterceptor)
-                .addPathPatterns("/api/v1/**")
-                .excludePathPatterns(
-                        "/api/v1/auth/**",
-                        "/api/v1/ws/**",
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**",
-                        "/swagger-ui.html");
-         */
-    }
+        @Override
+        public void addInterceptors(InterceptorRegistry registry) {
+                /*
+                 * registry.addInterceptor(jwtInterceptor)
+                 * .addPathPatterns("/api/v1/**")
+                 * .excludePathPatterns(
+                 * "/api/v1/auth/**",
+                 * "/api/v1/ws/**",
+                 * "/swagger-ui/**",
+                 * "/v3/api-docs/**",
+                 * "/swagger-ui.html");
+                 */
+        }
 
 }

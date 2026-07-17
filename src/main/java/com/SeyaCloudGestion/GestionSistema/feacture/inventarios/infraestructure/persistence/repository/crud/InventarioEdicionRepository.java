@@ -1,9 +1,9 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.inventarios.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.request.RequestEditarAllInventario;
-import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.request.RequestEditarEstadoInventario;
-import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.response.ResponseEditarAllInventario;
-import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.response.ResponseEditarEstadoInventario;
+import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.request.RequestAjustarInventario;
+import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.request.RequestConteoFisicoInventario;
+import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.response.ResponseAjustarInventario;
+import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.response.ResponseConteoFisicoInventario;
 import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.domain.interfaces.IInventarioEdicion;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +26,25 @@ public class InventarioEdicionRepository implements IInventarioEdicion {
     private DataSource con;
 
     @Override
-    public ResponseEditarAllInventario EditarAllInventario(RequestEditarAllInventario request) {
-        ResponseEditarAllInventario rpt = new ResponseEditarAllInventario();
-        String SQL = "{ call ALMACEN.sp_EditarInventario(?) }";
+    public ResponseConteoFisicoInventario ConteoFisicoInventario(RequestConteoFisicoInventario request) {
+        ResponseConteoFisicoInventario rpt = new ResponseConteoFisicoInventario();
+        String SQL = "{ call INVENTARIO.sp_ConteoFisicoInventario(?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
 
+            pstmt.setLong(1, empresaId);
+            pstmt.setLong( 2, sucursalId);
+            pstmt.setLong(3, request.getIdInventarioCabecera());
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            pstmt.setLong(4, userId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 rpt.setExito(true);
-                rpt.setMessage("Inventario actualizado correctamente.");
+                rpt.setMessage("Inventario Cerrado correctamente.");;
             } else {
                 rpt.setExito(false);
                 rpt.setMessage("No se actualizó Inventario.");
@@ -47,41 +52,46 @@ public class InventarioEdicionRepository implements IInventarioEdicion {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_EditarInventario", e);
+            log.error("Error en INVENTARIO.sp_ConteoFisicoInventario", e);
         }
         return rpt;
     }
 
     @Override
-    public ResponseEditarEstadoInventario EditarEstadoInventario(RequestEditarEstadoInventario request, int estado) {
-        ResponseEditarEstadoInventario rpt = new ResponseEditarEstadoInventario();
-        String SQL = "{ call ALMACEN.sp_EditarInventario_Estado(?,?,?) }";
+    public ResponseAjustarInventario AjusteInventario(RequestAjustarInventario request) {
+        ResponseAjustarInventario rpt = new ResponseAjustarInventario();
+
+        String SQL = "{ call INVENTARIO.sp_AjustarInventario(?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdInventario());
-            pstmt.setInt(2, estado);
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
             Long userId = 1L;
-            pstmt.setLong(3, userId);
+
+            pstmt.setLong(1, empresaId);
+            pstmt.setLong(2, sucursalId);
+            pstmt.setLong(3, request.getIdInventarioCabecera());
+            pstmt.setLong(4, userId);
 
             int rowsAffected = pstmt.executeUpdate();
+
             if (rowsAffected > 0) {
                 rpt.setExito(true);
-                rpt.setMessage("Inventario actualizado correctamente.");
+                rpt.setMessage("Ajuste de inventario realizado correctamente.");
             } else {
                 rpt.setExito(false);
-                rpt.setMessage("No se actualizó Inventario.");
+                rpt.setMessage("No se realizó el ajuste de inventario.");
             }
+
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_EditarInventario_Estado", e);
+            log.error("Error en INVENTARIO.sp_AjustarInventario", e);
         }
+
         return rpt;
     }
 
-    private void setParameter(CallableStatement pstmt, int index, Object value) throws SQLException {
-        pstmt.setObject(index, value);
-    }
 }

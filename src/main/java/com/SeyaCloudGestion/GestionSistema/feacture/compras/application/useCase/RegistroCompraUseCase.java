@@ -11,6 +11,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorPagar.application.
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleCompra.application.dto.request.RequestRegistroDetalleCompra;
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleCompra.application.dto.response.ResponseRegistroDetalleCompra;
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleCompra.application.useCase.RegistroDetalleCompraUseCase;
+import com.SeyaCloudGestion.GestionSistema.feacture.kardex.infraestructure.persistence.model.TipoMovimientoKardex;
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosStock.application.dto.request.RequestProcesarFullStock;
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosStock.application.dto.response.ResponseProcesarFullStock;
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosStock.application.useCase.ProcesarFullMovimientoStockUseCase;
@@ -104,6 +105,7 @@ public class RegistroCompraUseCase {
                 stockRequest.setCantidad(detalle.getCantidad());
                 stockRequest.setCostoUnitario(detalle.getCostoUnitario());
                 stockRequest.setIdTipoMovimiento(request.getIdTipoMovimiento());
+                stockRequest.setTipoPrimitivo(TipoMovimientoKardex.INGRESO_COMPRA);
                 stockRequest.setObservacion("Entrada - Compra Nro: " + idCompraGenerado);
 
                 ResponseProcesarFullStock stockResponse = procesarFullMovimientoStockUseCase.procesar(stockRequest);

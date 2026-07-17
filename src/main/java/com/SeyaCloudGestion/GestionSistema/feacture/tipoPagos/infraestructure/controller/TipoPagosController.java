@@ -19,7 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/TipoPagos")
+@RequestMapping("api/v1/tipoPagos")
 public class TipoPagosController {
 
     private final ListaTipoPagosUseCase listaTipoPagosUseCase;

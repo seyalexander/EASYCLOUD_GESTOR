@@ -2,6 +2,7 @@ package com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.application.dt
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 @Data
@@ -11,7 +12,7 @@ public class RequestRegistroDetalleVenta{
     private long idArticulo;
 
     @Min(value = 1, message = "El id debe ser mayor a 0")
-    private long idAlmacen;
+    private long idAlmacen=1;
 
     @Positive(message = "La cantidad debe ser mayor a 0")
     private double cantidad;
@@ -19,7 +20,7 @@ public class RequestRegistroDetalleVenta{
     @Positive(message = "El precio Unitario debe ser mayor a 0")
     private double precioUnitario;
 
-    @Positive(message = "El descuento debe ser mayor a 0")
+    @PositiveOrZero(message = "El descuento debe ser mayor a 0")
     private double descuento;
 
 }

@@ -1,5 +1,8 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.transferenciaDetalles.domain.interfaces;
 
-public interface ITransferenciaDetalleRegistro {
+import com.SeyaCloudGestion.GestionSistema.feacture.transferenciaDetalles.application.dto.request.RequestRegistroDetalleTransferencia;
+import com.SeyaCloudGestion.GestionSistema.feacture.transferenciaDetalles.application.dto.response.ResponseRegistroTransferenciaDetalle;
 
+public interface ITransferenciaDetalleRegistro {
+    ResponseRegistroTransferenciaDetalle RegistroDetalleTransferencia(long idTransferencia, RequestRegistroDetalleTransferencia request,double costoUnitario);
 }

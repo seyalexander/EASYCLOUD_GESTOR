@@ -23,13 +23,14 @@ public class DetalleVentaRegistroRepository implements IDetalleVentaRegistro {
     @Qualifier("SQLSERVER")
     private DataSource con;
 
-    public ResponseRegistroDetalleVenta registrarDetalleVenta(long idVenta,RequestRegistroDetalleVenta request,double total,double costoUnitario) {
+    public ResponseRegistroDetalleVenta registrarDetalleVenta(long idVenta, RequestRegistroDetalleVenta request,
+            double total, double costoUnitario) {
         ResponseRegistroDetalleVenta rpt = new ResponseRegistroDetalleVenta();
 
         String SQL = "{ call VENTAS.sp_RegistroVentaDetalle(?,?,?,?,?,?,?,?,?) }";
 
         try (Connection conn = con.getConnection();
-             CallableStatement pstmt = conn.prepareCall(SQL)) {
+                CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             pstmt.setLong(1, idVenta);
             pstmt.setLong(2, request.getIdArticulo());
@@ -39,7 +40,7 @@ public class DetalleVentaRegistroRepository implements IDetalleVentaRegistro {
             pstmt.setDouble(6, costoUnitario);
             pstmt.setDouble(7, request.getDescuento());
             pstmt.setDouble(8, total);
-            Long userId= 1L;
+            Long userId = 1L;
             pstmt.setLong(9, userId);
 
             int rowsAffected = pstmt.executeUpdate();

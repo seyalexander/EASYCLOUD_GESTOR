@@ -33,10 +33,11 @@ public class TipoMovimientoRegistroRepository implements ITipoMovimientoRegistro
 
             setParameter(pstmt, 1, request.getDescripcion());
             setParameter(pstmt, 2, request.getEsEntrada());
+            pstmt.setString(3, request.getCodigo().name());
             Long userId = 1L;
-            pstmt.setLong(3, userId);
-            Long empresaId = 1L;
-            pstmt.setLong(4, empresaId);
+            pstmt.setLong(4, userId);
+            //Long empresaId = 1L;
+            //pstmt.setLong(4, empresaId);
 
 
             int rowsAffected = pstmt.executeUpdate();
@@ -51,7 +52,7 @@ public class TipoMovimientoRegistroRepository implements ITipoMovimientoRegistro
         } catch (SQLException e) {
             rpt.setExito(false);
             if (e.getErrorCode() == 2601 || e.getErrorCode() == 2627) {
-                rpt.setMessage("Ya existe un tipo de movimiento con esa descripción.");
+                rpt.setMessage("Ya existe un tipo de movimiento con esa descripción y ese codigo");
             } else {
                 rpt.setMessage("Error al registrar el tipo movimiento.");
             }

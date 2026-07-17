@@ -1,5 +1,6 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.tipoMovimientos.application.dto.request;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.kardex.infraestructure.persistence.model.TipoMovimientoKardex;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -14,4 +15,6 @@ public class RequestRegistroTipoMovimiento {
     @Max(value = 1, message = "El valor máximo permitido para entrada es 1")
     private int esEntrada;
 
+    @NotNull(message = "El codigo es obligatorio")
+    private TipoMovimientoKardex codigo;
 }

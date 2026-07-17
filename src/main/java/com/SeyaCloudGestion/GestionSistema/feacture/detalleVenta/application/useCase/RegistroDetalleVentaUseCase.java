@@ -62,7 +62,7 @@ public class RegistroDetalleVentaUseCase {
                 throw new IllegalArgumentException("El almacen no existe.");
             }
             //total y desceutno
-            double subTotal = request.getCantidad()*request.getPrecioUnitario();
+            double subTotal = request.getCantidad()*detalleBDArt.getArticulos().getPrecioVenta();
             double descuento =subTotal* request.getDescuento();
             double total = subTotal-descuento;
             //costoUnitario

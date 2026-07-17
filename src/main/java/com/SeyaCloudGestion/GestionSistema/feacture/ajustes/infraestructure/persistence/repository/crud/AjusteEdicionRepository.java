@@ -1,8 +1,8 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.ajustes.infraestructure.persistence.repository.crud;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.ajustes.application.dto.request.RequestEditarAllAjuste;
-import com.SeyaCloudGestion.GestionSistema.feacture.ajustes.application.dto.request.RequestEditarEstadoAjuste;
-import com.SeyaCloudGestion.GestionSistema.feacture.ajustes.application.dto.response.ResponseEditarAllAjuste;
+import com.SeyaCloudGestion.GestionSistema.feacture.ajustes.application.dto.request.RequestRegistrarAjusteInventarioInicial;
+import com.SeyaCloudGestion.GestionSistema.feacture.ajustes.application.dto.request.RequestRegistroDetalleInventarioIncial;
+import com.SeyaCloudGestion.GestionSistema.feacture.ajustes.application.dto.response.ResponseRegistrarInventarioInicalAjuste;
 import com.SeyaCloudGestion.GestionSistema.feacture.ajustes.application.dto.response.ResponseEditarEstadoAjuste;
 import com.SeyaCloudGestion.GestionSistema.feacture.ajustes.domain.interfaces.IAjustesEdicion;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +26,8 @@ public class AjusteEdicionRepository implements IAjustesEdicion {
     private DataSource con;
 
     @Override
-    public ResponseEditarAllAjuste EditarAllAjustes(RequestEditarAllAjuste request) {
-        ResponseEditarAllAjuste rpt = new ResponseEditarAllAjuste();
+    public ResponseRegistrarInventarioInicalAjuste EditarAllAjustes(RequestRegistrarAjusteInventarioInicial request) {
+        ResponseRegistrarInventarioInicalAjuste rpt = new ResponseRegistrarInventarioInicalAjuste();
         String SQL = "{ call ALMACEN.sp_EditarAjustes(?) }";
 
         try (Connection conn = con.getConnection();
@@ -53,14 +53,14 @@ public class AjusteEdicionRepository implements IAjustesEdicion {
     }
 
     @Override
-    public ResponseEditarEstadoAjuste EditarEstadoAjustes(RequestEditarEstadoAjuste request, int estado) {
+    public ResponseEditarEstadoAjuste EditarEstadoAjustes(RequestRegistroDetalleInventarioIncial request, int estado) {
         ResponseEditarEstadoAjuste rpt = new ResponseEditarEstadoAjuste();
         String SQL = "{ call ALMACEN.sp_EditarAjustes_Estado(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
-            setParameter(pstmt, 1, request.getIdAjuste());
+           // setParameter(pstmt, 1, request.getIdAjuste());
             pstmt.setInt(2, estado);
             Long userId = 1L;
             pstmt.setLong(3, userId);

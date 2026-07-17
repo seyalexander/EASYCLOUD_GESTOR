@@ -1,8 +1,8 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.transferenciaDetalles.domain.interfaces;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.transferenciaDetalles.application.dto.request.RequestListaTransferenciaDetalle;
+import com.SeyaCloudGestion.GestionSistema.feacture.transferenciaDetalles.application.dto.request.RequestListaDetalleTransferencia;
 import com.SeyaCloudGestion.GestionSistema.feacture.transferenciaDetalles.application.dto.response.ResponseListaTransferenciaDetalle;
 
 public interface ITransferenciaDetalleListado {
-    ResponseListaTransferenciaDetalle listaTransferenciaDetalle(RequestListaTransferenciaDetalle request);
+    public ResponseListaTransferenciaDetalle listaDetalleTransferencia(RequestListaDetalleTransferencia request);
 }

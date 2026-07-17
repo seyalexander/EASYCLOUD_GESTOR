@@ -11,10 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Slf4j
 @Repository
@@ -28,16 +25,33 @@ public class AjusteDetalleRepository implements IAjustesDetalle {
     @Override
     public ResponseDetalleAjuste DetalleAjustes(RequestDetalleAjuste request) {
         ResponseDetalleAjuste response = new ResponseDetalleAjuste();
-        String SQL = "{ call ALMACEN.sp_ObtenerAjustesPorId(?) }";
+        String SQL = "{ call INVENTARIO.sp_ObtenerAjusteStockPorId(?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             setParameter(pstmt, 1, request.getIdAjuste());
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+            pstmt.setLong(2, empresaId);
+            pstmt.setLong(  3, sucursalId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     AjustesModel item = new AjustesModel();
+                    item.setIdAjusteStock(rs.getLong("idAjusteStock"));
+                    item.setIdArticulo(rs.getLong("idArticulo"));
+                    item.setIdSucursal(rs.getLong("idSucursal"));
+                    item.setIdAlmacen(rs.getLong("idAlmacen"));
+                    item.setCantidad(rs.getDouble("cantidad"));
+                    item.setMotivo(rs.getString("motivo"));
+
+                    Timestamp fechaAjuste = rs.getTimestamp("fechaAjuste");
+                    if (fechaAjuste != null) {
+                        item.setFechaAjuste(fechaAjuste.toLocalDateTime());
+                    }
+
+                    item.setIdUsuario(rs.getLong("idUsuario"));
 
                     response.setExito(true);
                     response.setMessage("Ajustes obtenido correctamente.");
@@ -50,7 +64,7 @@ public class AjusteDetalleRepository implements IAjustesDetalle {
         } catch (SQLException e) {
             response.setExito(false);
             response.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_ObtenerAjustesPorId", e);
+            log.error("Error en INVENTARIO.sp_ObtenerAjusteStockPorId", e);
         }
         return response;
     }

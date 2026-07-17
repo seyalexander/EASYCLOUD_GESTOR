@@ -26,15 +26,25 @@ public class AjusteRegistroRepository implements IAjustesRegistro {
     @Override
     public ResponseRegistroAjuste RegistroAjustes(RequestRegistrarAjuste request) {
         ResponseRegistroAjuste rpt = new ResponseRegistroAjuste();
-        String SQL = "{ call ALMACEN.sp_RegistroAjustes(?) }";
+        String SQL = "{ call INVENTARIO.sp_RegistroAjusteStock(?,?,?,?, ?,?,?) }";
 
         try (Connection conn = con.getConnection();
              CallableStatement pstmt = conn.prepareCall(SQL)) {
 
             Long userId = 1L;
-            pstmt.setLong(1, userId);
+            Long empresaId = 1L;
+            Long sucursalId = 1L;
+            pstmt.setLong(7, userId);
 
-            int rowsAffected = pstmt.executeUpdate();
+             pstmt.setLong(  1, request.getIdArticulo());
+            pstmt.setLong(2, empresaId);
+            pstmt.setLong(  3, sucursalId);
+            pstmt.setLong(  4, request.getIdAlmacen());
+            pstmt.setDouble(  6, request.getCantidad());
+            pstmt.setString(  5, request.getMotivo());
+            pstmt.setLong(7, userId);
+
+           int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
                 rpt.setExito(true);
@@ -46,7 +56,7 @@ public class AjusteRegistroRepository implements IAjustesRegistro {
         } catch (SQLException e) {
             rpt.setExito(false);
             rpt.setMessage(e.getMessage());
-            log.error("Error en ALMACEN.sp_RegistroAjustes", e);
+            log.error("Error en INVENTARIO.sp_RegistroAjusteStock", e);
         }
         return rpt;
     }

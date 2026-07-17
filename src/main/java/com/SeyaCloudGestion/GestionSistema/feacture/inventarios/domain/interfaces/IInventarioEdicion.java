@@ -1,11 +1,11 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.inventarios.domain.interfaces;
 
-import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.request.RequestEditarAllInventario;
-import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.request.RequestEditarEstadoInventario;
-import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.response.ResponseEditarAllInventario;
-import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.response.ResponseEditarEstadoInventario;
+import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.request.RequestAjustarInventario;
+import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.request.RequestConteoFisicoInventario;
+import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.response.ResponseAjustarInventario;
+import com.SeyaCloudGestion.GestionSistema.feacture.inventarios.application.dto.response.ResponseConteoFisicoInventario;
 
 public interface IInventarioEdicion {
-    ResponseEditarAllInventario EditarAllInventario(RequestEditarAllInventario request);
-    ResponseEditarEstadoInventario EditarEstadoInventario(RequestEditarEstadoInventario request, int estado);
+    ResponseConteoFisicoInventario ConteoFisicoInventario(RequestConteoFisicoInventario request);
+    ResponseAjustarInventario AjusteInventario(RequestAjustarInventario request);
 }

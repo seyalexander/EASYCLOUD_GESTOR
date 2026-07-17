@@ -1,5 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.venta.application.useCase;
 
+import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.dto.response.ResponseDetalleArticulo;
+import com.SeyaCloudGestion.GestionSistema.feacture.articulos.application.useCase.DetalleArticuloUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.dto.response.ResponseDetalleCliente;
 import com.SeyaCloudGestion.GestionSistema.feacture.clientes.application.useCase.DetalleClienteUseCase;
 import com.SeyaCloudGestion.GestionSistema.feacture.comprobantes.application.dto.request.RequestProcesarRegistroComprobante;
@@ -11,6 +13,7 @@ import com.SeyaCloudGestion.GestionSistema.feacture.cuentasPorCobrar.application
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.application.dto.request.RequestRegistroDetalleVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.application.dto.response.ResponseRegistroDetalleVenta;
 import com.SeyaCloudGestion.GestionSistema.feacture.detalleVenta.application.useCase.RegistroDetalleVentaUseCase;
+import com.SeyaCloudGestion.GestionSistema.feacture.kardex.infraestructure.persistence.model.TipoMovimientoKardex;
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosStock.application.dto.request.RequestProcesarFullStock;
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosStock.application.dto.response.ResponseProcesarFullStock;
 import com.SeyaCloudGestion.GestionSistema.feacture.movimientosStock.application.useCase.ProcesarFullMovimientoStockUseCase;
@@ -44,10 +47,10 @@ public class RegistroVentaUseCase {
     private final RegistroPagoUseCase registroPagoUseCase;
     private final ProcesarRegistroComprobanteUseCase procesarRegistroComprobanteUseCase;
     private final RegistroCuentasPorCobrarUseCase registroCuentasPorCobrarUseCase;
-
+    private final DetalleArticuloUseCase detalleArticuloUseCase;
     public RegistroVentaUseCase(
             VentaService ventaService,
-            ProcesarFullMovimientoStockUseCase procesarFullMovimientoStockUseCase, DetalleClienteUseCase detalleClienteUseCase, DetalleTurnoCajaUseCase detalleTurnoCajaUseCase, RegistroDetalleVentaUseCase registroDetalleVentaUseCase, DetalleTipoMovimientoUseCase detalleTipoMovimientoUseCase, RegistroPagoUseCase registroPagoUseCase, ProcesarRegistroComprobanteUseCase procesarRegistroComprobanteUseCase, RegistroCuentasPorCobrarUseCase registroCuentasPorCobrarUseCase
+            ProcesarFullMovimientoStockUseCase procesarFullMovimientoStockUseCase, DetalleClienteUseCase detalleClienteUseCase, DetalleTurnoCajaUseCase detalleTurnoCajaUseCase, RegistroDetalleVentaUseCase registroDetalleVentaUseCase, DetalleTipoMovimientoUseCase detalleTipoMovimientoUseCase, RegistroPagoUseCase registroPagoUseCase, ProcesarRegistroComprobanteUseCase procesarRegistroComprobanteUseCase, RegistroCuentasPorCobrarUseCase registroCuentasPorCobrarUseCase, DetalleArticuloUseCase detalleArticuloUseCase
     ) {
         this.ventaService = ventaService;
         this.procesarFullMovimientoStockUseCase = procesarFullMovimientoStockUseCase;
@@ -58,6 +61,7 @@ public class RegistroVentaUseCase {
         this.registroPagoUseCase = registroPagoUseCase;
         this.procesarRegistroComprobanteUseCase = procesarRegistroComprobanteUseCase;
         this.registroCuentasPorCobrarUseCase = registroCuentasPorCobrarUseCase;
+        this.detalleArticuloUseCase = detalleArticuloUseCase;
     }
 
     @Transactional("sqlServerTransactionManager")
@@ -67,7 +71,7 @@ public class RegistroVentaUseCase {
             ResponseDetalleCliente detalleBDcli = detalleClienteUseCase.DetalleCliente(request.getIdCliente());
 
             if (!detalleBDcli.isExito() || detalleBDcli.getCliente() == null) {
-                throw new IllegalArgumentException("El cliente no existe.");
+                throw new IllegalArgumentException(detalleBDcli.getMessage());
             }
             //turno caja
             ResponseDetalleTurnoCaja detalleBDturnoCaja = detalleTurnoCajaUseCase.DetalleTurnoCaja(request.getIdCaja(), EstadoCaja.ABIERTO);
@@ -95,6 +99,7 @@ public class RegistroVentaUseCase {
             double sumaTotalVenta = 0.0;
             //for inicial para insertar datos primarios en la cabecera
             for (RequestRegistroDetalleVenta detalle : request.getDetalles()) {
+
                 double subTotalLinea = detalle.getCantidad() * detalle.getPrecioUnitario();
                 double dineroDescuento = subTotalLinea * detalle.getDescuento();
                 double totalLinea = subTotalLinea - dineroDescuento;
@@ -126,6 +131,7 @@ public class RegistroVentaUseCase {
                 stockRequest.setIdAlmacen(detalle.getIdAlmacen());
                 stockRequest.setCantidad(detalle.getCantidad());
                 stockRequest.setIdTipoMovimiento(request.getIdTipoMovimiento());
+                stockRequest.setTipoPrimitivo(TipoMovimientoKardex.EGRESO_VENTA);
                 stockRequest.setObservacion("Salida - Venta Nro: " + idVentaGenerado);
 
                 ResponseProcesarFullStock stockResponse = procesarFullMovimientoStockUseCase.procesar(stockRequest);
@@ -198,7 +204,7 @@ public class RegistroVentaUseCase {
             ResponseProcesarRegistroComprobante responseRegistroComprobante = procesarRegistroComprobanteUseCase.procesarRegistro(requestRegistroComprobante);
 
             if (!responseRegistroComprobante.isExito()) {
-                throw new IllegalArgumentException("Error al registrar el comprovante");
+                throw new IllegalArgumentException("Error al registrar el comprovante" +responseRegistroComprobante.getMessage());
             }
             return response;
 

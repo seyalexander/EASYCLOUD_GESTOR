@@ -58,4 +58,10 @@ public class TipoMovimientoService implements ITipoMovimientoListado, ITipoMovim
     public ResponseDetalleTipoMovimiento DetalleTipoMovimiento(RequestDetalleTipoMovimiento request) {
         return tipoMovimientoDetalleRepository.DetalleTipoMovimiento(request);
     }
+
+    @Override
+    @Cacheable(value = "tipoMovimiento_detalle", key = "#request.codigo")
+    public ResponseDetalleTipoMovimiento DetalleTipoMovimiento(RequestDetallePorCodigoTipoMovimiento request) {
+        return tipoMovimientoDetalleRepository.DetalleTipoMovimiento(request);
+    }
 }

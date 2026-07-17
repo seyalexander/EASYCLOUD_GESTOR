@@ -1,9 +1,7 @@
 package com.SeyaCloudGestion.GestionSistema.feacture.movimientosStock.application.dto.request;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
+import com.SeyaCloudGestion.GestionSistema.feacture.kardex.infraestructure.persistence.model.TipoMovimientoKardex;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
@@ -25,4 +23,7 @@ public class RequestProcesarFullStock {
 
     @Size(max = 250, message = "La observación no debe superar los 250 caracteres")
     private String observacion;
+
+    @NotNull(message = "El tipo de movimiento kardex es obligatorio")
+    private TipoMovimientoKardex tipoPrimitivo;
 }
